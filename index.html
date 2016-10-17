@@ -3,17 +3,15 @@ layout: default
 title: 我的Blog
 ---
 
-<div class="container">
-	<h2>{{ page.title }}</h2>
-	<p>最新文章</p>
-	<div class="row">
-		<ul class="list-group">
-			{% for post in site.posts %}
-		　　　　<li class="list-group-item">
-					{{ post.date | date_to_string }} 
-					<a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
-				</li>
-		　　{% endfor %}
-		</ul>
-	</div>
+<h2>{{ page.title }}</h2>
+<p>最新文章</p>
+<div class="row">
+	<ul class="list-group">
+		{% for post in site.posts %}
+	　　　　<li class="list-group-item">
+				{{ post.date | date_to_string }} 
+				<a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+			</li>
+	　　{% endfor %}
+	</ul>
 </div>
