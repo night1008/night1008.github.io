@@ -6,6 +6,7 @@ title: Python 建议
 ## {{ page.title }}
  
 python的pickle只能用于Python语言
+解析xml最好用lxml
 
 ## PEP8
 
@@ -14,7 +15,7 @@ python的pickle只能用于Python语言
 
 ### 异常类名
 
-``` 应该有后缀**ERROR** ```
+``` 应该有后缀** ERROR ** ```
 
 ### 方法名称
 
@@ -23,7 +24,7 @@ python的pickle只能用于Python语言
 ### 方法参数
 
 ```
-    **self**作为实例方法的第一个参数，**cls**作为类方法的第一个参数。
+    ** self **作为实例方法的第一个参数，** cls **作为类方法的第一个参数。
     一些参数为关键字名称的，最好是关键字加上一个下划线后缀，比如，class_ 比 clss好。
 ```
 
