@@ -17,20 +17,26 @@
 	　　<title>{{ page.title }}</title>
 	</head>
 　　<body>
-        <div class="blog-masthead">
+        <div id="top" class="blog-masthead">
             <div class="container">
                 <nav class="blog-nav">
-                    <a class="blog-nav-item active" href="#">Home</a>
-                    <a class="blog-nav-item" href="#">New features</a>
-                    <a class="blog-nav-item" href="#">Press</a>
-                    <a class="blog-nav-item" href="#">New hires</a>
-                    <a class="blog-nav-item" href="#">About</a>
+                    <a class="blog-nav-item active" href="{{ site.url }}">首页</a>
+                    <a class="blog-nav-item" href="#">待做</a>
+                    <a class="blog-nav-item" href="#">关于</a>
                 </nav>
             </div>
         </div>
         <div class="container">
             {{ content }}
         </div>
+        <footer class="blog-footer">
+            <p>
+                By <a href="https://github.com/night1008">night</a>.
+            </p>
+            <p>
+                <a href="#top">回到顶部</a>
+            </p>
+        </footer>
 　　　　
 　　</body>
 	<!-- Bootstrap core JavaScript
