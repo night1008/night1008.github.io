@@ -3,9 +3,14 @@ layout: default
 title: 我的Blog
 ---
 
-<h2>{{ page.title }}</h2>
-<p>最新文章</p>
-<div class="row">
+<div class="blog-header">
+	<h1 class="blog-title">{{ page.title }}</h1>
+	<p class="lead blog-description">
+		我的Blog
+	</p>
+</div>
+
+<div class="row" style="min-height:480px;">
 	<ul class="list-group">
 		{% for post in site.posts %}
 	　　　　<li class="list-group-item">
