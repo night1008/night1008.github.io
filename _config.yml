@@ -1,3 +1,3 @@
 baseurl: /night1008.github.io
-paginate: 1
+paginate: 10
 paginate_path: /page:num/
