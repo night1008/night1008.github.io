@@ -22,33 +22,43 @@ title: 我的Blog
 	<div class="col-md-12">
 	{% if paginator.total_pages > 1 %}
 		<ul class="pagination">
-			<li>
-				{% if paginator.previous_page %}
-				<a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; 上一页</a>
-				{% else %}
-				<span>&laquo; 上一页</span>
-				{% endif %}
-			</li>
+			{% if paginator.previous_page %}
+				<li>
+					<a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; 上一页</a>
+				</li>
+			{% else %}
+				<li class="disabled">
+					<a href="javascript:;">&laquo; 上一页</a>
+				</li>
+			{% endif %}
+			
 
 			{% for page in (1..paginator.total_pages) %}
-				<li>
 			    {% if page == paginator.page %}
-			     	<a href="javascript:;"><em>{{ page }}</em></a>
+			    	<li class="active">
+			     		<a href="javascript:;">{{ page }}</a>
+			     	</li>
 			    {% elsif page == 1 %}
-			      	<a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">{{ page }}</a>
+			      	<li>
+			      		<a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">{{ page }}</a>
+			      	</li>
+			      </li>
 			    {% else %}
-			      	<a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a>
+			    	<li>
+			      		<a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a>
+			      	</li>
 			    {% endif %}
-			    </li>
 			{% endfor %}
 
-			<li>
-				{% if paginator.next_page %}
-				    <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">下一页 &raquo;</a>
-				{% else %}
-				    <span>下一页 &raquo;</span>
-				{% endif %}
-			</li>
+			{% if paginator.next_page %}
+				<li>
+					<a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">下一页 &raquo;</a>
+				</li>
+			{% else %}
+				<li class="disabled">
+					<a href="javascript:;">下一页 &raquo;</a>
+				</li>
+			{% endif %}
 		</ul>
 	{% endif %}
 </div>
