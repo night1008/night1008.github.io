@@ -24,7 +24,7 @@ title: 我的Blog
 		<ul class="pagination">
 			<li>
 				{% if paginator.previous_page %}
-				<a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
+				<a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; 上一页</a>
 				{% else %}
 				<span>&laquo; 上一页</span>
 				{% endif %}
@@ -33,7 +33,7 @@ title: 我的Blog
 			{% for page in (1..paginator.total_pages) %}
 				<li>
 			    {% if page == paginator.page %}
-			     	<em>{{ page }}</em>
+			     	<a href="javascript:;"><em>{{ page }}</em></a>
 			    {% elsif page == 1 %}
 			      	<a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">{{ page }}</a>
 			    {% else %}
@@ -44,7 +44,7 @@ title: 我的Blog
 
 			<li>
 				{% if paginator.next_page %}
-				    <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Next &raquo;</a>
+				    <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">下一页 &raquo;</a>
 				{% else %}
 				    <span>下一页 &raquo;</span>
 				{% endif %}
