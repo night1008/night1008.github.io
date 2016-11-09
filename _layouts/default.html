@@ -26,16 +26,21 @@
             </div>
         </div>
         <div class="container" style="min-height:480px;">
-            <div class="blog-header">
-                <h1 class="blog-title">{{ page.title }}</h1>
-                <p class="lead blog-description">
-                    {{ page.description }}
-                </p>
-            </div>
-            
             <div class="row">
                 <div class="col-md-12">
-                    {{ content }}
+                    <div class="blog-header">
+                        <h1 class="blog-title">{{ page.title }}</h1>
+                        <p class="lead blog-description">
+                            {{ page.description }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="blog-body">
+                        {{ content }}
+                    </div>
                 </div>
             </div>
         </div>
