@@ -13,9 +13,9 @@
         <!-- custom core CSS -->
         <link href="{{'/assets/css/custom.css' | relative_url }}" rel="stylesheet">
 
-	　　<title>{{ page.title }}</title>
+        <title>{{ page.title }}</title>
 	</head>
-　　<body>
+    <body>
         <div id="top" class="blog-masthead">
             <div class="container">
                 <nav class="blog-nav">
@@ -26,7 +26,18 @@
             </div>
         </div>
         <div class="container" style="min-height:480px;">
-            {{ content }}
+            <div class="blog-header">
+                <h1 class="blog-title">{{ page.title }}</h1>
+                <p class="lead blog-description">
+                    {{ page.description }}
+                </p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    {{ content }}
+                </div>
+            </div>
         </div>
         <footer class="blog-footer">
             <p>
