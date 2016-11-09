@@ -1,44 +1,33 @@
 ---
 layout: default
 title: Mysql 知识
-description: ''
+description: mysql ...
 ---
 
-<div class="blog-header">
-	<h1 class="blog-title">{{ page.title }}</h1>
-	<p class="lead blog-description">
-		mysql ...
-	</p>
-</div>
+<h3> 数据库维护 </h3>
+<p> 
+	<b> ANALYZE TABLE tablename; </b> 用来检查表键是否正确 <br>
+	<b> CHECK TABLE tablename; </b> 用来检查表的问题 <br>
+	<b> OPTIMIZE TABLE tablename; </b> 用来回收被大量删除的表空间 <br>
+	<b>mysqld --help --safe-mode --version <b><br>
+	<h5>日志</h5>
+	<ol>
+		<li>错误日志</li>
+		<li>查询日志</li>
+		<li>二进制日志 <small>(记录更新过数据的所有语句)</small></li>
+		<li>缓慢查询日志</li>
+	</ol>
+</p>
+<hr>
 
-<div class="row">
-	<div class="col-md-12">
-		<h3> 数据库维护 </h3>
-		<p> 
-			<b> ANALYZE TABLE tablename; </b> 用来检查表键是否正确 <br>
-			<b> CHECK TABLE tablename; </b> 用来检查表的问题 <br>
-			<b> OPTIMIZE TABLE tablename; </b> 用来回收被大量删除的表空间 <br>
-			<b>mysqld --help --safe-mode --version <b><br>
-			<h5>日志</h5>
-			<ol>
-				<li>错误日志</li>
-				<li>查询日志</li>
-				<li>二进制日志 <small>(记录更新过数据的所有语句)</small></li>
-				<li>缓慢查询日志</li>
-			</ol>
-		</p>
-		<hr>
-
-		<h3>性能调优</h3>
-		<p>
-			查看当前设置：<br>
-			<b>SHOW VARIABLES;</b><br>
-			<b>SHOW STATUS;</b><br>
-			mysql 是一个多用户多线程的DBMS，某一任务执行缓慢，所有的任务都会执行缓慢。<br>
-			<b> SHOW PROCESSLIST; </b> <small>(显示所有的活动进程)</small> <br>
-			<b>EXPLAIN sql statement</b> <small>(解释如何执行sql语句)</small> <br>
-			不要在SELECT语句中使用太多的OR，可以用多条SELECT语句联合UNION <br>
-			LIKE 查询很慢<br>
-		</p>
-	</div>
-</div>
+<h3>性能调优</h3>
+<p>
+	查看当前设置：<br>
+	<b>SHOW VARIABLES;</b><br>
+	<b>SHOW STATUS;</b><br>
+	mysql 是一个多用户多线程的DBMS，某一任务执行缓慢，所有的任务都会执行缓慢。<br>
+	<b> SHOW PROCESSLIST; </b> <small>(显示所有的活动进程)</small> <br>
+	<b>EXPLAIN sql statement</b> <small>(解释如何执行sql语句)</small> <br>
+	不要在SELECT语句中使用太多的OR，可以用多条SELECT语句联合UNION <br>
+	LIKE 查询很慢<br>
+</p>

@@ -80,11 +80,10 @@ h6, .h6 {
  */
 
 .blog-header {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 10px 0;
 }
 .blog-title {
-  margin-top: 30px;
+  margin-top: 10px;
   margin-bottom: 0;
   font-size: 60px;
   font-weight: normal;
@@ -94,7 +93,7 @@ h6, .h6 {
   color: #999;
 }
 .blog-body {
-  background-color: #ccc;
+  
 }
 
 
