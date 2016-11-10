@@ -2,6 +2,7 @@
 layout: default
 title: 我的Blog
 description: 我的Blog
+active: index
 ---
 
 <ul class="list-group">
@@ -25,7 +26,6 @@ description: 我的Blog
 			</li>
 		{% endif %}
 		
-
 		{% for page in (1..paginator.total_pages) %}
 		    {% if page == paginator.page %}
 		    	<li class="active">
