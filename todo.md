@@ -2,27 +2,27 @@
 layout: default
 title: 待做
 active: todo
-permalink: todo
 ---
 
 ***
-# github pages
 
-# jekyllrb
+### github pages
 
-# ConfigParser
+### jekyllrb
 
-# pandas
+### ConfigParser
 
-# click
+### pandas
 
-# setuptools
+### click
 
-# git
+### setuptools
 
-# PEP8
+### git
 
-# sqlachemy
+### PEP8
 
-# mysql
+### sqlachemy
+
+### mysql
 	
