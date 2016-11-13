@@ -5,25 +5,14 @@ active: todo
 show_header: false
 ---
 
-***
-
-### github pages
-
-### jekyllrb
-
-### ConfigParser
-
-### pandas
-
-### click
-
-### setuptools
-
-### git
-
-### PEP8
-
-### sqlachemy
-
-### mysql
+1. github pages
+2. jekyllrb
+3. ConfigParser
+4. pandas
+5. click
+6.  setuptools
+7. git
+8. PEP8
+9. sqlachemy
+10. mysql
 
