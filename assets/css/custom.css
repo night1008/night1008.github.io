@@ -83,7 +83,6 @@ h6, .h6 {
   padding-top: 10px 0;
 }
 .blog-title {
-  margin-top: 10px;
   margin-bottom: 0;
   font-size: 40px;
   font-weight: normal;
@@ -93,7 +92,7 @@ h6, .h6 {
   color: #999;
 }
 .blog-body {
-
+  margin-top: 30px;
 }
 
 
