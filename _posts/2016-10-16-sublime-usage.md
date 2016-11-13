@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Sublime 使用
-description: aaaaaaa
+description: ''
 show_header: true
 ---
 
@@ -30,4 +30,7 @@ show_header: true
 > **Ctrl + Shift + Enter** 可以在当前行上面添加一行
 >
 > 选中多行后按 **Ctrl + ]** 可以增加缩进，按 **Ctrl + [** 可以减少缩进。（等价于Tab和Shift + Tab）
+
+### 使用
+> 保存事去除两边空格：User Settings 加上，```"trim_trailing_white_space_on_save": true```
 
