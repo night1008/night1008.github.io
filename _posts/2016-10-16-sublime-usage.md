@@ -2,6 +2,7 @@
 layout: default
 title: Sublime 使用
 description: aaaaaaa
+show_header: true
 ---
 
 ```

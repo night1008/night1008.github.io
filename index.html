@@ -3,6 +3,7 @@ layout: default
 title: 我的Blog
 description: 我的Blog
 active: index
+show_header: false
 ---
 
 <ul class="list-group">
@@ -25,7 +26,7 @@ active: index
 				<a href="javascript:;">&laquo; 上一页</a>
 			</li>
 		{% endif %}
-		
+
 		{% for page in (1..paginator.total_pages) %}
 		    {% if page == paginator.page %}
 		    	<li class="active">

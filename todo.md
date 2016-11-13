@@ -2,6 +2,7 @@
 layout: default
 title: 待做
 active: todo
+show_header: false
 ---
 
 ***
@@ -25,4 +26,4 @@ active: todo
 ### sqlachemy
 
 ### mysql
-	
+

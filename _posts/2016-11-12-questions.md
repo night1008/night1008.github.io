@@ -2,6 +2,7 @@
 layout: default
 title: 问题记录
 description: ''
+show_header: true
 ---
 
 ### 为什么可以用公钥加密，却用私钥解密
