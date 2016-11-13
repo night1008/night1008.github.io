@@ -16,8 +16,10 @@ show_header: true
 > 2. 模块只初始化一次
 > 3. import机制是线程安全的(在并发状态下模块也只有一个实例)
 >
->	``` import module;
->	    module.run() ```
+```
+	import module;
+	module.run()
+```
 
 
 ### mixni模式：
@@ -38,12 +40,12 @@ show_header: true
 > python的state库
 
 > 判断一个类是古典类还是新式类应该从其 __metaclass__ 上看，而不是从定义上看。
->  ```
->		class A:
->			pass
->		class B(object):
->			pass
-> ```
+```
+	class A:
+		pass
+	class B(object):
+		pass
+```
 
 ###	__init__()不是类的构造方法
 > 构造方法： __new__()，
