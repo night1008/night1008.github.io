@@ -40,6 +40,7 @@ show_header: true
 > python的state库
 
 > 判断一个类是古典类还是新式类应该从其 __metaclass__ 上看，而不是从定义上看。
+>
 ```
 	class A:
 		pass
