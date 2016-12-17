@@ -15,4 +15,8 @@ show_header: false
 8. PEP8
 9. sqlachemy
 10. mysql
+11. 豆瓣电影top250
+12. vue
+13. tensorflow
+14. npm
 
