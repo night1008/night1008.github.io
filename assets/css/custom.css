@@ -83,6 +83,7 @@ ul.posts {
   width: 42em;
   margin: 3em auto 2em auto;
   line-height: 1.5em;
+  min-height: 500px;
 }
 
 .title {
