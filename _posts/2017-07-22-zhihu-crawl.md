@@ -15,9 +15,10 @@ title: 知乎抓取
 
 在不实现登录的情况下，采用一个个注释掉headers里面参数的方式，发现起作用的 ```authorization```，当然加上 user-agent 会更好，有兴趣的可以试一下。
 
+以下是使用python的```requests```库实现的模拟请求。
+
 ```python
 # coding: utf-8
-import json
 import requests
 
 session = requests.Session()
