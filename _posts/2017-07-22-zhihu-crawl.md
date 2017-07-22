@@ -13,9 +13,9 @@ title: 知乎抓取
 
 如果不想通过模拟JS实现抓取的话，通过接口获取的方式也是不错的途径。
 
-在不实现登录的情况下，采用一个个注释掉headers里面参数的方式，发现起作用的 ```authorization```，当然加上 user-agent 会更好，有兴趣的可以试一下。
+在不实现登录的情况下，采用一个个注释掉```headers```里面参数的方式，发现起作用的 ```authorization```，当然加上```user-agent```会更好，有兴趣的可以试一下。
 
-以下是使用python的```requests```库实现的模拟请求。
+以下是使用python的```requests```库实现的模拟请求某一问题下的回答。
 
 ```python
 # coding: utf-8
