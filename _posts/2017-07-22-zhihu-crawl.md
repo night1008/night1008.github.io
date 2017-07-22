@@ -17,9 +17,7 @@ title: 知乎抓取
 
 ```python
 # coding: utf-8
-
 import json
-
 import requests
 
 session = requests.Session()
