@@ -1,2 +1,3 @@
 # night1008.github.io
-github blog
+
+https://night1008.github.io/
