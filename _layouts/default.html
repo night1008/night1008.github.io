@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="author" content="night1008">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
     	<!-- Bootstrap core CSS -->
     	<link href="{{'/assets/css/bootstrap.min.css' | relative_url }}" rel="stylesheet">
@@ -16,36 +17,15 @@
         <title>{{ page.title }}</title>
 	</head>
     <body>
-        <div id="top" class="blog-masthead">
-            <div class="container">
-                <nav class="blog-nav">
-                    <a class="blog-nav-item {% if page.active == 'index' %} active {% endif %}" href="{{ site.url }}">首页</a>
-                    <a class="blog-nav-item {% if page.active == 'todo' %} active {% endif %}" href="{{ site.baseurl }}/todo.html">待做</a>
-                    <a class="blog-nav-item {% if page.active == 'about' %} active {% endif %}" href="{{ site.baseurl }}/about.html">关于</a>
-                </nav>
+        <div class="site">
+            <div id="top" class="title">
+                <a href="/">Tom Preston-Werner</a>
+                <a class="extra" href="/">home</a>
             </div>
+
+            {{ content }}
         </div>
-        <div class="container blog-container">
-            {% if page.show_header %}
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="blog-header">
-                        <h1 class="blog-title">{{ page.title }}</h1>
-                        <p class="lead blog-description">
-                            {{ page.description }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="blog-body">
-                        {{ content }}
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <footer class="blog-footer">
             <p>
                 By <a href="https://github.com/night1008">night</a>.
@@ -54,7 +34,6 @@
                 <a href="#top">回到顶部</a>
             </p>
         </footer>
-　　　　
 　　</body>
 	<!-- Bootstrap core JavaScript
     ================================================== -->
