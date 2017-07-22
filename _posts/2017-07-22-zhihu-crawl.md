@@ -4,7 +4,7 @@ title: 知乎抓取
 ---
 
 {{ page.title }}
-<p class="meta">19 Jun 2015 - San Francisco</p>
+<p class="meta">22 Jun 2017</p>
 <hr>
 
 最近看见知乎的前端页面用React进行了重构，原本的爬虫已经不适用了，因此重新研究了页面上抓取。
