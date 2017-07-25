@@ -1,12 +1,12 @@
 ---
 layout: default
-comment_enable: true
+comments: true
 ---
 
 <div id="post">
 	{{ content }}
 </div>
 
-{% if comment_enbale %}
+{% if page.comments %}
 	{% include disqus.html %}
 {% endif %}
