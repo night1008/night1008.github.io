@@ -17,7 +17,7 @@ comments: true
 在不实现登录的情况下，采用一个个注释掉```headers```里面参数的方式，发现起作用的 ```authorization```，当然加上```user-agent```会更好，有兴趣的可以试一下。
 
 以下是使用python的```requests```库实现的模拟请求某一问题下的回答。
-更具体的实现可看项目[django_zhihu](https://github.com/night1008/django_zhihu)。
+更具体的实现可看项目[django_zhihu](https://github.com/night1008/django_zhihu){:target="_blank"}。
 
 ```python
 # coding: utf-8
