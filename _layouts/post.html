@@ -1,14 +1,11 @@
 ---
 layout: default
-comments: true
 ---
 
 <div id="post">
 	{{ content }}
 </div>
 
----- {{ comments }}
-++++ {{ page.commments }}
 {% if page.comments %}
 	{% include disqus.html %}
 {% endif %}

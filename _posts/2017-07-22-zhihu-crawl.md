@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 知乎抓取
+comments: true
 ---
 
 {{ page.title }}
