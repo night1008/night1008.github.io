@@ -42,7 +42,9 @@ s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<noscript>
+Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
 ```
 
 6. 在博客内容文件里面启动评论并加载，就可以看到评论插件了。
@@ -55,7 +57,7 @@ comments: true
 ---
 
 {% if page.comments %} 
-	{% indclude disqus.html %}
+	{% include disqus.html %}
 {% endif %}
 ```
 
