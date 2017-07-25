@@ -14,9 +14,9 @@ comments: true
 
 1. 注册个[Disqus](https://disqus.com/profile/signup/){:target="_blank"} 的账号，
 
-2. 创建自己的[Disqus新站](https://disqus.com/admin/create/){:target="_blank"} ，
+2. 创建自己的[Disqus新站](https://disqus.com/admin/create/){:target="_blank"}，
 
-3. 选择Disqus的套餐 ```https://<your_shortname>.disqus.com/admin/install/subscription/```，一般选非商业的免费套餐就够用了，
+3. 选择Disqus的套餐```https://<your_shortname>.disqus.com/admin/install/subscription/```，一般选非商业的免费套餐就够用了，
 
 4. 进行博客网站模板语言选择 ```https://<your_shortname>.disqus.com/admin/install/```
 ，我使用的是默认的Jekyll（根据自己的博客平台进行选择）， ```https://<your_shortname>.disqus.com/admin/install/platforms/jekyll/```
@@ -47,17 +47,7 @@ Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">
 </noscript>
 ```
 
-6. 在博客内容文件里面启动评论并加载，就可以看到评论插件了。
+最后在博客内容文件里面启动评论并加载，就可以看到评论插件了。
 
-```
----
-layout: default
-comments: true
-# other options
----
-
-{% if page.comments %} 
-	{% include disqus.html %}
-{% endif %}
-```
+更加详细的可见[Disqus帮助文档](https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-){:target="_blank"}
 
