@@ -16,16 +16,12 @@ comments: true
 
 2. 创建自己的[Disqus新站](https://disqus.com/admin/create/){:target="_blank"}，
 
-3. 选择Disqus的套餐
-
-	```https://<your_shortname>.disqus.com/admin/install/subscription/```，
+3. 选择Disqus的套餐 <br> ```https://<your_shortname>.disqus.com/admin/install/subscription/```，
 	一般选非商业的免费套餐就够用了，
 
 4. 进行博客网站模板语言选择 
 	```https://<your_shortname>.disqus.com/admin/install/```，
-	我使用的是默认的Jekyll（根据自己的博客平台进行选择），
-	 
-	```https://<your_shortname>.disqus.com/admin/install/platforms/jekyll/```
+	我使用的是默认的Jekyll（根据自己的博客平台进行选择），<br> ```https://<your_shortname>.disqus.com/admin/install/platforms/jekyll/```
 
 5. 把```https://<your_shortname>.disqus.com/admin/install/platforms/universalcode/```生成的插件代码复制到你想要的位置，比如单独创建个文件 ```disqus.html```
 
