@@ -7,6 +7,8 @@ comments: true
 	{{ content }}
 </div>
 
+{{ comments }}
+{{ page.commments }}
 {% if page.comments %}
 	hello
 	{% include disqus.html %}
