@@ -38,14 +38,13 @@ INSERT INTO user (name) VALUES ('a5');
 
 以下为插入结果
 
-```
-id		name
-1		a1
-1000	a2
-1001	a3
-100		a4
-1002	a5
-```
+| id | name |
+| :------| :------|
+| 1    | a1 |
+| 1000 | a2 |
+| 1001 | a3 |
+| 100  | a4 |
+| 1002 | a5 |
 
 说明mysql的自增ID策略为在目前最大的ID上进行自增。
 
@@ -76,14 +75,14 @@ INSERT INTO "user" (name) VALUES ('a5');
 
 以下为插入结果
 
-```
-id		name
-1		a1
-1000	a2
-2		a3
-100		a4
-3		a5
-```
+| id | name |
+| :------| :------|
+| 1   | a1 |
+| 1000 | a2 |
+| 2    | a3 |
+| 100    | a4 |
+| 3    | a5 |
+
 
 倘若这时手动插入id为4的记录，之后再默认插入时就会报```duplicate key value violates unique constraint "user_pkey"```的错误。
 
