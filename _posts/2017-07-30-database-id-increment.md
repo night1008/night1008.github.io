@@ -1,7 +1,7 @@
 ---
 layout: post
-keywords: database id,increment, 数据库ID自增策略
-description: database id,increment, 数据库ID自增策略
+keywords: database id,increment,数据库ID自增策略
+description: database id,increment,数据库ID自增策略
 title: 数据库ID自增策略
 comments: true
 ---

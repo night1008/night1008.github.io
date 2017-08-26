@@ -1,7 +1,7 @@
 ---
 layout: post
-keywords: github-pages, disqus, Github Pages 添加 Disqus 评论插件
-description: github-pages, disqus, Github Pages 添加 Disqus 评论插件
+keywords: github-pages,disqus,Github Pages 添加 Disqus 评论插件
+description: github-pages,disqus,Github Pages 添加 Disqus 评论插件
 title: Github Pages 添加 Disqus 评论插件
 comments: true
 ---
