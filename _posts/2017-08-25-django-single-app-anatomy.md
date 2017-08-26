@@ -14,8 +14,11 @@ comments: true
 django-admin startproject mysite
 ```
 
-[图片测试](/assets/img/2017-08-25/manage.png)
+![manage.py](/assets/img/2017-08-25/manage.png)
 
+![settings.py](/assets/img/2017-08-25/settings.png)
+
+![wsgi.py](/assets/img/2017-08-25/wsgi.png)
 
 ```
 mysite/
