@@ -1,5 +1,7 @@
 ---
 layout: post
+keywords: django,single-app, Django单一APP文件结构调整
+description: django,single-app, Django单一APP文件结构调整
 title: Django单一APP文件结构调整
 comments: true
 ---
@@ -32,7 +34,6 @@ mysite/
 
 ```
 cd mysite
-
 python manage.py startapp polls
 ```
 
@@ -47,15 +48,15 @@ mysite/
         urls.py
         wsgi.py
 
-	polls/
-	    __init__.py
-	    admin.py
-	    apps.py
-	    migrations/
-	        __init__.py
-	    models.py
-	    tests.py
-	    views.py
+    polls/
+        __init__.py
+        admin.py
+        apps.py
+        migrations/
+            __init__.py
+        models.py
+        tests.py
+        views.py
 ```
 
 接下来就是如何进行文件结构的调整了。
@@ -76,7 +77,7 @@ rm __init__.py
 
 ![wsgi.py](/assets/img/2017-08-25/wsgi.png)
 
-把polls的目录名称改为web,
+把polls的目录名称改为web, 不改也无所谓，下面记得调整过来就行。
 
 最后生成的目录如下，
 
@@ -87,24 +88,26 @@ mysite/
     urls.py
     wsgi.py
  
-	web/
-	    __init__.py
-	    admin.py
-	    apps.py
-	    migrations/
-	        __init__.py
-	    models.py
-	    tests.py
-	    views.py
+    web/
+        __init__.py
+        admin.py
+        apps.py
+        migrations/
+            __init__.py
+        models.py
+        tests.py
+        views.py
 ```
 
 如果想在项目内使用celery呢，也是需要做些调整的。
 
-往```settings.py```添加一些celery的基本设置，还有把app添加到settings.py的INSTALLED_APPS里。
+往```settings.py```添加一些celery的基本设置，还有把app添加到```settings.py```的```INSTALLED_APPS```里。
 
 ![celery](/assets/img/2017-08-25/celery.png)
 
 注意不能再创建```celery.py```的文件了。
+
+celery_app.py
 
 ```python
 from __future__ import absolute_import, unicode_literals
@@ -131,6 +134,8 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 ```
+
+tasks.py
 
 ```python
 # coding:utf-8
@@ -161,19 +166,23 @@ mysite/
     wsgi.py
     celery_app.py
  
-	web/
-	    __init__.py
-	    admin.py
-	    apps.py
-	    migrations/
-	        __init__.py
-	    models.py
-	    tasks.py
-	    tests.py
-	    views.py
+    web/
+        __init__.py
+        admin.py
+        apps.py
+        migrations/
+            __init__.py
+        models.py
+        tasks.py
+        tests.py
+        views.py
 ```
 
+celery的运行结果如下，
+
 ![celery-result](/assets/img/2017-08-25/celery-result.png)
+
+大功告成～
 
 
 
