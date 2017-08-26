@@ -178,6 +178,10 @@ mysite/
         views.py
 ```
 
+```
+celery worker -A celery_app -l info
+```
+
 celery的运行结果如下，
 
 ![celery-result](/assets/img/2017-08-25/celery-result.png)
