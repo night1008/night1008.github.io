@@ -35,6 +35,10 @@ brew-php-switcher 71
 brew install composer
 composer global require "laravel/installer"
 export PATH=$PATH:$HOME/.composer/vendor/bin
+(或者
+echo 'export PATH=/usr/local/bin:$PATH' >>~/.bash_profile
+source ~/.bash_profile
+)
 laravel new blog
 ```
 
@@ -43,6 +47,8 @@ laravel new blog
 ```
 curl -sS https://getcomposer.org/installer | php
 php composer.phar create-project --prefer-dist laravel/laravel blog
+mv composer.phar to blog
+php composer.phar install
 ```
 
 建议采用第二种，比较方便。
