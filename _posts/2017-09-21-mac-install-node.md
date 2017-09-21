@@ -1,4 +1,4 @@
-2017-09-21---
+---
 layout: post
 keywords: mac,node
 description: how to install node on mac
