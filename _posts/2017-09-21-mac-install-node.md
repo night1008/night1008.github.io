@@ -15,10 +15,15 @@ comments: true
 ```
 brew install nvm
 mkdir ~/.nvm
+```
+
+其次, 需要在shell的配置文件(~/.bashrc, ~/.profile, or ~/.zshrc)中添加如下内容：
+
+
+```
+# for nvm
 export NVM_DIR=~/.nvm
 source $(brew --prefix nvm)/nvm.sh
-source ~/.bash_profile
-echo $NVM_DIR
 ```
 
 目前node的LTS上v6.11.3
