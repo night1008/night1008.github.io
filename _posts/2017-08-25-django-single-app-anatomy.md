@@ -87,7 +87,7 @@ mysite/
     settings.py
     urls.py
     wsgi.py
- 
+
     web/
         __init__.py
         admin.py
@@ -165,7 +165,7 @@ mysite/
     urls.py
     wsgi.py
     celery_app.py
- 
+
     web/
         __init__.py
         admin.py
@@ -187,6 +187,42 @@ celery的运行结果如下，
 ![celery-result](/assets/img/2017-08-25/celery-result.png)
 
 大功告成～
+
+补充，如果想把tasks拆分为多个文件，如以下目录
+```
+mysite/
+    manage.py
+    settings.py
+    urls.py
+    wsgi.py
+    celery_app.py
+
+    web/
+        __init__.py
+        admin.py
+        apps.py
+        migrations/
+            __init__.py
+        models.py
+        tasks/
+            __init__.py
+            task1.py
+            tasks2.py
+        tests.py
+        views.py
+```
+
+需要用到
+```python
+# Load task modules from all registered Django app configs.
+# app.autodiscover_tasks()
+for root, dirs, files in os.walk('web/tasks'):
+    for file in files:
+        if file.startswith('__') or file.endswith('.pyc'):
+            continue
+        file = file[:-3]
+        app.autodiscover_tasks(['web.tasks'], related_name=file)
+```
 
 
 
