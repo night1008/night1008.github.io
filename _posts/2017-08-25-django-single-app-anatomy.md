@@ -214,14 +214,27 @@ mysite/
 
 需要用到
 ```python
+import os
+from celery import Celery
+from django.conf import settings
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
+
+app = Celery('celery')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+
 # Load task modules from all registered Django app configs.
 # app.autodiscover_tasks()
-for root, dirs, files in os.walk('web/tasks'):
-    for file in files:
-        if file.startswith('__') or file.endswith('.pyc'):
-            continue
-        file = file[:-3]
-        app.autodiscover_tasks(['web.tasks'], related_name=file)
+for app_name in settings.INSTALLED_APPS:
+    if app_name.startswith('django'):
+        continue
+    for root, dirs, files in os.walk(app_name + '/tasks'):
+        for file in files:
+            if file.startswith('__') or file.endswith('.pyc') or not file.endswith('.py'):
+                continue
+            file = file[:-3]
+            app.autodiscover_tasks([app_name + '.tasks'], related_name=file)
+
 ```
 
 
