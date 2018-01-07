@@ -16,7 +16,6 @@ App store 内下载Xcode
 
 ```
 安装homebrew:
-
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.bash_profile
@@ -24,7 +23,6 @@ echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.bash_profile
 
 ```
 安装python:
-
 由于系统自带的python版本是2.7.10，因此2.7.+版本的需要另外安装
 
 python -V
@@ -50,7 +48,6 @@ python3 -V
 
 ```
 安装git:
-
 brew install git
 
 git config --global user.name “yourname”
@@ -60,7 +57,6 @@ git config --global user.email “youremail”
 
 ```
 安装node:
-
 brew install node
 ```
 
@@ -79,7 +75,6 @@ psql -d postgres
 
 ```
 安装php:
-
 由于系统自带的php版本是7.1.7，因此7.1.+版本的需要另外安装
 
 php —version
@@ -102,7 +97,6 @@ php —version
 
 
 独立安装php扩展:
-
 brew install homebrew/php(可选， 可查看所有扩展)
 
 brew install homebrew/php/php71-pdo-pgsql
@@ -114,7 +108,6 @@ vim /usr/local/etc/php/7.1/conf.d/ext-pdo_pgsql.ini
 
 ```
 安装redis:
-
 brew install redis
 
 brew service start redis
@@ -122,7 +115,6 @@ brew service start redis
 
 ```
 安装iTerm2 + ZSH:
-
 http://www.iterm2.com/downloads.html
 
 brew install zsh zsh-completions
@@ -134,7 +126,6 @@ chsh -s /usr/local/bin/zsh
 
 ```
 安装elasticsearch:
-
 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
 brew install elasticsearch
@@ -143,6 +134,7 @@ brew install elasticsearch
 ```
 
 ```
+安装sublimetext:
 https://www.sublimetext.com/3
 
 ln -sv "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
@@ -157,7 +149,6 @@ References:
 }
 
 Packages:
-
 All Autocomplete
 
 Python PEP8 Autoformat
@@ -165,7 +156,6 @@ Python PEP8 Autoformat
 
 ```
 其他软件：
-
 https://github.com/shadowsocks/shadowsocks-iOS/releases
 
 https://www.google.cn/chrome/browser/desktop/index.html
