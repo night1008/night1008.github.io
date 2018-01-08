@@ -58,6 +58,11 @@ git config --global user.email “youremail”
 ```
 安装node:
 brew install node
+node -v
+
+brew install n
+sudo n lts
+node -v
 ```
 
 ```
