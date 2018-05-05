@@ -1,8 +1,8 @@
 ---
 layout: post
-keywords: git,revert
-description: how to revert git modified and unstaged file
-title: how to revert git modified and unstaged file
+keywords: git, revert, 撤销已修改的文件
+description: how to revert git modified and unstaged file, Git如何撤销已修改的文件
+title: Git如何撤销已修改的文件
 comments: true
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: post
-keywords: python,list,tuple,mutable,unmutable
-description: the diff between python mutable and unmutable
+keywords: python, list, tuple, mutable, unmutable, 可变对象, 不可变对象
+description: the diff between python mutable and unmutable, python中可变对象和不可变对象的区别
 title: python中可变对象和不可变对象的区别
 comments: true
 ---

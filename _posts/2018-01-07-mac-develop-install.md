@@ -1,7 +1,7 @@
 ---
 layout: post
-keywords: mac,develop,install
-description: install develop software on mac
+keywords: mac, develop, install, 安装开发环境
+description: install develop software on mac, mac上安装工作用的开发环境
 title: mac上安装工作用的开发环境
 comments: true
 ---

@@ -1,8 +1,8 @@
 ---
 layout: post
-keywords: sanguozhi, miniprogram
-description: thought of sanguozhi miniprogram
-title: thought of sanguozhi miniprogram
+keywords: sanguozhi, miniprogram, 三国志, 名字, 名字大全, 小程序
+description: thought of sanguozhi miniprogram, 三国志名字大全小程序想法记录
+title: 三国志名字大全小程序想法记录
 comments: true
 ---
 
@@ -25,15 +25,19 @@ comments: true
 小程序的功能主要包括：
 
 ### 人名搜索
+
 支持简体和繁体版本的展示，能够单独搜索名字和字，以列表的形式展示
 
 ### 简单数据分析
+
 解析的全部人名，统计出现次数最多（前十）的字，和出现次数最多（前十）的姓，以柱状体的形式展示
 
 ### 提供人物详细信息
+
 通过`维基百科`提供的人物信息接口，展示人物的详细信息，以弹出层的形式展示
 
 ### 用户人名熟悉程度测试
+
 随机出现一些人物名字，让用户填写其字，亦或反之，测试用户对人名的熟悉
 
 其他想法（思考中...）

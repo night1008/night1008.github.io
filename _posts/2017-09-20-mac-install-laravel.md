@@ -1,7 +1,7 @@
 ---
 layout: post
-keywords: mac,laravel
-description: how to install laravel on mac
+keywords: mac,laravel, 安装laravel
+description: how to install laravel on mac, 如何在mac上安装laravel
 title: 如何在mac上安装laravel
 comments: true
 ---

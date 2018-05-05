@@ -1,7 +1,7 @@
 ---
 layout: post
-keywords: django,single-app,Django单一APP文件结构调整
-description: django,single-app,Django单一APP文件结构调整
+keywords: django, single-app, Django单一APP文件结构调整
+description: django, single-app, Django单一APP文件结构调整
 title: Django单一APP文件结构调整
 comments: true
 ---
