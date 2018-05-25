@@ -31,7 +31,7 @@ $expire = fread($handle, 10);
 fclose($handle);
 
 if (time() >= $expire) {
-    unlink($cachefile);
+    unlink($file);
 }
 ```
 
