@@ -6,10 +6,6 @@ title: 如何清理laravel过期文件缓存
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">25 May 2018</p>
-<hr>
-
 laravel项目使用文件进行缓存的，除非包含以下情况，不然是不会删除缓存文件的
 
 1. Cache::forget('xxx')

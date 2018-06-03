@@ -6,10 +6,6 @@ title: 如何在mac上安装laravel
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">20 Sep 2017</p>
-<hr>
-
 由于mac自带的php版本上5.6，目前最新的版本上7.1，因此先要升级php版本。
 
 ```

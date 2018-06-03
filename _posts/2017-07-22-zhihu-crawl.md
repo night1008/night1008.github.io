@@ -6,10 +6,6 @@ title: 知乎抓取
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">22 Jun 2017</p>
-<hr>
-
 最近看见知乎的前端页面用React进行了重构，原本的爬虫已经不适用了，因此重新研究了页面上抓取。
 
 通过使用React，势必会暴露一些数据接口。

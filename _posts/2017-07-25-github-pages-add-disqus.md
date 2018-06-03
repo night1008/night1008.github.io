@@ -6,10 +6,6 @@ title: Github Pages 添加 Disqus 评论插件
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">25 Jun 2017</p>
-<hr>
-
 想给自己的博客加上评论插件方便交流，发现Disqus还不错，于是就把它加上。
 
 下面记录一下添加流程。

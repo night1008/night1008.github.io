@@ -6,10 +6,6 @@ title: mac上安装工作用的开发环境
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">07 Jan 2018</p>
-<hr>
-
 ```
 App store 内下载Xcode
 ```

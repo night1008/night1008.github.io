@@ -6,10 +6,6 @@ title: python中可变对象和不可变对象的区别
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">25 Oct 2017</p>
-<hr>
-
 对于可变对象，比如列表，+= 运算符就地修改列表。
 
 ```python

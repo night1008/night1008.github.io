@@ -6,10 +6,6 @@ title: Git如何撤销已修改的文件
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">04 Feb 2018</p>
-<hr>
-
 ```
 revert modified file
 git checkout -- $(git ls-files -m)
@@ -17,4 +13,9 @@ git checkout -- $(git ls-files -m)
 revert unstaged file
 git clean -nf
 git clean -df
+```
+
+```
+git reset --hard <revision_id_of_last_known_good_commit>
+git push --force origin develop
 ```

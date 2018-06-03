@@ -6,10 +6,6 @@ title: 数据库ID自增策略
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">30 Jun 2017</p>
-<hr>
-
 最近做数据库迁移时要保证旧数据库的数据ID也要迁移到新数据库，所以需要了解一下数据库ID的自增策略。
 
 选取mysql和postgrep进行测试。

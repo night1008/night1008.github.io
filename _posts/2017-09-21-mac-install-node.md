@@ -6,10 +6,6 @@ title: 如何在mac上安装node
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">21 Sep 2017</p>
-<hr>
-
 首先安装nvm
 
 ```

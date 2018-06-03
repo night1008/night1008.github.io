@@ -6,11 +6,6 @@ title: 安装Python Shadowsocks
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">06 May 2018</p>
-<hr>
-
-
 承接上一篇文章，为了使用`维基百科`的接口，因为国内封锁了相关域名，导致无法使用，
 
 又不想使用`百度百科`的相关链接，感觉不够简要，所以就使用自己搭建的VPN进行代理

@@ -6,10 +6,6 @@ title: Django单一APP文件结构调整
 comments: true
 ---
 
-{{ page.title }}
-<p class="meta">25 Aug 2017</p>
-<hr>
-
 很多时候用Django开发Web应用的时候只会有单一的app，因为Django默认的文件结构导致命名上的烦恼，结合网上看到的资料，写一下关于单一app如何进行文件结构的调整。
 
 首先，创建一个Django的project，
