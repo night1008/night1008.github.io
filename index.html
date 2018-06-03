@@ -16,7 +16,7 @@ title: 首页
 
 {% if paginator.total_pages > 1 %}
 	{% if paginator.previous_page %}
-		<a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}" class="btn">
+		<a href="{{ paginator.previous_page_path }}" class="btn">
 			&laquo; 上一页
 		</a>
 	{% else %}
