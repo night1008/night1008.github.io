@@ -6,12 +6,13 @@ layout: default
 <h1>{{ page.title }}</h1>
 <small>{{ page.date | date: "%-d %B %Y" }}</small>
 <hr>
+<br>
 
 {{ content }}
 
-{% if page.tags %}
-  <small>tags: <em>{{ page.tags | join: "</em> - <em>" }}</em></small>
-{% endif %}
+<!-- {% if page.tags %}
+    <small>tags: <em>{{ page.tags | join: "</em> - <em>" }}</em></small>
+{% endif %} -->
 
 {% if page.comments %}
     {% include disqus.html %}
