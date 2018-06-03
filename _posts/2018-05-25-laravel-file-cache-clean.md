@@ -25,7 +25,7 @@ laravel项目使用文件进行缓存的，除非包含以下情况，不然是�
 对缓存目录进行文件遍历(注意使用迭代器)，缓存文件的前10位是到期时间戳，核心代码如下
 
 
-```
+```php
 $handle = fopen($file, "r");
 $expire = fread($handle, 10);
 fclose($handle);

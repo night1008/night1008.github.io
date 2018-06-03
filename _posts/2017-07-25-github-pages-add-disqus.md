@@ -24,10 +24,10 @@ comments: true
 4. 进行博客网站模板语言选择	https://```<your_shortname>```.disqus.com/admin/install/，
 	我使用的是默认的Jekyll（根据自己的博客平台进行选择），https://```<your_shortname>```.disqus.com/admin/install/platforms/jekyll/
 
-5. 把 https://```<your_shortname>```.disqus.com/admin/install/platforms/universalcode/ 	
+5. 把 https://```<your_shortname>```.disqus.com/admin/install/platforms/universalcode/
 	生成的插件代码复制到你想要的位置，比如单独创建个文件 ```disqus.html```
 
-```
+```html
 <div id="disqus_thread"></div>
 <script>
 /**
@@ -54,4 +54,3 @@ Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">
 最后在博客内容文件里面启动评论并加载，就可以看到评论插件了。
 
 更加详细的可见[Disqus帮助文档](https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-){:target="_blank"}。
-

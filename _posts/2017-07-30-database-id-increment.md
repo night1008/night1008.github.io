@@ -18,7 +18,7 @@ comments: true
 
 创建个user表，
 
-```
+```sql
 CREATE TABLE `user` (
   	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   	`name` varchar(256) DEFAULT NULL,
@@ -57,7 +57,7 @@ INSERT INTO user (name) VALUES ('a5');
 再说postgrep,
 创建个user表，
 
-```
+```sql
 CREATE TABLE "user" (
 	id SERIAL NOT NULL,
 	name VARCHAR,
