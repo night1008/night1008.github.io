@@ -1,6 +1,8 @@
+title: night1008 blog
+description: night1008 blog
 baseurl: /night1008.github.io
 paginate: 10
 paginate_path: /page:num/
-# remote_theme: daattali/beautiful-jekyll
-
+show_downloads: false
+google_analytics: UA-120218346-1
 theme: jekyll-theme-hacker
