@@ -2,7 +2,7 @@ title: Night1008
 description: Night1008 blog
 baseurl: /night1008.github.io
 paginate: 10
-paginate_path: /page:num/
+paginate_path: /page/num
 show_downloads: false
 google_analytics: UA-120218346-1
 theme: jekyll-theme-hacker
