@@ -41,10 +41,12 @@ laravel new blog
 其二，局部安装laravel，需要先下载composer.phar
 
 ```
-curl -sS https://getcomposer.org/installer | php
+curl -sS https://getcomposer.org/installer | php (或者 php -r "readfile('https://getcomposer.org/installer');" | php)
 php composer.phar create-project --prefer-dist laravel/laravel blog
 mv composer.phar to blog
 php composer.phar install
+php artisan key:generate
+php artisan serve
 ```
 
 建议采用第二种，比较方便。

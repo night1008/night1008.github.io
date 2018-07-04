@@ -23,7 +23,7 @@ echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.bash_profile
 
 python -V
 
-brew  install python
+brew install python
 
 python2 -V
 
