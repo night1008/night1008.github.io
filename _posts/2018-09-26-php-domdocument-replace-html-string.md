@@ -20,7 +20,7 @@ foreach ($nodes as $node) {
     $fragment = $node->ownerDocument->createDocumentFragment();
     $fragment->appendXML('<div>replace<span>replace</span></div>');
     // $node->parentNode->replaceChild($fragment, $node);
-    $parent = $parent->parentNode;
+    $parent = $node->parentNode;
     while ($parent->nodeName != 'p') {
         $parent = $parent->parentNode;
     }
