@@ -19,7 +19,8 @@ $nodes = $crawler->filter('a');
 foreach ($nodes as $node) {
     $fragment = $node->ownerDocument->createDocumentFragment();
     $fragment->appendXML('<div>replace<span>replace</span></div>');
-    $node->parentNode->replaceChild($fragment, $node);
+    // $node->parentNode->replaceChild($fragment, $node);
+    $parent = $parent->parentNode;
     while ($parent->nodeName != 'p') {
         $parent = $parent->parentNode;
     }
