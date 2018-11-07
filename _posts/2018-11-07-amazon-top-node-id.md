@@ -11,15 +11,13 @@ comments: true
 
 拿印度站来说，
 
-首先，进入
->  https://www.amazon.in/bestsellers，
+首先，进入 https://www.amazon.in/bestsellers，
 
 然后进入各个顶级品类的榜单页面，任意选取一个商品进入其详情页，
 
 如果商品详情页顶部包含顶级品类的面包屑，其href中就可以得到顶级品类的node_id
 
-比如进入
-> https://www.amazon.in/Pampers-Diapers-Pants-Medium-Count/dp/B07DP24NSR/ref=zg_bs_baby_1?_encoding=UTF8&psc=1
+比如进入 https://www.amazon.in/Pampers-Diapers-Pants-Medium-Count/dp/B07DP24NSR/ref=zg_bs_baby_1?_encoding=UTF8&psc=1
 
 ![amazon-baby](/assets/img/2018-11-07/amazon-baby.png)
 
