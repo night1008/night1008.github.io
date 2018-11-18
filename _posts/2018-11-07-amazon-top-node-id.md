@@ -11,7 +11,7 @@ comments: true
 
 拿印度站来说，
 
-首先，进入 https://www.amazon.in/bestsellers，
+首先，进入 https://www.amazon.in/bestsellers
 
 然后进入各个顶级品类的榜单页面，任意选取一个商品进入其详情页，
 
