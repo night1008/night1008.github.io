@@ -56,6 +56,6 @@ can't load package: package github.com/golang/lint/golint: cannot find package "
     /Users/night/go/src/github.com/golang/lint/golint (from $GOPATH)
 ```
 
-在`$GOPATH/src/github.com`目录下执行，`cp -R ../golang.org/x/lint`即可。
+在`$GOPATH/src/github.com`目录下执行，`cp -R ../golang.org/x/lint .`即可。
 
 重启vscode即可看到go插件安装成功。
