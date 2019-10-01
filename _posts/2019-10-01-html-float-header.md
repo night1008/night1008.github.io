@@ -6,7 +6,7 @@ title: 实现页面顶栏滚动浮现
 comments: true
 ---
 
-页面滚动的时候，顶部的header能够替换成其他的内容，在 (Kevin Blog)[https://zhowkev.in/2017/02/28/ri-ben-de-ba-ge-shen-mei-yi-shi-chan-pin-she-ji-mei-xue-de-kua-jie-shu-dan/] 的博客里面看到不错的实现方式，
+页面滚动的时候，顶部的header能够替换成其他的内容，在[Kevin Blog](https://zhowkev.in/2017/02/28/ri-ben-de-ba-ge-shen-mei-yi-shi-chan-pin-she-ji-mei-xue-de-kua-jie-shu-dan/){:target="_blank"}的博客里面看到不错的实现方式，
 在此记录一下，留以后用。
 
 ```html
