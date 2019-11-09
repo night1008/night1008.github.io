@@ -1,5 +1,7 @@
 title: Night1008
-description: ''
+name: Night1008
+description: Night1008's blog
+url: http://night1008.github.io
 baseurl: /night1008.github.io
 paginate: 10
 paginate_path: /page/:num
