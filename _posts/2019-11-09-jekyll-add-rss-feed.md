@@ -6,6 +6,8 @@ title: 为Jekyll博客添加RSS feed订阅功能
 comments: true
 ---
 
+{% raw %}
+
 ### 1.确保_config.yml文件中有下列属性：
 
 ```
@@ -48,7 +50,9 @@ layout: none
 在你网站的合适地方添加如下代码：
 
 ```html
-<a href="{{ site.url }}/feed.xml">RSS订阅</a>
+<a href="{ site.url }/feed.xml">RSS订阅</a>
 ```
+
+{% endraw %}
 
 > 若要使用，请把 {} 全部替换成 {{}}，还有打开对{% for post in site.posts limit:10 %}的注释
