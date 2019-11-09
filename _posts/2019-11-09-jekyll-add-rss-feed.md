@@ -1,4 +1,26 @@
 ---
+layout: post
+keywords: jekyll,rss,feed
+description: 为Jekyll博客添加RSS feed订阅功能
+title: 为Jekyll博客添加RSS feed订阅功能
+comments: true
+---
+
+
+1. 确保_config.yml文件中有下列属性：
+
+```
+name:         blog Name
+description:  A description for your blog
+url:          http://your-blog-url.com
+```
+
+这些值{{ site.name }}，{{ site.description }}，{{ site.url }}会在你的feed文件里用到。
+
+2. 在网站根目录下添加 feed.xml
+
+```xml
+---
 layout: none
 ---
 
@@ -20,3 +42,12 @@ layout: none
 		{% endfor %}
 	</channel>
 </rss>
+```
+
+3. 发布
+
+在你网站的合适地方添加如下代码：
+
+```html
+<a href="{{ site.url }}/feed.xml">RSS订阅</a>
+```
