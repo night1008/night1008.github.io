@@ -2,7 +2,7 @@ title: Night1008
 name: Night1008
 description: Night1008's blog
 url: http://night1008.github.io
-baseurl: /night1008.github.io
+baseurl: /
 paginate: 10
 paginate_path: /page/:num
 show_downloads: false
