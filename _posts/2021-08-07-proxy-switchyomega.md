@@ -1,8 +1,8 @@
 ---
 layout: post
 keywords: Proxy SwitchyOmega
-description: Proxy SwitchyOmega 设置
-title: Proxy SwitchyOmega 设置
+description: Proxy SwitchyOmega设置
+title: Proxy SwitchyOmega设置
 comments: true
 ---
 
@@ -12,11 +12,11 @@ comments: true
 
 下面记录下如何配置。
 
-1. 设置代理服务器，如图所示，
+1. 设置代理服务器,如图所示，
 
 ![proxy.jpg](/assets/img/2021-08-07/proxy.jpg)
 
-2. 设置自动切换规则，缩图所示，
+2. 设置自动切换规则，如图所示，
 
 ![auto-switch.jpg](/assets/img/2021-08-07/auto-switch.jpg)
 
