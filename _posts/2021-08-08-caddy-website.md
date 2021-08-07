@@ -1,8 +1,8 @@
 ---
 layout: post
 keywords: caddy, domain, https, website
-description: 如何使用caddy快速构建包含https的站点
-title: 如何使用caddy快速构建包含https的站点
+description: 使用caddy快速构建包含https站点
+title: 使用caddy快速构建包含https站点
 comments: true
 ---
 
