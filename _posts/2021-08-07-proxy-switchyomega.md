@@ -12,11 +12,11 @@ comments: true
 
 下面记录下如何配置。
 
-1. 设置代理服务器,如图所示，
+#### 设置代理服务器
 
 ![proxy.jpg](/assets/img/2021-08-07/proxy.jpg)
 
-2. 设置自动切换规则，如图所示，
+#### 设置自动切换规则
 
 ![auto-switch.jpg](/assets/img/2021-08-07/auto-switch.jpg)
 
@@ -24,4 +24,4 @@ comments: true
 
 被墙PAC地址为：https://raw.githubusercontent.com/aglent/autoproxy/master/gfwlist.pac
 
-3. 设置`Shadowsocks`为 `手动模式`。
+#### 设置`Shadowsocks`为`手动模式`
