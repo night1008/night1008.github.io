@@ -24,6 +24,6 @@ comments: true
 访问过程中发现，一直报`ERR_TOO_MANY_REDIRECTS`错误，
 原来是因为没有设置`cloudflare SSL/TLS encryption mode`为`Full或Full (strict)`
 
-具体可见 https://gist.github.com/lopezjurip/5314252970cc94970058320ac78f490a
+具体可见 [Fix Too Many Redirect error using Caddy + Cloudflare](https://gist.github.com/lopezjurip/5314252970cc94970058320ac78f490a)
 
 至此就可以正常访问域名了。
