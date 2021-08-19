@@ -17,4 +17,4 @@ comments: true
 | 20G | move to the 20th line of the file |
 | G | move to the last line of the file |
 | 20[UpArrow] | move up 20 lines in the current file |
-| 10[DownArrow] | move down 20 lines in the current file |
+| 20[DownArrow] | move down 20 lines in the current file |
