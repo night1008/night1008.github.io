@@ -18,7 +18,7 @@ fatal: 无法访问 'https://github.com/night1008/diary.git/'：The requested UR
 
 感觉使用 personal access token 需要定期更换，比较麻烦，所以采用 ssh 的方式。
 
-生成 SSH 密钥，具体可看[Generating a new SSH key and adding it to the ssh-agent](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+生成 SSH 密钥，具体可看 [Generating a new SSH key and adding it to the ssh-agent](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 
 ```
 ssh-keygen -t ed25519 -C "your_email@example.com"
