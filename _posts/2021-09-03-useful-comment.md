@@ -2,7 +2,7 @@
 layout: post
 keywords: useful comment
 description: 言论合集
-title:
+title: 言论合集
 comments: true
 ---
 
