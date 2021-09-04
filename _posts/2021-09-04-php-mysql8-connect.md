@@ -1,8 +1,8 @@
 ---
 layout: post
-keywords: php7, mysql8, connect
-description: html开发技巧
-title: html开发技巧
+keywords: php7, mysql8, authentication
+description: php mysql8 连接认证问题
+title: php mysql8 连接认证问题
 comments: true
 ---
 
