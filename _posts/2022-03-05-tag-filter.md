@@ -34,10 +34,11 @@ VALUES ("foo", "bar", 1), ("x", "y", 1), ("foo", "bar", 2), ("x", "y", 2), ("foo
 
 ### 问题
 
-基于以上库表结构，如果想要查询同时拥有`foo=bar`和`x=y`标签的resource，应该如何编写查询语句。
+基于以上库表结构，如果想要查询同时拥有`foo=bar`和`x=y`标签的 resource，应该如何编写查询语句。
 
 #### 方案一
 > mysql 不支持 intersect 操作符，sqlite 和 postgresql 可以
+
 ```sql
 select * from resources where id in (
   select resource_id from labels where key = 'foo' and value = 'bar'
