@@ -68,3 +68,9 @@ SELECT group_0, arrayFilter(x -> x.2 is not null, groupArray((dt, amount_0))) as
 │ Andriod │ []                                                      │ [('2022-04-10',20),('2022-04-11',20)] │
 └─────────┴─────────────────────────────────────────────────────────┴───────────────────────────────────────┘
 ```
+
+```sql
+SELECT * FROM values('x Int8', 0, 1, 2, 3, 4, 5);
+
+SELECT * FROM values('x Int8, y String', (0, 'a'), (1, 'b'), (2, 'c'))
+```
