@@ -1,8 +1,8 @@
 ---
 layout: post
 keywords: 左耳听风，极客时间
-description: 左耳听风 - 左耳听风，极客时间 - 学习记录
-title: 左耳听风 - 左耳听风，极客时间 - 学习记录
+description: 左耳听风(极客时间) - 学习记录
+title: 左耳听风(极客时间) - 学习记录
 comments: true
 ---
 
