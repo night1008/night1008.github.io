@@ -27,6 +27,11 @@ brew install minikube
 brew install kubectl
 ```
 
+需要把下面运行脚本中的 `192.168.8.101` 替换为本机的 ip。
+
+同时，修改 `shadowsocks http` 设置，如图所示，
+![shadowsocks-http-setting.jpg](/assets/img/2022-09-03/shadowsocks-http-setting.jpg)
+
 启动 minikube 脚本 `minikube_start.sh`
 
 ```sh
@@ -41,6 +46,8 @@ minikube start \
     --addons ingress \
     --addons ingress-dns \
     --mount --mount-string="$HOME:$HOME" \
+    --docker-env HTTP_PROXY="http://192.168.8.101:1087" --docker-env HTTPS_PROXY="http://192.168.8.101:1087" \
+    --docker-env NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24 \
     --kubernetes-version v1.24.1
 
 sudo mkdir -p /etc/resolver
