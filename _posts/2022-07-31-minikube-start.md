@@ -9,7 +9,7 @@ comments: true
 发现两个问题，
 
 1. Docker-for-mac 占用很大的电脑空间
-2. minikube 使用 docker-desktop 无法正常访问 service
+2. docker-desktop 使用 minikube 无法正常访问 service
 
 因此选择卸载 Docker-for-mac，使用 minikube 作为替换。
 
@@ -27,7 +27,7 @@ brew install minikube
 brew install kubectl
 ```
 
-需要把下面运行脚本中的 `192.168.8.101` 替换为本机的 ip。
+需要把下面运行脚本中的 `192.168.8.101` 替换为主机的 ip。
 
 同时，修改 `shadowsocks http` 设置，如图所示，
 ![shadowsocks-http-setting.jpg](/assets/img/2022-09-03/shadowsocks-http-setting.jpg)
