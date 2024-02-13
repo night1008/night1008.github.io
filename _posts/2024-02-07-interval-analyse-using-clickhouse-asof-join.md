@@ -1,8 +1,8 @@
 ---
 layout: post
-keywords: ClickHouse, asof join, 间隔分析
-description: 如何通过 ClickHouse asof join 实现间隔分析
-title: 如何通过 ClickHouse asof join 实现间隔分析
+keywords: ClickHouse, ASOF JOIN, 间隔分析
+description: 如何通过 ClickHouse ASOF JOIN 实现间隔分析
+title: 如何通过 ClickHouse ASOF JOIN 实现间隔分析
 comments: true
 ---
 ### 什么是间隔分析？
