@@ -105,6 +105,10 @@ remotePort = 6000
 ssh-keygen
 ```
 
+```sh
+ssh -i ~/Secrets/aliyun-ecs.cer root@aliyun-machine 'mkdir -p .ssh && cat >> .ssh/authorized_keys' < ~/.ssh/aliyun-ecs-jumpssh-internal.pub
+```
+
 ## 4. 修改公网主机 ssh 配置
 
 正常在阿里云上可以直接下载 aliyun-ecs.cer 私钥进行登录。
@@ -117,11 +121,7 @@ vim /etc/ssh/sshd_config
 GatewayPorts yes
 ```
 
-内网主机上执行
-
 ```sh
-ssh -i ~/Secrets/aliyun-ecs.cer root@aliyun-machine 'mkdir -p .ssh && cat >> .ssh/authorized_keys' < ~/.ssh/aliyun-ecs-jumpssh-internal.pub
-
 sudo service sshd restart
 ```
 
@@ -135,19 +135,19 @@ sudo service sshd restart
                            └──────────────────────────────────┘
                                      ┌──────────────────┐
                                      │                  │
-                 ┌──────────────────▶│  aliyun-machine  │─────────────────┐
-                 │                   │                  │                 │
-                 │                   └──────────────────┘                 │  ┌──────────────────────────────────┐
-                 │                                                        │  │  aliyun-machine-ssh-private-key  │
+                 ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─▶│  aliyun-machine  │─ ─ ─ ─ ─ ─ ─ ─ ─
+                                     │                  │                 │
+                 │                   └──────────────────┘                    ┌──────────────────────────────────┐
+                                                                          │  │  aliyun-machine-ssh-private-key  │
                  │                                                        ▼  └──────────────────────────────────┘
         ┌────────────────┐                                     ┌─────────────────────┐
         │                │                                     │                     │
-        │  local-machine │                                     │   intranet-machine  │
-        │                │                                     │                     │
-        └────────────────┘                                     └─────────────────────┘
-┌──────────────────────────────────┐                    ┌─────────────────────────────────┐
-│ intranet-machine-ssh-private-key │                    │ intranet-machine-ssh-public-key │
-└──────────────────────────────────┘                    └─────────────────────────────────┘
+        │  local-machine │                       ┌────────────▶│   intranet-machine  │
+        │                │                       │             │                     │
+        └────────────────┘                       │             └─────────────────────┘
+┌──────────────────────────────────┐             │       ┌─────────────────────────────────┐
+│ intranet-machine-ssh-private-key │─────────────┘       │ intranet-machine-ssh-public-key │
+└──────────────────────────────────┘                     └─────────────────────────────────┘
 ```
 
 ---
