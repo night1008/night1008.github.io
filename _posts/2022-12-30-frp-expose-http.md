@@ -1,8 +1,8 @@
 ---
 layout: post
-keywords: frp intranet forwarding
-description: 如何通过 frp 进行内网穿透
-title: 如何通过 frp 进行内网穿透
+keywords: frp, http
+description: 如何通过 frp 暴露本地 http 服务
+title: 如何通过 frp 暴露本地 http 服务
 comments: true
 ---
 
@@ -96,7 +96,7 @@ local_port = 8080 (需要暴露的本地端口)
 custom_domains = 8.134.56.47 (域名的话需要备案)
 ```
 
-然后启动 `frpc`，别人就可以远程访问你的接口了。
+然后启动 `frpc`，别人才可以远程访问你的接口了。
 
 ```sh
 ./frpc -c ./frpc.ini
