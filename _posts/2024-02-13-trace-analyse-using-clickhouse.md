@@ -12,7 +12,33 @@ comments: true
 
 **例如**：用户在访问了某个电商产品首页后，有多大比例的用户进行了搜索？有多大比例的用户访问了分类页？有多大比例的用户直接访问的商品详情页？
 
+Session 间隔为前后两个事件发生的时间间隔，超过指定的时间间隔，则为不同的路径。
+
 ### 如何用 ClickHouse 实现查询
+
+```sql
+CREATE DATABASE demo ENGINE = Memory;
+
+CREATE TABLE trace_test (event String, user_id Int64, group0 String, time DateTime) ENGINE = Memory;
+
+-- 插入测试数据
+INSERT INTO trace_test (event, user_id, group0, time) VALUES
+('A', 1, 'a', '2024-02-07 01:00:00'),
+('B', 1, 'a', '2024-02-07 01:01:00'),
+('C', 1, 'b', '2024-02-07 01:02:00'),
+('D', 1, 'a', '2024-02-07 01:13:00'),
+('A', 1, 'a', '2024-02-07 01:14:00'),
+('A', 1, 'b', '2024-02-07 01:15:00'),
+('B', 1, 'a', '2024-02-07 01:16:00'),
+('B', 1, 'a', '2024-02-07 01:17:00'),
+('A', 1, 'b', '2024-02-08 01:08:00'),
+('A', 1, 'b', '2024-02-08 01:09:00'),
+('A', 1, 'a', '2024-02-08 01:30:00'),
+('C', 1, 'a', '2024-02-08 01:31:00'),
+('D', 1, 'a', '2024-02-08 01:32:00'),
+('A', 1, 'a', '2024-02-08 01:33:00'),
+('B', 1, 'a', '2024-02-08 01:34:00');
+```
 
 参照了以下两个文章，
 1. [https://www.jianshu.com/p/dd8de7c795c6](https://www.jianshu.com/p/dd8de7c795c6)
@@ -21,64 +47,73 @@ comments: true
 实现了第一种写法，
 
 ```sql
-SELECT `$event_traces`, COUNT(1) AS `$session_count` FROM (
-  WITH arraySort(x -> x.1, groupArray((`#time`, array(`$event_name`, `$group0`)))) AS `$sorted_events`,
-  arrayEnumerate(`$sorted_events`) AS `$event_idxs`,
-  arrayFilter((x, y, z) -> (y > 1800000), `$event_idxs`, arrayDifference(`$sorted_events`.1), `$sorted_events`
-  ) AS `$temp_gap_idxs`,
-  arrayMap(x -> x + 1, `$temp_gap_idxs`) AS `$gap_idxs`,
-  arrayMap(x -> if(has(`$gap_idxs`, x), 1, 0), `$event_idxs`) AS `$gap_masks`,
-  arraySplit((x, y) -> y, `$sorted_events`, `$gap_masks`) AS `$split_events`
-    SELECT `$virtual_user_id`,
-           arrayJoin(`$split_events`) AS `$temp_event_traces`,
-          `$temp_event_traces`.2 AS `$event_traces`
-      FROM (
-          SELECT *, multiIf((`#event` IN ('#user_create')), '#user_create', (`#event` IN ('#user_login')), '#user_login', (`#event` IN ('#user_logout')), '#user_logout', (`#event` IN ('#user_new')), '#user_new', (`#event` IN ('#charge')), '#charge', '') AS `$event_name`, '' AS `$group0`, `#user_id` AS `$virtual_user_id`
-            FROM (
-              SELECT `#time`, `#data_lifecycle`, `#dt`, `#event`, `#user_id`
-              FROM events AS event
-              WHERE (`#data_lifecycle` = '0')
-              AND (`#dt` BETWEEN '2023-10-14' AND '2023-10-20')
-              AND ((`#event` IN ('#user_create')) OR (`#event` IN ('#user_login')) OR (`#event` IN ('#user_logout')) OR (`#event` IN ('#user_new')) OR (`#event` IN ('#charge'))))
-        )
-    WHERE `$virtual_user_id` != ''
-    GROUP BY `$virtual_user_id`
-    HAVING length(`$event_traces`) >= 1
+SELECT `$event_traces`, COUNT(1) AS `$session_count`
+ FROM (
+  WITH arraySort(x -> x.1, groupArray((timestamp, array(event, group0)))) AS `$sorted_events`,
+      arrayEnumerate(`$sorted_events`) AS `$event_idxs`,
+      arrayFilter(
+        (x, y, z) -> (y > 300), `$event_idxs`,
+        arrayDifference(`$sorted_events`.1),
+        `$sorted_events`
+      ) AS `$temp_gap_idxs`,
+      arrayMap(x -> x, `$temp_gap_idxs`) AS `$gap_idxs`,
+      arrayMap(x -> if(has(`$gap_idxs`, x), 1, 0), `$event_idxs`) AS `$gap_masks`,
+      arraySplit((x, y) -> y, `$sorted_events`, `$gap_masks`) AS `$split_events`
+  SELECT user_id,
+        arrayJoin(`$split_events`) AS `$temp_event_traces`,
+        `$temp_event_traces`.2 AS `$event_traces`
+    FROM (
+      SELECT *, toUInt64(time) AS timestamp FROM trace_test
     )
-    WHERE `$event_traces`[1][1] = '#user_create'
+   GROUP BY user_id
+   HAVING length(`$event_traces`) >= 1
+)
+WHERE `$event_traces`[1][1] = 'A'
 GROUP BY `$event_traces`
 ORDER BY `$session_count` DESC
 LIMIT 1000000;
+```
+
+查询结果：
+```
+┌─$event_traces───────────────────────────────────────┬─$session_count─┐
+│ [['A','a'],['B','a'],['C','b']]                     │              1 │
+│ [['A','b'],['A','b']]                               │              1 │
+│ [['A','a'],['C','a'],['D','a'],['A','a'],['B','a']] │              1 │
+└─────────────────────────────────────────────────────┴────────────────┘
 ```
 
 自己思考后实现了第二种写法，
 
 ```sql
 SELECT `$event_traces`, COUNT(1) AS `$session_count` FROM (
-  SELECT `$virtual_user_id`,
-        groupArray((`#time`, array(`$event_name`, `$group0`))) AS `$sorted_events`,
+  SELECT user_id,
+        groupArray((timestamp, array(event, group0))) AS `$sorted_events`,
         groupArray(`$split_flag`) AS `$gap_masks`,
         arraySplit((x, y) -> y, `$sorted_events`, `$gap_masks`) AS `$split_events`,
         arrayJoin(`$split_events`) AS `$temp_event_traces`,
         `$temp_event_traces`.2 AS `$event_traces`
    FROM (
-        SELECT *, any(`#time`) OVER (PARTITION BY `$virtual_user_id` ORDER BY `#time` rows between 1 preceding and 1 preceding) AS `$previous_time`, if(`#time` - `$previous_time` > 1800000, 1, 0) AS `$split_flag`
-        FROM (
-          SELECT *, multiIf((`#event` IN ('#user_create')), '#user_create', (`#event` IN ('#user_login')), '#user_login', (`#event` IN ('#user_logout')), '#user_logout', (`#event` IN ('#user_new')), '#user_new', (`#event` IN ('#charge')), '#charge', '') AS `$event_name`, '' AS `$group0`, `#user_id` AS `$virtual_user_id`
+        SELECT *, any(timestamp) OVER (PARTITION BY user_id ORDER BY timestamp rows between 1 preceding and 1 preceding) AS `$previous_time`, if(timestamp - `$previous_time` > 300, 1, 0) AS `$split_flag`
           FROM (
-            SELECT `#time`, `#data_lifecycle`, `#dt`, `#event`, `#user_id`
-            FROM events AS event
-            WHERE (`#data_lifecycle` = '0')
-            AND (`#dt` BETWEEN '2023-10-14' AND '2023-10-19')
-            AND ((`#event` IN ('#user_create')) OR (`#event` IN ('#user_login')) OR (`#event` IN ('#user_logout')) OR (`#event` IN ('#user_new')) OR (`#event` IN ('#charge'))))
-            ORDER BY `#time`
+          SELECT *, toUInt64(time) AS timestamp FROM trace_test
+          ORDER BY time
         )
-      ) WHERE `$virtual_user_id` != ''
-      GROUP BY `$virtual_user_id`
-      HAVING length(`$event_traces`) >= 1
+      )
+    GROUP BY user_id
+    HAVING length(`$event_traces`) >= 1
     )
-  WHERE `$event_traces`[1][1] = '#user_login'
+  WHERE `$event_traces`[1][1] = 'A'
 GROUP BY `$event_traces`
 ORDER BY `$session_count` DESC
 LIMIT 1000000;
+```
+
+查询结果：
+```
+┌─$event_traces───────────────────────────────────────┬─$session_count─┐
+│ [['A','a'],['B','a'],['C','b']]                     │              1 │
+│ [['A','b'],['A','b']]                               │              1 │
+│ [['A','a'],['C','a'],['D','a'],['A','a'],['B','a']] │              1 │
+└─────────────────────────────────────────────────────┴────────────────┘
 ```
