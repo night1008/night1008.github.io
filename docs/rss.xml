@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 26 Apr 2024 07:41:55 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>分析平台中的业务关系图</title><link>https://night1008.github.io/post/fen-xi-ping-tai-zhong-de-ye-wu-guan-xi-tu.html</link><description>### 用户和应用角色之间的关系&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 26 Apr 2024 07:54:45 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>分析平台中的业务关系图</title><link>https://night1008.github.io/post/fen-xi-ping-tai-zhong-de-ye-wu-guan-xi-tu.html</link><description>### 用户和应用角色之间的关系&#13;
 ![user_role_permission](https://github.com/night1008/night1008.github.io/assets/3940006/214e5136-2ac8-453f-8ddb-e4cd865e4027)&#13;
 &#13;
 ---&#13;
@@ -10,7 +10,7 @@
 ---&#13;
 &#13;
 ### 看板空间和看板之间的关系&#13;
-![dashboard_space](https://github.com/night1008/night1008.github.io/assets/3940006/da0eb41b-e945-4ead-92f7-f41256b688c5)&#13;
+![dashboard_space](https://github.com/night1008/night1008.github.io/assets/3940006/40200478-f311-40a1-ba05-1e3e0a80a394)&#13;
 。</description><guid isPermaLink="true">https://night1008.github.io/post/fen-xi-ping-tai-zhong-de-ye-wu-guan-xi-tu.html</guid><pubDate>Thu, 25 Apr 2024 09:17:32 +0000</pubDate></item><item><title>如何在 iOS 上安装 PokeMMO</title><link>https://night1008.github.io/post/ru-he-zai-%20iOS%20-shang-an-zhuang-%20PokeMMO.html</link><description>准备条件：&#13;
 1.  [PokeMMO Account](https://pokemmo.com/en/)&#13;
 2. [AltStore](https://iosdroids.com/altstore/)&#13;
