@@ -9,7 +9,14 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="如何进行前后端静态资源分离">
+<meta name="description" content="我目前开发的平台的前端静态资源是使用 [go embed](https://pkg.go.dev/embed) 机制内嵌到后端服务中，
+当访问量比较大的时候，服务器会有比较大的 IO 消耗，因此进行前端静态资源分离。">
+<meta property="og:title" content="如何进行前后端静态资源分离">
+<meta property="og:description" content="我目前开发的平台的前端静态资源是使用 [go embed](https://pkg.go.dev/embed) 机制内嵌到后端服务中，
+当访问量比较大的时候，服务器会有比较大的 IO 消耗，因此进行前端静态资源分离。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://night1008.github.io/post/ru-he-jin-xing-qian-hou-duan-jing-tai-zi-yuan-fen-li.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>如何进行前后端静态资源分离</title>
 
 
