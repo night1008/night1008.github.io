@@ -19,23 +19,23 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"log"
+	'context'
+	'fmt'
+	'log'
 
-	"github.com/ClickHouse/clickhouse-go/v2"
+	'github.com/ClickHouse/clickhouse-go/v2'
 )
 
 func main() {
 	db := clickhouse.OpenDB(&clickhouse.Options{
-		Addr: []string{"127.0.0.1:9000"},
+		Addr: []string{'127.0.0.1:9000'},
 		Auth: clickhouse.Auth{
-			Database: "default",
-			Username: "default",
-			Password: "",
+			Database: 'default',
+			Username: 'default',
+			Password: '',
 		},
 		Settings: clickhouse.Settings{
-			"join_use_nulls": 1,
+			'join_use_nulls': 1,
 		},
 	})
 
@@ -46,7 +46,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	sql := "select sleep(300)"
+	sql := 'select sleep(300)'
 	rows, err := conn.QueryContext(ctx, sql)
 	if err != nil {
 		log.Fatal(err)
@@ -77,19 +77,19 @@ See code snippet:
 package issues
 
 import (
-	"context"
-	"testing"
+	'context'
+	'testing'
 
-	clickhouse_tests "github.com/ClickHouse/clickhouse-go/v2/tests"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	clickhouse_tests 'github.com/ClickHouse/clickhouse-go/v2/tests'
+	'github.com/stretchr/testify/assert'
+	'github.com/stretchr/testify/require'
 )
 
 func Test1268(t *testing.T) {
-	conn, err := clickhouse_tests.GetDatabaseSQLConnection("issues", nil, nil, nil)
+	conn, err := clickhouse_tests.GetDatabaseSQLConnection('issues', nil, nil, nil)
 	require.NoError(t, err)
 
-	rows, err := conn.QueryContext(context.Background(), "select sleep(300)")
+	rows, err := conn.QueryContext(context.Background(), 'select sleep(300)')
 	require.NoError(t, err)
 	defer rows.Close()
 
@@ -99,7 +99,7 @@ func Test1268(t *testing.T) {
 		}
 	}
 
-	assert.ErrorContains(t, rows.Err(), "code: 160, message: The maximum sleep time is 3000000 microseconds.")
+	assert.ErrorContains(t, rows.Err(), 'code: 160, message: The maximum sleep time is 3000000 microseconds.')
 }
 ```。">
 <meta property="og:title" content="clickhouse-go 某些查询不会返回查询错误">
@@ -113,23 +113,23 @@ func Test1268(t *testing.T) {
 package main
 
 import (
-	"context"
-	"fmt"
-	"log"
+	'context'
+	'fmt'
+	'log'
 
-	"github.com/ClickHouse/clickhouse-go/v2"
+	'github.com/ClickHouse/clickhouse-go/v2'
 )
 
 func main() {
 	db := clickhouse.OpenDB(&clickhouse.Options{
-		Addr: []string{"127.0.0.1:9000"},
+		Addr: []string{'127.0.0.1:9000'},
 		Auth: clickhouse.Auth{
-			Database: "default",
-			Username: "default",
-			Password: "",
+			Database: 'default',
+			Username: 'default',
+			Password: '',
 		},
 		Settings: clickhouse.Settings{
-			"join_use_nulls": 1,
+			'join_use_nulls': 1,
 		},
 	})
 
@@ -140,7 +140,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	sql := "select sleep(300)"
+	sql := 'select sleep(300)'
 	rows, err := conn.QueryContext(ctx, sql)
 	if err != nil {
 		log.Fatal(err)
@@ -171,19 +171,19 @@ See code snippet:
 package issues
 
 import (
-	"context"
-	"testing"
+	'context'
+	'testing'
 
-	clickhouse_tests "github.com/ClickHouse/clickhouse-go/v2/tests"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	clickhouse_tests 'github.com/ClickHouse/clickhouse-go/v2/tests'
+	'github.com/stretchr/testify/assert'
+	'github.com/stretchr/testify/require'
 )
 
 func Test1268(t *testing.T) {
-	conn, err := clickhouse_tests.GetDatabaseSQLConnection("issues", nil, nil, nil)
+	conn, err := clickhouse_tests.GetDatabaseSQLConnection('issues', nil, nil, nil)
 	require.NoError(t, err)
 
-	rows, err := conn.QueryContext(context.Background(), "select sleep(300)")
+	rows, err := conn.QueryContext(context.Background(), 'select sleep(300)')
 	require.NoError(t, err)
 	defer rows.Close()
 
@@ -193,7 +193,7 @@ func Test1268(t *testing.T) {
 		}
 	}
 
-	assert.ErrorContains(t, rows.Err(), "code: 160, message: The maximum sleep time is 3000000 microseconds.")
+	assert.ErrorContains(t, rows.Err(), 'code: 160, message: The maximum sleep time is 3000000 microseconds.')
 }
 ```。">
 <meta property="og:type" content="article">
@@ -430,7 +430,6 @@ function iFrameLoading(){
     }
 }
 </script>
-
 
 
 </html>
