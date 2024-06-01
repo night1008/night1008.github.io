@@ -11,6 +11,8 @@
     </script>
 <meta name="description" content="### 可以对 error 进行 switch 判断
 
+来源 https://github.com/prashanthpai/sqlcache/blob/4bf943bfd00f02394a480c5437e86af4b5be074c/cache_redis.go#L24
+
 ```go
 func (r *Redis) Get(ctx context.Context, key string) (*cache.Item, bool, error) {
 	b, err := r.c.Get(ctx, r.keyPrefix+key).Bytes()
@@ -30,6 +32,8 @@ func (r *Redis) Get(ctx context.Context, key string) (*cache.Item, bool, error) 
 ```。">
 <meta property="og:title" content="Go 有趣的代码片段">
 <meta property="og:description" content="### 可以对 error 进行 switch 判断
+
+来源 https://github.com/prashanthpai/sqlcache/blob/4bf943bfd00f02394a480c5437e86af4b5be074c/cache_redis.go#L24
 
 ```go
 func (r *Redis) Get(ctx context.Context, key string) (*cache.Item, bool, error) {
@@ -107,6 +111,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h3>可以对 error 进行 switch 判断</h3>
+<p>来源 <a href="https://github.com/prashanthpai/sqlcache/blob/4bf943bfd00f02394a480c5437e86af4b5be074c/cache_redis.go#L24">https://github.com/prashanthpai/sqlcache/blob/4bf943bfd00f02394a480c5437e86af4b5be074c/cache_redis.go#L24</a></p>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> (<span class="pl-s1">r</span> <span class="pl-c1">*</span><span class="pl-smi">Redis</span>) <span class="pl-en">Get</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>, <span class="pl-s1">key</span> <span class="pl-smi">string</span>) (<span class="pl-c1">*</span>cache.<span class="pl-smi">Item</span>, <span class="pl-smi">bool</span>, <span class="pl-smi">error</span>) {
 	<span class="pl-s1">b</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">r</span>.<span class="pl-c1">c</span>.<span class="pl-en">Get</span>(<span class="pl-s1">ctx</span>, <span class="pl-s1">r</span>.<span class="pl-c1">keyPrefix</span><span class="pl-c1">+</span><span class="pl-s1">key</span>).<span class="pl-en">Bytes</span>()
 	<span class="pl-k">switch</span> <span class="pl-s1">err</span> {
