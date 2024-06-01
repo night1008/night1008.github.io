@@ -1,5 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Tue, 28 May 2024 16:00:40 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>分析平台中的业务关系图</title><link>https://night1008.github.io/post/fen-xi-ping-tai-zhong-de-ye-wu-guan-xi-tu.html</link><description>### 用户和应用角色之间的关系&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sat, 01 Jun 2024 13:01:33 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Go 有趣的代码片段</title><link>https://night1008.github.io/post/Go%20-you-qu-de-dai-ma-pian-duan.html</link><description>### 可以对 error 进行 switch 判断&#13;
+&#13;
+```go&#13;
+func (r *Redis) Get(ctx context.Context, key string) (*cache.Item, bool, error) {&#13;
+	b, err := r.c.Get(ctx, r.keyPrefix+key).Bytes()&#13;
+	switch err {&#13;
+	case nil:&#13;
+		var item cache.Item&#13;
+		if err := msgpack.Unmarshal(b, &amp;item); err != nil {&#13;
+			return nil, true, err&#13;
+		}&#13;
+		return &amp;item, true, nil&#13;
+	case redis.Nil:&#13;
+		return nil, false, nil&#13;
+	default:&#13;
+		return nil, false, err&#13;
+	}&#13;
+}&#13;
+```。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-you-qu-de-dai-ma-pian-duan.html</guid><pubDate>Sat, 01 Jun 2024 13:01:05 +0000</pubDate></item><item><title>分析平台中的业务关系图</title><link>https://night1008.github.io/post/fen-xi-ping-tai-zhong-de-ye-wu-guan-xi-tu.html</link><description>### 用户和应用角色之间的关系&#13;
 ![user_role_permission](https://github.com/night1008/night1008.github.io/assets/3940006/214e5136-2ac8-453f-8ddb-e4cd865e4027)&#13;
 &#13;
 ---&#13;
