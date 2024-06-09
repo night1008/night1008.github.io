@@ -1,5 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sat, 01 Jun 2024 13:03:30 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Go 有趣的代码片段</title><link>https://night1008.github.io/post/Go%20-you-qu-de-dai-ma-pian-duan.html</link><description>### 可以对 error 进行 switch 判断&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sun, 09 Jun 2024 06:43:47 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Go 如何实现 Clickhouse 查询缓存</title><link>https://night1008.github.io/post/Go%20-ru-he-shi-xian-%20Clickhouse%20-cha-xun-huan-cun.html</link><description>**整体思路：先判断是否命中缓存，没有的话再进入查询队列**&#13;
+&#13;
+依赖的包&#13;
+```&#13;
+https://github.com/ClickHouse/ClickHouse&#13;
+&#13;
+https://github.com/prashanthpai/sqlcache =&gt; https://github.com/night1008/sqlcache&#13;
+&#13;
+https://github.com/DATA-DOG/go-sqlmock&#13;
+&#13;
+https://github.com/blockloop/scan&#13;
+```&#13;
+&#13;
+现在的问题是 clickhouse 的查询结果可能返回复杂类型，比如 Map(String, UInt8)，&#13;
+如果命中缓存，缓存的结果为 `driver.Rows`，需要转换成 `*sql.Rows` 方便后续使用，&#13;
+因此想到通过 `sqlmock` 的方式，但是默认的 `value converter` 是 `driver.DefaultParameterConverter`，只能转换基础类型，&#13;
+复杂类型也没有定义专门用于解析的结构体，会报诸如以下的错误，&#13;
+&#13;
+&gt; panic: row #1, column #2 ('mapper') type map[string]uint8: unsupported type map[string]uint8, a map&#13;
+&#13;
+好在 `go-sqlmock` 可以指定 `ValueConverterOption`，这样就可以把 `driver.Rows` 转换成 `*sql.Rows` 了。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-ru-he-shi-xian-%20Clickhouse%20-cha-xun-huan-cun.html</guid><pubDate>Sun, 09 Jun 2024 06:43:22 +0000</pubDate></item><item><title>Go 有趣的代码片段</title><link>https://night1008.github.io/post/Go%20-you-qu-de-dai-ma-pian-duan.html</link><description>### 可以对 error 进行 switch 判断&#13;
 &#13;
 来源 https://github.com/prashanthpai/sqlcache/blob/4bf943bfd00f02394a480c5437e86af4b5be074c/cache_redis.go#L24&#13;
 &#13;
