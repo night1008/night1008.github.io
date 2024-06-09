@@ -38,7 +38,6 @@ import (
 	"github.com/prashanthpai/sqlcache/cache"
 
 	"github.com/dgraph-io/ristretto"
-	//	"github.com/redis/go-redis/v9"
 	_ "github.com/ClickHouse/clickhouse-go/v2"
 )
 
