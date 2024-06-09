@@ -152,7 +152,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(persons)
+		fmt.Printf("%#v\n", persons)
 	}
 }
 ```
