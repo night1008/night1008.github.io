@@ -30,8 +30,8 @@ func main() {
 
 	user := User{
 		Email: "demo@qq.com",
-		Name:  "demo111",
-		Age:   211,
+		Name:  "demo",
+		Age:   20,
 	}
 
 	// 错误写法
