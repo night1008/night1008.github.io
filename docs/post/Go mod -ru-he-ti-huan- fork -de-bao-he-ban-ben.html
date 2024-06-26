@@ -9,7 +9,8 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="以  `github.com/prashanthpai/sqlcache` 为例，想替换成 fork 的包 `github.com/night1008/sqlcache`
+<meta name="description" content="以  `github.com/prashanthpai/sqlcache` 为例，想替换成 fork 的包 `github.com/night1008/sqlcache`，
+假设当前该包的版本为 `v0.0.0`
 
 #### 第一步
 ```
@@ -44,7 +45,8 @@ go: github.com/night1008/sqlcache@v0.0.0-20240623031410-4d47c940a2d7: parsing go
 go mod tidy
 ```。">
 <meta property="og:title" content="Go mod 如何替换 fork 的包和版本">
-<meta property="og:description" content="以  `github.com/prashanthpai/sqlcache` 为例，想替换成 fork 的包 `github.com/night1008/sqlcache`
+<meta property="og:description" content="以  `github.com/prashanthpai/sqlcache` 为例，想替换成 fork 的包 `github.com/night1008/sqlcache`，
+假设当前该包的版本为 `v0.0.0`
 
 #### 第一步
 ```
@@ -136,7 +138,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>以  <code class="notranslate">github.com/prashanthpai/sqlcache</code> 为例，想替换成 fork 的包 <code class="notranslate">github.com/night1008/sqlcache</code></p>
+<div class="markdown-body" id="postBody"><p>以  <code class="notranslate">github.com/prashanthpai/sqlcache</code> 为例，想替换成 fork 的包 <code class="notranslate">github.com/night1008/sqlcache</code>，<br>
+假设当前该包的版本为 <code class="notranslate">v0.0.0</code></p>
 <h4>第一步</h4>
 <pre class="notranslate"><code class="notranslate">go mod edit -replace github.com/prashanthpai/sqlcache@v0.0.0=github.com/night1008/sqlcache@master
 </code></pre>

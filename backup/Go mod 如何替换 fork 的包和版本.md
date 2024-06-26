@@ -1,4 +1,5 @@
-以  `github.com/prashanthpai/sqlcache` 为例，想替换成 fork 的包 `github.com/night1008/sqlcache`
+以  `github.com/prashanthpai/sqlcache` 为例，想替换成 fork 的包 `github.com/night1008/sqlcache`，
+假设当前该包的版本为 `v0.0.0`
 
 #### 第一步
 ```
