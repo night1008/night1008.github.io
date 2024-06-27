@@ -138,7 +138,16 @@ func main() {
 				log.Fatal(err)
 			}
 		}
-		mockRows := mock.NewRows(cacheRows.Columns()).AddRows(dests...)
+                cacheItem, ok := cacheRows.(*sqlcache.RowsCached)
+	        if !ok {
+		       log.Fatal(fmt.Errorf("cacheRows is not *sqlcache.RowsCached"))
+	        }
+	        mockColumns := make([]*sqlmock.Column, 0, len(cacheRows.Columns()))
+	        for i, column := range cacheRows.Columns() {
+		        mockColumns = append(mockColumns, sqlmock.NewColumn(column).OfType(cacheItem.DatabaseTypeNames[i], ""))
+	        }
+	        mockRows := mock.NewRowsWithColumnDefinition(mockColumns...).AddRows(dests...)
+		// mockRows := mock.NewRows(cacheRows.Columns()).AddRows(dests...)
 		mock.ExpectQuery(regexp.QuoteMeta(querySQL)).WillReturnRows(mockRows)
 		rows, _ := db.Query(querySQL)
 		fmt.Println(rows)

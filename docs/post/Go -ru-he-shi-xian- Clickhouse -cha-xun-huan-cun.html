@@ -244,7 +244,16 @@ https://github.com/blockloop/scan
 				<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
 			}
 		}
-		<span class="pl-s1">mockRows</span> <span class="pl-c1">:=</span> <span class="pl-s1">mock</span>.<span class="pl-en">NewRows</span>(<span class="pl-s1">cacheRows</span>.<span class="pl-en">Columns</span>()).<span class="pl-en">AddRows</span>(<span class="pl-s1">dests</span><span class="pl-c1">...</span>)
+                <span class="pl-s1">cacheItem</span>, <span class="pl-s1">ok</span> <span class="pl-c1">:=</span> <span class="pl-s1">cacheRows</span>.(<span class="pl-c1">*</span>sqlcache.<span class="pl-smi">RowsCached</span>)
+	        <span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">ok</span> {
+		       <span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-en">Errorf</span>(<span class="pl-s">"cacheRows is not *sqlcache.RowsCached"</span>))
+	        }
+	        <span class="pl-s1">mockColumns</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-c1">*</span>sqlmock.<span class="pl-smi">Column</span>, <span class="pl-c1">0</span>, <span class="pl-en">len</span>(<span class="pl-s1">cacheRows</span>.<span class="pl-en">Columns</span>()))
+	        <span class="pl-k">for</span> <span class="pl-s1">i</span>, <span class="pl-s1">column</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">cacheRows</span>.<span class="pl-en">Columns</span>() {
+		        <span class="pl-s1">mockColumns</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">mockColumns</span>, <span class="pl-s1">sqlmock</span>.<span class="pl-en">NewColumn</span>(<span class="pl-s1">column</span>).<span class="pl-en">OfType</span>(<span class="pl-s1">cacheItem</span>.<span class="pl-c1">DatabaseTypeNames</span>[<span class="pl-s1">i</span>], <span class="pl-s">""</span>))
+	        }
+	        <span class="pl-s1">mockRows</span> <span class="pl-c1">:=</span> <span class="pl-s1">mock</span>.<span class="pl-en">NewRowsWithColumnDefinition</span>(<span class="pl-s1">mockColumns</span><span class="pl-c1">...</span>).<span class="pl-en">AddRows</span>(<span class="pl-s1">dests</span><span class="pl-c1">...</span>)
+		<span class="pl-c">// mockRows := mock.NewRows(cacheRows.Columns()).AddRows(dests...)</span>
 		<span class="pl-s1">mock</span>.<span class="pl-en">ExpectQuery</span>(<span class="pl-s1">regexp</span>.<span class="pl-en">QuoteMeta</span>(<span class="pl-s1">querySQL</span>)).<span class="pl-en">WillReturnRows</span>(<span class="pl-s1">mockRows</span>)
 		<span class="pl-s1">rows</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Query</span>(<span class="pl-s1">querySQL</span>)
 		<span class="pl-s1">fmt</span>.<span class="pl-en">Println</span>(<span class="pl-s1">rows</span>)
