@@ -32,6 +32,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+        "regexp"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/prashanthpai/sqlcache"
@@ -138,8 +139,9 @@ func main() {
 			}
 		}
 		mockRows := mock.NewRows(cacheRows.Columns()).AddRows(dests...)
-		mock.ExpectQuery("select").WillReturnRows(mockRows)
-		rows, _ := db.Query("select")
+                sql := "select"
+		mock.ExpectQuery(regexp.QuoteMeta(sql)).WillReturnRows(mockRows)
+		rows, _ := db.Query(sql)
 		fmt.Println(rows)
   
                 type Person struct {

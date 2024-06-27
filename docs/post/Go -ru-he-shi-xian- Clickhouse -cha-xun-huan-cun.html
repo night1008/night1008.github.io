@@ -138,6 +138,7 @@ https://github.com/blockloop/scan
 	<span class="pl-s">"fmt"</span>
 	<span class="pl-s">"io"</span>
 	<span class="pl-s">"log"</span>
+        <span class="pl-s">"regexp"</span>
 
 	<span class="pl-s">"github.com/DATA-DOG/go-sqlmock"</span>
 	<span class="pl-s">"github.com/prashanthpai/sqlcache"</span>
@@ -244,8 +245,9 @@ https://github.com/blockloop/scan
 			}
 		}
 		<span class="pl-s1">mockRows</span> <span class="pl-c1">:=</span> <span class="pl-s1">mock</span>.<span class="pl-en">NewRows</span>(<span class="pl-s1">cacheRows</span>.<span class="pl-en">Columns</span>()).<span class="pl-en">AddRows</span>(<span class="pl-s1">dests</span><span class="pl-c1">...</span>)
-		<span class="pl-s1">mock</span>.<span class="pl-en">ExpectQuery</span>(<span class="pl-s">"select"</span>).<span class="pl-en">WillReturnRows</span>(<span class="pl-s1">mockRows</span>)
-		<span class="pl-s1">rows</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Query</span>(<span class="pl-s">"select"</span>)
+                <span class="pl-s1">sql</span> <span class="pl-c1">:=</span> <span class="pl-s">"select"</span>
+		<span class="pl-s1">mock</span>.<span class="pl-en">ExpectQuery</span>(<span class="pl-s1">regexp</span>.<span class="pl-en">QuoteMeta</span>(<span class="pl-s1">sql</span>)).<span class="pl-en">WillReturnRows</span>(<span class="pl-s1">mockRows</span>)
+		<span class="pl-s1">rows</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Query</span>(<span class="pl-s1">sql</span>)
 		<span class="pl-s1">fmt</span>.<span class="pl-en">Println</span>(<span class="pl-s1">rows</span>)
   
                 <span class="pl-k">type</span> <span class="pl-smi">Person</span> <span class="pl-k">struct</span> {
