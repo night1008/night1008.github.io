@@ -139,9 +139,8 @@ func main() {
 			}
 		}
 		mockRows := mock.NewRows(cacheRows.Columns()).AddRows(dests...)
-                sql := "select"
-		mock.ExpectQuery(regexp.QuoteMeta(sql)).WillReturnRows(mockRows)
-		rows, _ := db.Query(sql)
+		mock.ExpectQuery(regexp.QuoteMeta(querySQL)).WillReturnRows(mockRows)
+		rows, _ := db.Query(querySQL)
 		fmt.Println(rows)
   
                 type Person struct {
