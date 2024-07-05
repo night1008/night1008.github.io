@@ -11,8 +11,9 @@ import (
 
 func Recover() {
 	if r := recover(); r != nil {
-		fmt.Println(string(debug.Stack()))
-		log.Error().Err(fmt.Errorf("%s", string(debug.Stack()))).Msg("recover from panic")
+		debugStack := string(debug.Stack())
+		fmt.Println(debugStack)
+		log.Error().Err(fmt.Errorf("%s", debugStack)).Msg("recover from panic")
 	}
 }
 
