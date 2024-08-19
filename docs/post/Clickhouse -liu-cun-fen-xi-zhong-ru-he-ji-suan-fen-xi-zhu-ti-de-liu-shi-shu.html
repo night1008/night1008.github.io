@@ -139,6 +139,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
   user_id UInt64
 ) ENGINE <span class="pl-k">=</span> Memory;
 
+
 <span class="pl-c"><span class="pl-c">--</span>- 插入数据</span>
 <span class="pl-k">INSERT INTO</span> retention_test <span class="pl-k">VALUES</span>
 (<span class="pl-s"><span class="pl-pds">'</span>2024-08-01 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>),
@@ -171,6 +172,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
   )
   <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>
   <span class="pl-k">ORDER BY</span> <span class="pl-c1">1</span>;
+
 
 <span class="pl-c"><span class="pl-c">--</span> 查询结果</span>
 ┌───────────init_date─┬─loss_data──────────┐

@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS retention_test (
   user_id UInt64
 ) ENGINE = Memory;
 
+
 --- 插入数据
 INSERT INTO retention_test VALUES
 ('2024-08-01 00:00:00', 'user_create', 1),
@@ -70,6 +71,7 @@ SELECT init_date, arrayReduce('sumMap', arrayMap(x -> map(x, 1), groupArray(loss
   )
   GROUP BY 1
   ORDER BY 1;
+
 
 -- 查询结果
 ┌───────────init_date─┬─loss_data──────────┐
