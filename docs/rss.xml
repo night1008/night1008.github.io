@@ -1,5 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Mon, 19 Aug 2024 08:25:46 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Clickhouse 留存分析中如何计算分析主体的流失数</title><link>https://night1008.github.io/post/Clickhouse%20-liu-cun-fen-xi-zhong-ru-he-ji-suan-fen-xi-zhu-ti-de-liu-shi-shu.html</link><description>### 背景&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 12 Sep 2024 09:50:03 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Clickhouse 留存分析中如何计算分析主体的留存情况</title><link>https://night1008.github.io/post/Clickhouse%20-liu-cun-fen-xi-zhong-ru-he-ji-suan-fen-xi-zhu-ti-de-liu-cun-qing-kuang.html</link><description>## 背景&#13;
+&#13;
+先明确留存分析相关的概念，&#13;
+**留存分析**：衡量不同批次新增用户的数据表现，最常见的就是留存率&#13;
+**分析主体**：触发事件的主体，比如用户&#13;
+**初始事件**：代表新增的事件，比如用户注册&#13;
+**回访事件**：代表活跃的事件，比如用户登录&#13;
+**回访用户同时参与事件**：代表活跃的事件，比如用户充值&#13;
+&#13;
+## 需求&#13;
+&#13;
+产品给出的关于留存定义为：**某天完成了初始事件的分析主体，在初始事件日期后的第 1 日至第 N 日有完成“回访事件”，即为第 N 日的“留存用户”**。</description><guid isPermaLink="true">https://night1008.github.io/post/Clickhouse%20-liu-cun-fen-xi-zhong-ru-he-ji-suan-fen-xi-zhu-ti-de-liu-cun-qing-kuang.html</guid><pubDate>Thu, 12 Sep 2024 09:49:38 +0000</pubDate></item><item><title>Clickhouse 留存分析中如何计算分析主体的流失数</title><link>https://night1008.github.io/post/Clickhouse%20-liu-cun-fen-xi-zhong-ru-he-ji-suan-fen-xi-zhu-ti-de-liu-shi-shu.html</link><description>### 背景&#13;
 &#13;
 先明确留存分析相关的概念&#13;
 **留存分析**：衡量不同批次新增用户的数据表现，最常见的就是留存率&#13;
