@@ -12,7 +12,7 @@
     </script>
 <meta name="description" content="### 背景
 
-我们使用了 `PostgreSQL` 表的记录作为全局任务的全局锁，
+我们使用了 `PostgreSQL` 表的记录作为任务只在单个节点上执行的全局锁，
 并且使用的是 `FOR UPDATE` 的行级别锁，
 但在锁已被表持有的情况下，如果要对表结构进行变更字段的话，会执行失败，
 场景为旧部署服务已持有了行级别锁，新部署服务就变更不了表结构，
@@ -20,7 +20,7 @@
 <meta property="og:title" content="PostgreSQL 持有行级别锁后表字段变更失败的问题">
 <meta property="og:description" content="### 背景
 
-我们使用了 `PostgreSQL` 表的记录作为全局任务的全局锁，
+我们使用了 `PostgreSQL` 表的记录作为任务只在单个节点上执行的全局锁，
 并且使用的是 `FOR UPDATE` 的行级别锁，
 但在锁已被表持有的情况下，如果要对表结构进行变更字段的话，会执行失败，
 场景为旧部署服务已持有了行级别锁，新部署服务就变更不了表结构，
@@ -96,7 +96,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h3>背景</h3>
-<p>我们使用了 <code class="notranslate">PostgreSQL</code> 表的记录作为全局任务的全局锁，<br>
+<p>我们使用了 <code class="notranslate">PostgreSQL</code> 表的记录作为任务只在单个节点上执行的全局锁，<br>
 并且使用的是 <code class="notranslate">FOR UPDATE</code> 的行级别锁，<br>
 但在锁已被表持有的情况下，如果要对表结构进行变更字段的话，会执行失败，<br>
 场景为旧部署服务已持有了行级别锁，新部署服务就变更不了表结构，<br>
