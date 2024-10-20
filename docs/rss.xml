@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 10 Oct 2024 10:06:39 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>PostgreSQL 持有行级别锁后表字段变更失败的问题</title><link>https://night1008.github.io/post/PostgreSQL%20-chi-you-xing-ji-bie-suo-hou-biao-zi-duan-bian-geng-shi-bai-de-wen-ti.html</link><description>### 背景&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sun, 20 Oct 2024 14:04:25 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>PostgreSQL 持有行级别锁后表字段变更失败的问题</title><link>https://night1008.github.io/post/PostgreSQL%20-chi-you-xing-ji-bie-suo-hou-biao-zi-duan-bian-geng-shi-bai-de-wen-ti.html</link><description>### 背景&#13;
 &#13;
 我们使用了 `PostgreSQL` 表的记录作为任务只在单个节点上执行的全局锁，&#13;
 并且使用的是 `FOR UPDATE` 的行级别锁，&#13;
@@ -179,7 +179,8 @@ func RunJob(ctx context.Context) error {&#13;
 - [ ] [沙丘1](https://movie.douban.com/subject/3001114) (还可以)&#13;
 - [ ] [沙丘2](https://movie.douban.com/subject/35575567) (还可以)&#13;
 - [ ] [月满轩尼诗](https://movie.douban.com/subject/3777800) (还可以)&#13;
-- [ ] [因果报应 Maharaja](https://movie.douban.com/subject/36934908/) (还不错)。</description><guid isPermaLink="true">https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</guid><pubDate>Sat, 06 Jul 2024 14:59:53 +0000</pubDate></item><item><title>Go recover from panic</title><link>https://night1008.github.io/post/Go%20recover%20from%20panic.html</link><description>```go&#13;
+- [ ] [因果报应 Maharaja](https://movie.douban.com/subject/36934908/) (还不错)&#13;
+- [ ] [心里的声音](https://movie.douban.com/subject/26435723/) (还可以)。</description><guid isPermaLink="true">https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</guid><pubDate>Sat, 06 Jul 2024 14:59:53 +0000</pubDate></item><item><title>Go recover from panic</title><link>https://night1008.github.io/post/Go%20recover%20from%20panic.html</link><description>```go&#13;
 package main&#13;
 &#13;
 import (&#13;
