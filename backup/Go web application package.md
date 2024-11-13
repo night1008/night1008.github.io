@@ -1,0 +1,5 @@
+1. [github.com/gin-gonic/gin](https://github.com/gin-gonic/gin) (framework)
+2. [github.com/spf13/cobra](https://github.com/spf13/cobra) (cli)
+3. [github.com/spf13/viper](https://github.com/spf13/viper) (config)
+4. [gorm.io/gorm](https://gorm.io/gorm) (orm)
+5. [github.com/rs/zerolog](https://github.com/rs/zerolog) (log)
