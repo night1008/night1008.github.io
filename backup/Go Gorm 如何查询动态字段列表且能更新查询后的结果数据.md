@@ -209,6 +209,8 @@ func getAdReportFieldTitleName(name string) string {
 
 ### 思路二：通过字典方式存储动态数据结构
 
+[Find-To-Map](https://gorm.io/docs/advanced_query.html#Find-To-Map)
+
 ```go
 func queryByMap(fields []string) (interface{}, error) {
   var groupBy []string

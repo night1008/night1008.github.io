@@ -282,6 +282,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 }</pre></div>
 <hr>
 <h3>思路二：通过字典方式存储动态数据结构</h3>
+<p><a href="https://gorm.io/docs/advanced_query.html#Find-To-Map" rel="nofollow">Find-To-Map</a></p>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-en">queryByMap</span>(<span class="pl-s1">fields</span> []<span class="pl-smi">string</span>) (<span class="pl-k">interface</span>{}, <span class="pl-smi">error</span>) {
   <span class="pl-k">var</span> <span class="pl-s1">groupBy</span> []<span class="pl-smi">string</span>
   <span class="pl-s1">allSelectFields</span> <span class="pl-c1">:=</span> <span class="pl-en">append</span>(<span class="pl-s1">groupBy</span>, <span class="pl-s1">fields</span><span class="pl-c1">...</span>)
