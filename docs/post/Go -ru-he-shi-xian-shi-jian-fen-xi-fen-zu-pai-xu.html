@@ -285,15 +285,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 }
 
 <span class="pl-c">// 根据分组值排序</span>
-<span class="pl-k">func</span> <span class="pl-en">sortUnionGroupsByValue</span>(<span class="pl-s1">unionGroups</span> [][]<span class="pl-smi">string</span>, <span class="pl-s1">unionGroupsValueMap</span> <span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-smi">float64</span>, <span class="pl-s1">unionGroupsJoinSymbol</span> <span class="pl-smi">string</span>, <span class="pl-s1">sortByAsc</span> <span class="pl-smi">bool</span>) [][]<span class="pl-smi">string</span> {
-	<span class="pl-s1">newUnionGroups</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([][]<span class="pl-smi">string</span>, <span class="pl-en">len</span>(<span class="pl-s1">unionGroups</span>))
-	<span class="pl-en">copy</span>(<span class="pl-s1">newUnionGroups</span>, <span class="pl-s1">unionGroups</span>)
-	<span class="pl-s1">sort</span>.<span class="pl-en">Slice</span>(<span class="pl-s1">newUnionGroups</span>, <span class="pl-k">func</span>(<span class="pl-s1">i</span>, <span class="pl-s1">j</span> <span class="pl-smi">int</span>) <span class="pl-smi">bool</span> {
+<span class="pl-k">func</span> <span class="pl-s1">sortUnionGroupsByValue</span>(<span class="pl-s1">unionGroups</span> [][]<span class="pl-smi">string</span>, <span class="pl-s1">unionGroupsValueMap</span> <span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-smi">float64</span>, <span class="pl-s1">unionGroupsJoinSymbol</span> <span class="pl-smi">string</span>, <span class="pl-s1">sortByAsc</span> <span class="pl-smi">bool</span>) [][]<span class="pl-smi">string</span> {
+	<span class="pl-s1">newUnionGroups</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([][]<span class="pl-smi">string</span>, <span class="pl-s1">len</span>(<span class="pl-s1">unionGroups</span>))
+	<span class="pl-s1">copy</span>(<span class="pl-s1">newUnionGroups</span>, <span class="pl-s1">unionGroups</span>)
+	<span class="pl-s1">sort</span>.<span class="pl-c1">Slice</span>(<span class="pl-s1">newUnionGroups</span>, <span class="pl-k">func</span>(<span class="pl-s1">i</span>, <span class="pl-s1">j</span> <span class="pl-smi">int</span>) <span class="pl-smi">bool</span> {
 		<span class="pl-s1">sortValue</span> <span class="pl-c1">:=</span> <span class="pl-c1">false</span>
 		<span class="pl-k">if</span> <span class="pl-s1">sortByAsc</span> {
-			<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">unionGroupsValueMap</span>[<span class="pl-s1">strings</span>.<span class="pl-en">Join</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">i</span>], <span class="pl-s1">unionGroupsJoinSymbol</span>)] <span class="pl-c1">&lt;</span> <span class="pl-s1">unionGroupsValueMap</span>[<span class="pl-s1">strings</span>.<span class="pl-en">Join</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">j</span>], <span class="pl-s1">unionGroupsJoinSymbol</span>)]
+			<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">unionGroupsValueMap</span>[<span class="pl-s1">strings</span>.<span class="pl-c1">Join</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">i</span>], <span class="pl-s1">unionGroupsJoinSymbol</span>)] <span class="pl-c1">&lt;</span> <span class="pl-s1">unionGroupsValueMap</span>[<span class="pl-s1">strings</span>.<span class="pl-c1">Join</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">j</span>], <span class="pl-s1">unionGroupsJoinSymbol</span>)]
 		} <span class="pl-k">else</span> {
-			<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">unionGroupsValueMap</span>[<span class="pl-s1">strings</span>.<span class="pl-en">Join</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">i</span>], <span class="pl-s1">unionGroupsJoinSymbol</span>)] <span class="pl-c1">&gt;</span> <span class="pl-s1">unionGroupsValueMap</span>[<span class="pl-s1">strings</span>.<span class="pl-en">Join</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">j</span>], <span class="pl-s1">unionGroupsJoinSymbol</span>)]
+			<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">unionGroupsValueMap</span>[<span class="pl-s1">strings</span>.<span class="pl-c1">Join</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">i</span>], <span class="pl-s1">unionGroupsJoinSymbol</span>)] <span class="pl-c1">&gt;</span> <span class="pl-s1">unionGroupsValueMap</span>[<span class="pl-s1">strings</span>.<span class="pl-c1">Join</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">j</span>], <span class="pl-s1">unionGroupsJoinSymbol</span>)]
 		}
 		<span class="pl-k">return</span> <span class="pl-s1">sortValue</span>
 	})
@@ -301,25 +301,25 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 }
 
 <span class="pl-c">// 根据分组名称排序</span>
-<span class="pl-k">func</span> <span class="pl-en">sortUnionGroupsByGroup</span>(<span class="pl-s1">unionGroups</span> [][]<span class="pl-smi">string</span>, <span class="pl-s1">unionGroupBy</span> []<span class="pl-c1">*</span><span class="pl-smi">EventModelQueryGroupBy</span>, <span class="pl-s1">sortByAsc</span> <span class="pl-smi">bool</span>) [][]<span class="pl-smi">string</span> {
-	<span class="pl-s1">newUnionGroups</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([][]<span class="pl-smi">string</span>, <span class="pl-en">len</span>(<span class="pl-s1">unionGroups</span>))
-	<span class="pl-en">copy</span>(<span class="pl-s1">newUnionGroups</span>, <span class="pl-s1">unionGroups</span>)
-	<span class="pl-s1">sort</span>.<span class="pl-en">Slice</span>(<span class="pl-s1">newUnionGroups</span>, <span class="pl-k">func</span>(<span class="pl-s1">i</span>, <span class="pl-s1">j</span> <span class="pl-smi">int</span>) <span class="pl-smi">bool</span> {
+<span class="pl-k">func</span> <span class="pl-s1">sortUnionGroupsByGroup</span>(<span class="pl-s1">unionGroups</span> [][]<span class="pl-smi">string</span>, <span class="pl-s1">unionGroupBy</span> []<span class="pl-c1">*</span><span class="pl-smi">EventModelQueryGroupBy</span>, <span class="pl-s1">sortByAsc</span> <span class="pl-smi">bool</span>) [][]<span class="pl-smi">string</span> {
+	<span class="pl-s1">newUnionGroups</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([][]<span class="pl-smi">string</span>, <span class="pl-s1">len</span>(<span class="pl-s1">unionGroups</span>))
+	<span class="pl-s1">copy</span>(<span class="pl-s1">newUnionGroups</span>, <span class="pl-s1">unionGroups</span>)
+	<span class="pl-s1">sort</span>.<span class="pl-c1">Slice</span>(<span class="pl-s1">newUnionGroups</span>, <span class="pl-k">func</span>(<span class="pl-s1">i</span>, <span class="pl-s1">j</span> <span class="pl-smi">int</span>) <span class="pl-smi">bool</span> {
 		<span class="pl-s1">sortValue</span> <span class="pl-c1">:=</span> <span class="pl-c1">false</span>
 		<span class="pl-k">for</span> <span class="pl-s1">index</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">unionGroupBy</span> {
-			<span class="pl-k">if</span> <span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">i</span>][<span class="pl-s1">index</span>] <span class="pl-c1">!=</span> <span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">j</span>][<span class="pl-s1">index</span>] {
+			<span class="pl-k">if</span> <span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">i</span>][<span class="pl-smi">index</span>] <span class="pl-c1">!=</span> <span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">j</span>][<span class="pl-smi">index</span>] {
 				<span class="pl-k">switch</span> <span class="pl-s1">unionGroupBy</span>[<span class="pl-s1">index</span>].<span class="pl-c1">Type</span> {
 				<span class="pl-k">case</span> <span class="pl-s1">PropertyTypeInteger</span>, <span class="pl-s1">PropertyTypeNumber</span>:
 					<span class="pl-k">if</span> <span class="pl-s1">sortByAsc</span> {
-						<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">sortValue</span> <span class="pl-c1">||</span> <span class="pl-en">parseNumberRangeSortValue</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">i</span>][<span class="pl-s1">index</span>]) <span class="pl-c1">&lt;</span> <span class="pl-en">parseNumberRangeSortValue</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">j</span>][<span class="pl-s1">index</span>])
+						<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">sortValue</span> <span class="pl-c1">||</span> <span class="pl-s1">parseNumberRangeSortValue</span>(<span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">i</span>][<span class="pl-smi">index</span>]) <span class="pl-c1">&lt;</span> <span class="pl-s1">parseNumberRangeSortValue</span>(<span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">j</span>][<span class="pl-smi">index</span>])
 					} <span class="pl-k">else</span> {
-						<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">sortValue</span> <span class="pl-c1">||</span> <span class="pl-en">parseNumberRangeSortValue</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">i</span>][<span class="pl-s1">index</span>]) <span class="pl-c1">&gt;</span> <span class="pl-en">parseNumberRangeSortValue</span>(<span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">j</span>][<span class="pl-s1">index</span>])
+						<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">sortValue</span> <span class="pl-c1">||</span> <span class="pl-s1">parseNumberRangeSortValue</span>(<span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">i</span>][<span class="pl-smi">index</span>]) <span class="pl-c1">&gt;</span> <span class="pl-s1">parseNumberRangeSortValue</span>(<span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">j</span>][<span class="pl-smi">index</span>])
 					}
 				<span class="pl-k">default</span>:
 					<span class="pl-k">if</span> <span class="pl-s1">sortByAsc</span> {
-						<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">sortValue</span> <span class="pl-c1">||</span> <span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">i</span>][<span class="pl-s1">index</span>] <span class="pl-c1">&lt;</span> <span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">j</span>][<span class="pl-s1">index</span>]
+						<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">sortValue</span> <span class="pl-c1">||</span> <span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">i</span>][<span class="pl-smi">index</span>] <span class="pl-c1">&lt;</span> <span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">j</span>][<span class="pl-smi">index</span>]
 					} <span class="pl-k">else</span> {
-						<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">sortValue</span> <span class="pl-c1">||</span> <span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">i</span>][<span class="pl-s1">index</span>] <span class="pl-c1">&gt;</span> <span class="pl-s1">newUnionGroups</span>[<span class="pl-s1">j</span>][<span class="pl-s1">index</span>]
+						<span class="pl-s1">sortValue</span> <span class="pl-c1">=</span> <span class="pl-s1">sortValue</span> <span class="pl-c1">||</span> <span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">i</span>][<span class="pl-smi">index</span>] <span class="pl-c1">&gt;</span> <span class="pl-smi">newUnionGroups</span>[<span class="pl-smi">j</span>][<span class="pl-smi">index</span>]
 					}
 				}
 				<span class="pl-k">break</span>
@@ -331,18 +331,18 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 }
 
 <span class="pl-c">// 对数值类型分组值拆分得到排序值 [-∞, 100), [-1, 2), 100, (null)</span>
-<span class="pl-k">func</span> <span class="pl-en">parseNumberRangeSortValue</span>(<span class="pl-s1">valueStr</span> <span class="pl-smi">string</span>) <span class="pl-smi">float64</span> {
-	<span class="pl-s1">firstPartValue</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-en">SplitN</span>(<span class="pl-s1">valueStr</span>, <span class="pl-s">","</span>, <span class="pl-c1">2</span>)[<span class="pl-c1">0</span>]
-	<span class="pl-s1">firstPartValue</span> <span class="pl-c1">=</span> <span class="pl-s1">strings</span>.<span class="pl-en">TrimLeft</span>(<span class="pl-s1">firstPartValue</span>, <span class="pl-s">"["</span>)
+<span class="pl-k">func</span> <span class="pl-s1">parseNumberRangeSortValue</span>(<span class="pl-s1">valueStr</span> <span class="pl-smi">string</span>) <span class="pl-smi">float64</span> {
+	<span class="pl-s1">firstPartValue</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-c1">SplitN</span>(<span class="pl-s1">valueStr</span>, <span class="pl-s">","</span>, <span class="pl-c1">2</span>)[<span class="pl-c1">0</span>]
+	<span class="pl-s1">firstPartValue</span> <span class="pl-c1">=</span> <span class="pl-s1">strings</span>.<span class="pl-c1">TrimLeft</span>(<span class="pl-s1">firstPartValue</span>, <span class="pl-s">"["</span>)
 	<span class="pl-k">switch</span> <span class="pl-s1">firstPartValue</span> {
 	<span class="pl-k">case</span> <span class="pl-s">"-∞"</span>:
-		<span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-en">Inf</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>)
+		<span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-c1">Inf</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>)
 	<span class="pl-k">case</span> <span class="pl-s">"(null)"</span>:
-		<span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-en">NaN</span>()
+		<span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-c1">NaN</span>()
 	<span class="pl-k">default</span>:
-		<span class="pl-s1">value</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">strconv</span>.<span class="pl-en">ParseFloat</span>(<span class="pl-s1">firstPartValue</span>, <span class="pl-c1">64</span>)
+		<span class="pl-s1">value</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">strconv</span>.<span class="pl-c1">ParseFloat</span>(<span class="pl-s1">firstPartValue</span>, <span class="pl-c1">64</span>)
 		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-en">Inf</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>)
+			<span class="pl-k">return</span> <span class="pl-s1">math</span>.<span class="pl-c1">Inf</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>)
 		}
 		<span class="pl-k">return</span> <span class="pl-s1">value</span>
 	}

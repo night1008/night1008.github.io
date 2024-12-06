@@ -126,21 +126,21 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-c1">UpdatedAt</span> <span class="pl-smi">int64</span> <span class="pl-s">`gorm:"autoUpdateTime:milli"`</span> <span class="pl-c">// 记录更新时间，单位 milli</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">GetServiceDeploymentGlobalJobLock</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>) (<span class="pl-smi">bool</span>, <span class="pl-smi">error</span>) {
+<span class="pl-k">func</span> <span class="pl-s1">GetServiceDeploymentGlobalJobLock</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>) (<span class="pl-smi">bool</span>, <span class="pl-smi">error</span>) {
 	<span class="pl-s1">deployment</span> <span class="pl-c1">:=</span> <span class="pl-smi">ServiceDeployment</span>{
 		<span class="pl-s1">Name</span>: <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>,
 	}
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">FirstOrCreate</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">deployment</span>, <span class="pl-smi">ServiceDeployment</span>{<span class="pl-s1">Name</span>: <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>}).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">FirstOrCreate</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">deployment</span>, <span class="pl-smi">ServiceDeployment</span>{<span class="pl-s1">Name</span>: <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>}).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-c1">false</span>, <span class="pl-s1">err</span>
 	}
 
-	<span class="pl-s1">tx</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Session</span>(<span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Session</span>{<span class="pl-s1">Logger</span>: <span class="pl-s1">logger</span>.<span class="pl-c1">Discard</span>}).<span class="pl-en">Begin</span>() <span class="pl-c">// 不打印错误日志，拿到锁会占用一个数据库连接</span>
-	<span class="pl-s1">exist</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">gormx</span>.<span class="pl-en">FindOne</span>(<span class="pl-s1">tx</span>.<span class="pl-en">Clauses</span>(clause.<span class="pl-smi">Locking</span>{<span class="pl-s1">Strength</span>: <span class="pl-s">"UPDATE"</span>, <span class="pl-s1">Options</span>: <span class="pl-s">"NOWAIT"</span>}).<span class="pl-en">Where</span>(<span class="pl-s">"name = ?"</span>, <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>), <span class="pl-c1">&amp;</span><span class="pl-s1">deployment</span>)
+	<span class="pl-s1">tx</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Session</span>(<span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Session</span>{<span class="pl-s1">Logger</span>: <span class="pl-s1">logger</span>.<span class="pl-c1">Discard</span>}).<span class="pl-c1">Begin</span>() <span class="pl-c">// 不打印错误日志，拿到锁会占用一个数据库连接</span>
+	<span class="pl-s1">exist</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">gormx</span>.<span class="pl-c1">FindOne</span>(<span class="pl-s1">tx</span>.<span class="pl-c1">Clauses</span>(clause.<span class="pl-smi">Locking</span>{<span class="pl-s1">Strength</span>: <span class="pl-s">"UPDATE"</span>, <span class="pl-s1">Options</span>: <span class="pl-s">"NOWAIT"</span>}).<span class="pl-c1">Where</span>(<span class="pl-s">"name = ?"</span>, <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>), <span class="pl-c1">&amp;</span><span class="pl-s1">deployment</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">if</span> <span class="pl-s1">pgErr</span>, <span class="pl-s1">ok</span> <span class="pl-c1">:=</span> <span class="pl-s1">err</span>.(<span class="pl-c1">*</span>pgconn.<span class="pl-smi">PgError</span>); <span class="pl-s1">ok</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">pgErr</span>.<span class="pl-c1">Code</span> <span class="pl-c1">==</span> <span class="pl-s">"55P03"</span> {
 			<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-c1">nil</span>
 		}
-		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">tx</span>.<span class="pl-en">Rollback</span>()
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">tx</span>.<span class="pl-c1">Rollback</span>()
 	}
 	<span class="pl-k">return</span> <span class="pl-s1">exist</span>, <span class="pl-s1">err</span>
 }</pre></div></div>

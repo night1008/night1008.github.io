@@ -165,8 +165,8 @@ https://github.com/blockloop/scan
 	<span class="pl-s1">defaultMaxRowsToCache</span> <span class="pl-c1">=</span> <span class="pl-c1">100</span>
 )
 
-<span class="pl-k">func</span> <span class="pl-en">newRistrettoCache</span>(<span class="pl-s1">maxRowsToCache</span> <span class="pl-smi">int64</span>) (cache.<span class="pl-smi">Cacher</span>, <span class="pl-smi">error</span>) {
-	<span class="pl-s1">c</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ristretto</span>.<span class="pl-en">NewCache</span>(<span class="pl-c1">&amp;</span>ristretto.<span class="pl-smi">Config</span>{
+<span class="pl-k">func</span> <span class="pl-s1">newRistrettoCache</span>(<span class="pl-s1">maxRowsToCache</span> <span class="pl-smi">int64</span>) (cache.<span class="pl-smi">Cacher</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-s1">c</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ristretto</span>.<span class="pl-c1">NewCache</span>(<span class="pl-c1">&amp;</span>ristretto.<span class="pl-smi">Config</span>{
 		<span class="pl-s1">NumCounters</span>: <span class="pl-c1">10</span> <span class="pl-c1">*</span> <span class="pl-s1">maxRowsToCache</span>,
 		<span class="pl-s1">MaxCost</span>:     <span class="pl-s1">maxRowsToCache</span>,
 		<span class="pl-s1">BufferItems</span>: <span class="pl-c1">64</span>,
@@ -175,7 +175,7 @@ https://github.com/blockloop/scan
 		<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 	}
 
-	<span class="pl-k">return</span> <span class="pl-s1">sqlcache</span>.<span class="pl-en">NewRistretto</span>(<span class="pl-s1">c</span>), <span class="pl-c1">nil</span>
+	<span class="pl-k">return</span> <span class="pl-s1">sqlcache</span>.<span class="pl-c1">NewRistretto</span>(<span class="pl-s1">c</span>), <span class="pl-c1">nil</span>
 }
 
 <span class="pl-k">var</span> <span class="pl-s1">querySQL</span> <span class="pl-smi">string</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
@@ -187,89 +187,89 @@ https://github.com/blockloop/scan
 
 <span class="pl-k">type</span> <span class="pl-smi">customConverter</span> <span class="pl-k">struct</span>{}
 
-<span class="pl-k">func</span> (<span class="pl-smi">customConverter</span>) <span class="pl-en">ConvertValue</span>(<span class="pl-s1">v</span> <span class="pl-smi">any</span>) (driver.<span class="pl-smi">Value</span>, <span class="pl-smi">error</span>) {
+<span class="pl-k">func</span> (<span class="pl-smi">customConverter</span>) <span class="pl-c1">ConvertValue</span>(<span class="pl-s1">v</span> <span class="pl-smi">any</span>) (driver.<span class="pl-smi">Value</span>, <span class="pl-smi">error</span>) {
 	<span class="pl-k">return</span> <span class="pl-s1">v</span>, <span class="pl-c1">nil</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">main</span>() {
-	<span class="pl-s1">cache</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">newRistrettoCache</span>(<span class="pl-s1">defaultMaxRowsToCache</span>)
+<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
+	<span class="pl-s1">cache</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">newRistrettoCache</span>(<span class="pl-s1">defaultMaxRowsToCache</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatalf</span>(<span class="pl-s">"newRistrettoCache() failed: %v"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatalf</span>(<span class="pl-s">"newRistrettoCache() failed: %v"</span>, <span class="pl-s1">err</span>)
 	}
 
-	<span class="pl-s1">interceptor</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">sqlcache</span>.<span class="pl-en">NewInterceptor</span>(<span class="pl-c1">&amp;</span>sqlcache.<span class="pl-smi">Config</span>{
+	<span class="pl-s1">interceptor</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">sqlcache</span>.<span class="pl-c1">NewInterceptor</span>(<span class="pl-c1">&amp;</span>sqlcache.<span class="pl-smi">Config</span>{
 		<span class="pl-s1">Cache</span>: <span class="pl-s1">cache</span>, <span class="pl-c">// pick a Cacher interface implementation of your choice (redis or ristretto)</span>
 	})
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatalf</span>(<span class="pl-s">"sqlcache.NewInterceptor() failed: %v"</span>, <span class="pl-s1">err</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatalf</span>(<span class="pl-s">"sqlcache.NewInterceptor() failed: %v"</span>, <span class="pl-s1">err</span>)
 	}
 
 	<span class="pl-k">defer</span> <span class="pl-k">func</span>() {
-		<span class="pl-s1">fmt</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"<span class="pl-cce">\n</span>Interceptor metrics: %+v<span class="pl-cce">\n</span>"</span>, <span class="pl-s1">interceptor</span>.<span class="pl-en">Stats</span>())
+		<span class="pl-s1">fmt</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"<span class="pl-cce">\n</span>Interceptor metrics: %+v<span class="pl-cce">\n</span>"</span>, <span class="pl-s1">interceptor</span>.<span class="pl-c1">Stats</span>())
 	}()
 
 	<span class="pl-s1">dsn</span> <span class="pl-c1">:=</span> <span class="pl-s">"clickhouse://localhost:9000"</span>
 
-	<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">sql</span>.<span class="pl-en">Open</span>(<span class="pl-s">"clickhouse"</span>, <span class="pl-s1">dsn</span>)
+	<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">sql</span>.<span class="pl-c1">Open</span>(<span class="pl-s">"clickhouse"</span>, <span class="pl-s1">dsn</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
 	<span class="pl-c">// install the wrapper which wraps pgx driver</span>
-	<span class="pl-s1">sql</span>.<span class="pl-en">Register</span>(<span class="pl-s">"clickhouse-sqlcache"</span>, <span class="pl-s1">interceptor</span>.<span class="pl-en">Driver</span>(<span class="pl-s1">conn</span>.<span class="pl-en">Driver</span>()))
+	<span class="pl-s1">sql</span>.<span class="pl-c1">Register</span>(<span class="pl-s">"clickhouse-sqlcache"</span>, <span class="pl-s1">interceptor</span>.<span class="pl-c1">Driver</span>(<span class="pl-s1">conn</span>.<span class="pl-c1">Driver</span>()))
 
-	<span class="pl-s1">db</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">sql</span>.<span class="pl-en">Open</span>(<span class="pl-s">"clickhouse-sqlcache"</span>, <span class="pl-s1">dsn</span>)
+	<span class="pl-s1">db</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">sql</span>.<span class="pl-c1">Open</span>(<span class="pl-s">"clickhouse-sqlcache"</span>, <span class="pl-s1">dsn</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
-	<span class="pl-k">defer</span> <span class="pl-s1">db</span>.<span class="pl-en">Close</span>()
+	<span class="pl-k">defer</span> <span class="pl-s1">db</span>.<span class="pl-c1">Close</span>()
 
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">db</span>.<span class="pl-en">PingContext</span>(<span class="pl-s1">context</span>.<span class="pl-en">TODO</span>()); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-en">Errorf</span>(<span class="pl-s">"db.PingContext() failed: %w"</span>, <span class="pl-s1">err</span>))
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">db</span>.<span class="pl-c1">PingContext</span>(<span class="pl-s1">context</span>.<span class="pl-c1">TODO</span>()); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Errorf</span>(<span class="pl-s">"db.PingContext() failed: %w"</span>, <span class="pl-s1">err</span>))
 	}
 
-	<span class="pl-s1">rows</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">QueryContext</span>(<span class="pl-s1">context</span>.<span class="pl-en">TODO</span>(), <span class="pl-s1">querySQL</span>)
+	<span class="pl-s1">rows</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">QueryContext</span>(<span class="pl-s1">context</span>.<span class="pl-c1">TODO</span>(), <span class="pl-s1">querySQL</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-en">Errorf</span>(<span class="pl-s">"db.QueryContext() failed: %w"</span>, <span class="pl-s1">err</span>))
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Errorf</span>(<span class="pl-s">"db.QueryContext() failed: %w"</span>, <span class="pl-s1">err</span>))
 	}
-	<span class="pl-k">defer</span> <span class="pl-s1">rows</span>.<span class="pl-en">Close</span>()
+	<span class="pl-k">defer</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Close</span>()
 
-	<span class="pl-k">for</span> <span class="pl-s1">rows</span>.<span class="pl-en">Next</span>() {
+	<span class="pl-k">for</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Next</span>() {
 		<span class="pl-k">var</span> <span class="pl-s1">id</span> <span class="pl-smi">int</span>
 		<span class="pl-k">var</span> <span class="pl-s1">name</span> <span class="pl-smi">string</span>
 		<span class="pl-k">var</span> <span class="pl-s1">mapper</span> <span class="pl-k">interface</span>{} <span class="pl-c">//map[string]uint64</span>
-		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">rows</span>.<span class="pl-en">Scan</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">id</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">name</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">mapper</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-en">Errorf</span>(<span class="pl-s">"rows.Scan() failed: %w"</span>, <span class="pl-s1">err</span>))
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Scan</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">id</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">name</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">mapper</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Errorf</span>(<span class="pl-s">"rows.Scan() failed: %w"</span>, <span class="pl-s1">err</span>))
 		}
-		<span class="pl-s1">fmt</span>.<span class="pl-en">Println</span>(<span class="pl-s">"===&gt; "</span>, <span class="pl-s1">id</span>, <span class="pl-s1">name</span>, <span class="pl-s1">mapper</span>)
+		<span class="pl-s1">fmt</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"===&gt; "</span>, <span class="pl-s1">id</span>, <span class="pl-s1">name</span>, <span class="pl-s1">mapper</span>)
 	}
 
-	<span class="pl-s1">db</span>, <span class="pl-s1">mock</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">sqlmock</span>.<span class="pl-en">New</span>(<span class="pl-s1">sqlmock</span>.<span class="pl-en">ValueConverterOption</span>(<span class="pl-smi">customConverter</span>{}))
-	<span class="pl-s1">cacheRows</span> <span class="pl-c1">:=</span> <span class="pl-s1">interceptor</span>.<span class="pl-en">CheckCache</span>(<span class="pl-s1">context</span>.<span class="pl-en">Background</span>(), <span class="pl-s1">querySQL</span>, <span class="pl-c1">nil</span>)
+	<span class="pl-s1">db</span>, <span class="pl-s1">mock</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">sqlmock</span>.<span class="pl-c1">New</span>(<span class="pl-s1">sqlmock</span>.<span class="pl-c1">ValueConverterOption</span>(<span class="pl-smi">customConverter</span>{}))
+	<span class="pl-s1">cacheRows</span> <span class="pl-c1">:=</span> <span class="pl-s1">interceptor</span>.<span class="pl-c1">CheckCache</span>(<span class="pl-s1">context</span>.<span class="pl-c1">Background</span>(), <span class="pl-s1">querySQL</span>, <span class="pl-c1">nil</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">cacheRows</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">var</span> <span class="pl-s1">dests</span> [][]driver.<span class="pl-smi">Value</span>
 		<span class="pl-k">for</span> {
-			<span class="pl-s1">dest</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]driver.<span class="pl-smi">Value</span>, <span class="pl-en">len</span>(<span class="pl-s1">cacheRows</span>.<span class="pl-en">Columns</span>()))
-			<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">cacheRows</span>.<span class="pl-en">Next</span>(<span class="pl-s1">dest</span>); <span class="pl-s1">err</span> <span class="pl-c1">==</span> <span class="pl-c1">nil</span> {
-				<span class="pl-s1">dests</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">dests</span>, <span class="pl-s1">dest</span>)
+			<span class="pl-s1">dest</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]driver.<span class="pl-smi">Value</span>, <span class="pl-s1">len</span>(<span class="pl-s1">cacheRows</span>.<span class="pl-c1">Columns</span>()))
+			<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">cacheRows</span>.<span class="pl-c1">Next</span>(<span class="pl-s1">dest</span>); <span class="pl-s1">err</span> <span class="pl-c1">==</span> <span class="pl-c1">nil</span> {
+				<span class="pl-s1">dests</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">dests</span>, <span class="pl-s1">dest</span>)
 			} <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">==</span> <span class="pl-s1">io</span>.<span class="pl-c1">EOF</span> {
 				<span class="pl-k">break</span>
 			} <span class="pl-k">else</span> {
-				<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+				<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 			}
 		}
                 <span class="pl-s1">cacheItem</span>, <span class="pl-s1">ok</span> <span class="pl-c1">:=</span> <span class="pl-s1">cacheRows</span>.(<span class="pl-c1">*</span>sqlcache.<span class="pl-smi">RowsCached</span>)
 	        <span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">ok</span> {
-		       <span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-en">Errorf</span>(<span class="pl-s">"cacheRows is not *sqlcache.RowsCached"</span>))
+		       <span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Errorf</span>(<span class="pl-s">"cacheRows is not *sqlcache.RowsCached"</span>))
 	        }
-	        <span class="pl-s1">mockColumns</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-c1">*</span>sqlmock.<span class="pl-smi">Column</span>, <span class="pl-c1">0</span>, <span class="pl-en">len</span>(<span class="pl-s1">cacheRows</span>.<span class="pl-en">Columns</span>()))
-	        <span class="pl-k">for</span> <span class="pl-s1">i</span>, <span class="pl-s1">column</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">cacheRows</span>.<span class="pl-en">Columns</span>() {
-		        <span class="pl-s1">mockColumns</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">mockColumns</span>, <span class="pl-s1">sqlmock</span>.<span class="pl-en">NewColumn</span>(<span class="pl-s1">column</span>).<span class="pl-en">OfType</span>(<span class="pl-s1">cacheItem</span>.<span class="pl-c1">DatabaseTypeNames</span>[<span class="pl-s1">i</span>], <span class="pl-s">""</span>))
+	        <span class="pl-s1">mockColumns</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-c1">*</span>sqlmock.<span class="pl-smi">Column</span>, <span class="pl-c1">0</span>, <span class="pl-s1">len</span>(<span class="pl-s1">cacheRows</span>.<span class="pl-c1">Columns</span>()))
+	        <span class="pl-k">for</span> <span class="pl-s1">i</span>, <span class="pl-s1">column</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">cacheRows</span>.<span class="pl-c1">Columns</span>() {
+		        <span class="pl-s1">mockColumns</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">mockColumns</span>, <span class="pl-s1">sqlmock</span>.<span class="pl-c1">NewColumn</span>(<span class="pl-s1">column</span>).<span class="pl-c1">OfType</span>(<span class="pl-s1">cacheItem</span>.<span class="pl-c1">DatabaseTypeNames</span>[<span class="pl-s1">i</span>], <span class="pl-s">""</span>))
 	        }
-	        <span class="pl-s1">mockRows</span> <span class="pl-c1">:=</span> <span class="pl-s1">mock</span>.<span class="pl-en">NewRowsWithColumnDefinition</span>(<span class="pl-s1">mockColumns</span><span class="pl-c1">...</span>).<span class="pl-en">AddRows</span>(<span class="pl-s1">dests</span><span class="pl-c1">...</span>)
+	        <span class="pl-s1">mockRows</span> <span class="pl-c1">:=</span> <span class="pl-s1">mock</span>.<span class="pl-c1">NewRowsWithColumnDefinition</span>(<span class="pl-s1">mockColumns</span><span class="pl-c1">...</span>).<span class="pl-c1">AddRows</span>(<span class="pl-s1">dests</span><span class="pl-c1">...</span>)
 		<span class="pl-c">// mockRows := mock.NewRows(cacheRows.Columns()).AddRows(dests...)</span>
-		<span class="pl-s1">mock</span>.<span class="pl-en">ExpectQuery</span>(<span class="pl-s1">regexp</span>.<span class="pl-en">QuoteMeta</span>(<span class="pl-s1">querySQL</span>)).<span class="pl-en">WillReturnRows</span>(<span class="pl-s1">mockRows</span>)
-		<span class="pl-s1">rows</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Query</span>(<span class="pl-s1">querySQL</span>)
-		<span class="pl-s1">fmt</span>.<span class="pl-en">Println</span>(<span class="pl-s1">rows</span>)
+		<span class="pl-s1">mock</span>.<span class="pl-c1">ExpectQuery</span>(<span class="pl-s1">regexp</span>.<span class="pl-c1">QuoteMeta</span>(<span class="pl-s1">querySQL</span>)).<span class="pl-c1">WillReturnRows</span>(<span class="pl-s1">mockRows</span>)
+		<span class="pl-s1">rows</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Query</span>(<span class="pl-s1">querySQL</span>)
+		<span class="pl-s1">fmt</span>.<span class="pl-c1">Println</span>(<span class="pl-s1">rows</span>)
   
                 <span class="pl-k">type</span> <span class="pl-smi">Person</span> <span class="pl-k">struct</span> {
 			<span class="pl-c1">ID</span>   <span class="pl-smi">int</span>    <span class="pl-s">`db:"id"`</span>
@@ -277,11 +277,11 @@ https://github.com/blockloop/scan
 			<span class="pl-c">// Mapper map[string]uint64 `db:"mapper"`</span>
 		}
 		<span class="pl-k">var</span> <span class="pl-s1">persons</span> []<span class="pl-smi">Person</span>
-		<span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">scan</span>.<span class="pl-en">Rows</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">persons</span>, <span class="pl-s1">rows</span>)
+		<span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">scan</span>.<span class="pl-c1">Rows</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">persons</span>, <span class="pl-s1">rows</span>)
 		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+			<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 		}
-		<span class="pl-s1">fmt</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"%#v<span class="pl-cce">\n</span>"</span>, <span class="pl-s1">persons</span>)
+		<span class="pl-s1">fmt</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"%#v<span class="pl-cce">\n</span>"</span>, <span class="pl-s1">persons</span>)
 	}
 }</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>

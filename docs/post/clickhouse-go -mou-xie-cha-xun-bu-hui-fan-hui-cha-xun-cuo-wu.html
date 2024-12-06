@@ -283,8 +283,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-s">"github.com/ClickHouse/clickhouse-go/v2"</span>
 )
 
-<span class="pl-k">func</span> <span class="pl-en">main</span>() {
-	<span class="pl-s1">db</span> <span class="pl-c1">:=</span> <span class="pl-s1">clickhouse</span>.<span class="pl-en">OpenDB</span>(<span class="pl-c1">&amp;</span>clickhouse.<span class="pl-smi">Options</span>{
+<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
+	<span class="pl-s1">db</span> <span class="pl-c1">:=</span> <span class="pl-s1">clickhouse</span>.<span class="pl-c1">OpenDB</span>(<span class="pl-c1">&amp;</span>clickhouse.<span class="pl-smi">Options</span>{
 		<span class="pl-s1">Addr</span>: []<span class="pl-smi">string</span>{<span class="pl-s">"127.0.0.1:9000"</span>},
 		<span class="pl-s1">Auth</span>: clickhouse.<span class="pl-smi">Auth</span>{
 			<span class="pl-s1">Database</span>: <span class="pl-s">"default"</span>,
@@ -296,21 +296,21 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 		},
 	})
 
-	<span class="pl-s1">ctx</span> <span class="pl-c1">:=</span> <span class="pl-s1">context</span>.<span class="pl-en">Background</span>()
-	<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Conn</span>(<span class="pl-s1">ctx</span>)
+	<span class="pl-s1">ctx</span> <span class="pl-c1">:=</span> <span class="pl-s1">context</span>.<span class="pl-c1">Background</span>()
+	<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Conn</span>(<span class="pl-s1">ctx</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
-	<span class="pl-k">defer</span> <span class="pl-s1">conn</span>.<span class="pl-en">Close</span>()
+	<span class="pl-k">defer</span> <span class="pl-s1">conn</span>.<span class="pl-c1">Close</span>()
 
 	<span class="pl-s1">sql</span> <span class="pl-c1">:=</span> <span class="pl-s">"select sleep(300)"</span>
-	<span class="pl-s1">rows</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">conn</span>.<span class="pl-en">QueryContext</span>(<span class="pl-s1">ctx</span>, <span class="pl-s1">sql</span>)
+	<span class="pl-s1">rows</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">conn</span>.<span class="pl-c1">QueryContext</span>(<span class="pl-s1">ctx</span>, <span class="pl-s1">sql</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
-	<span class="pl-k">defer</span> <span class="pl-s1">rows</span>.<span class="pl-en">Close</span>()
+	<span class="pl-k">defer</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Close</span>()
 
-	<span class="pl-s1">fmt</span>.<span class="pl-en">Println</span>(<span class="pl-s1">rows</span>.<span class="pl-en">Columns</span>())
+	<span class="pl-s1">fmt</span>.<span class="pl-c1">Println</span>(<span class="pl-s1">rows</span>.<span class="pl-c1">Columns</span>())
 }</pre></div>
 <p>期望结果是，</p>
 <pre class="notranslate"><code class="notranslate">code: 160, message: The maximum sleep time is 3000000 microseconds. Requested: 300: while executing 'FUNCTION sleep(300 :: 0) -&gt; sleep(300) UInt8 : 1'
@@ -333,21 +333,21 @@ Since the error is not thrown in ClickHouse at the time of query retrieval but l
 	<span class="pl-s">"github.com/stretchr/testify/require"</span>
 )
 
-<span class="pl-k">func</span> <span class="pl-en">Test1268</span>(<span class="pl-s1">t</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">T</span>) {
-	<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">clickhouse_tests</span>.<span class="pl-en">GetDatabaseSQLConnection</span>(<span class="pl-s">"issues"</span>, <span class="pl-c1">nil</span>, <span class="pl-c1">nil</span>, <span class="pl-c1">nil</span>)
-	<span class="pl-s1">require</span>.<span class="pl-en">NoError</span>(<span class="pl-s1">t</span>, <span class="pl-s1">err</span>)
+<span class="pl-k">func</span> <span class="pl-s1">Test1268</span>(<span class="pl-s1">t</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">T</span>) {
+	<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">clickhouse_tests</span>.<span class="pl-c1">GetDatabaseSQLConnection</span>(<span class="pl-s">"issues"</span>, <span class="pl-c1">nil</span>, <span class="pl-c1">nil</span>, <span class="pl-c1">nil</span>)
+	<span class="pl-s1">require</span>.<span class="pl-c1">NoError</span>(<span class="pl-s1">t</span>, <span class="pl-s1">err</span>)
 
-	<span class="pl-s1">rows</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">conn</span>.<span class="pl-en">QueryContext</span>(<span class="pl-s1">context</span>.<span class="pl-en">Background</span>(), <span class="pl-s">"select sleep(300)"</span>)
-	<span class="pl-s1">require</span>.<span class="pl-en">NoError</span>(<span class="pl-s1">t</span>, <span class="pl-s1">err</span>)
-	<span class="pl-k">defer</span> <span class="pl-s1">rows</span>.<span class="pl-en">Close</span>()
+	<span class="pl-s1">rows</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">conn</span>.<span class="pl-c1">QueryContext</span>(<span class="pl-s1">context</span>.<span class="pl-c1">Background</span>(), <span class="pl-s">"select sleep(300)"</span>)
+	<span class="pl-s1">require</span>.<span class="pl-c1">NoError</span>(<span class="pl-s1">t</span>, <span class="pl-s1">err</span>)
+	<span class="pl-k">defer</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Close</span>()
 
-	<span class="pl-k">for</span> <span class="pl-s1">rows</span>.<span class="pl-en">Next</span>() {
-		<span class="pl-k">if</span> <span class="pl-s1">rows</span>.<span class="pl-en">Err</span>() <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+	<span class="pl-k">for</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Next</span>() {
+		<span class="pl-k">if</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Err</span>() <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 			<span class="pl-k">break</span>
 		}
 	}
 
-	<span class="pl-s1">assert</span>.<span class="pl-en">ErrorContains</span>(<span class="pl-s1">t</span>, <span class="pl-s1">rows</span>.<span class="pl-en">Err</span>(), <span class="pl-s">"code: 160, message: The maximum sleep time is 3000000 microseconds."</span>)
+	<span class="pl-s1">assert</span>.<span class="pl-c1">ErrorContains</span>(<span class="pl-s1">t</span>, <span class="pl-s1">rows</span>.<span class="pl-c1">Err</span>(), <span class="pl-s">"code: 160, message: The maximum sleep time is 3000000 microseconds."</span>)
 }</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 

@@ -381,27 +381,27 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-c1">UpdatedAt</span> <span class="pl-smi">int64</span> <span class="pl-s">`gorm:"autoUpdateTime:milli"`</span> <span class="pl-c">// 记录更新时间，单位 milli</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">main</span>() {
+<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
 	<span class="pl-s1">dsn</span> <span class="pl-c1">:=</span> <span class="pl-s">"host=localhost user=postgres password=secret dbname=test port=5432 sslmode=disable"</span>
-	<span class="pl-s1">db</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">gorm</span>.<span class="pl-en">Open</span>(<span class="pl-s1">postgres</span>.<span class="pl-en">Open</span>(<span class="pl-s1">dsn</span>), <span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Config</span>{})
+	<span class="pl-s1">db</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">gorm</span>.<span class="pl-c1">Open</span>(<span class="pl-s1">postgres</span>.<span class="pl-c1">Open</span>(<span class="pl-s1">dsn</span>), <span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Config</span>{})
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">AutoMigrate</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">ServiceDeployment</span>{}); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">AutoMigrate</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">ServiceDeployment</span>{}); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
 
 	<span class="pl-k">var</span> <span class="pl-s1">jobEnable</span> <span class="pl-smi">bool</span>
 
-	<span class="pl-s1">eg</span>, <span class="pl-s1">ctx</span> <span class="pl-c1">:=</span> <span class="pl-s1">errgroup</span>.<span class="pl-en">WithContext</span>(<span class="pl-s1">context</span>.<span class="pl-en">Background</span>())
-	<span class="pl-s1">eg</span>.<span class="pl-en">Go</span>(<span class="pl-k">func</span>() <span class="pl-smi">error</span> {
-		<span class="pl-s1">ticker</span> <span class="pl-c1">:=</span> <span class="pl-s1">time</span>.<span class="pl-en">NewTicker</span>(<span class="pl-s1">globalJobLockGetPollingDuration</span>)
-		<span class="pl-k">defer</span> <span class="pl-s1">ticker</span>.<span class="pl-en">Stop</span>()
+	<span class="pl-s1">eg</span>, <span class="pl-s1">ctx</span> <span class="pl-c1">:=</span> <span class="pl-s1">errgroup</span>.<span class="pl-c1">WithContext</span>(<span class="pl-s1">context</span>.<span class="pl-c1">Background</span>())
+	<span class="pl-s1">eg</span>.<span class="pl-c1">Go</span>(<span class="pl-k">func</span>() <span class="pl-smi">error</span> {
+		<span class="pl-s1">ticker</span> <span class="pl-c1">:=</span> <span class="pl-s1">time</span>.<span class="pl-c1">NewTicker</span>(<span class="pl-s1">globalJobLockGetPollingDuration</span>)
+		<span class="pl-k">defer</span> <span class="pl-s1">ticker</span>.<span class="pl-c1">Stop</span>()
 
 		<span class="pl-k">for</span> {
-			<span class="pl-s1">exist</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">GetGlobalJobLock</span>(<span class="pl-s1">db</span>)
+			<span class="pl-s1">exist</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">GetGlobalJobLock</span>(<span class="pl-s1">db</span>)
 			<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-				<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s1">err</span>)
+				<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s1">err</span>)
 			}
 			<span class="pl-k">if</span> <span class="pl-s1">exist</span> {
 				<span class="pl-s1">jobEnable</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span>
@@ -409,32 +409,32 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 			}
 
 			<span class="pl-k">select</span> {
-			<span class="pl-k">case</span> <span class="pl-c1">&lt;-</span><span class="pl-s1">ctx</span>.<span class="pl-en">Done</span>():
-				<span class="pl-k">return</span> <span class="pl-s1">ctx</span>.<span class="pl-en">Err</span>()
+			<span class="pl-k">case</span> <span class="pl-c1">&lt;-</span><span class="pl-s1">ctx</span>.<span class="pl-c1">Done</span>():
+				<span class="pl-k">return</span> <span class="pl-s1">ctx</span>.<span class="pl-c1">Err</span>()
 			<span class="pl-k">case</span> <span class="pl-c1">&lt;-</span><span class="pl-s1">ticker</span>.<span class="pl-c1">C</span>:
 			}
 		}
 		<span class="pl-k">return</span> <span class="pl-c1">nil</span>
 	})
 
-	<span class="pl-s1">eg</span>.<span class="pl-en">Go</span>(<span class="pl-k">func</span>() <span class="pl-smi">error</span> {
-		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">stopTickerUntil</span>(<span class="pl-s1">ctx</span>, <span class="pl-s1">globalJobLockGetPollingDuration</span>, <span class="pl-k">func</span>() <span class="pl-smi">bool</span> {
+	<span class="pl-s1">eg</span>.<span class="pl-c1">Go</span>(<span class="pl-k">func</span>() <span class="pl-smi">error</span> {
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">stopTickerUntil</span>(<span class="pl-s1">ctx</span>, <span class="pl-s1">globalJobLockGetPollingDuration</span>, <span class="pl-k">func</span>() <span class="pl-smi">bool</span> {
 			<span class="pl-k">return</span> <span class="pl-s1">jobEnable</span>
 		}); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 			<span class="pl-k">return</span> <span class="pl-s1">err</span>
 		}
-		<span class="pl-k">return</span> <span class="pl-en">RunJob</span>(<span class="pl-s1">ctx</span>)
+		<span class="pl-k">return</span> <span class="pl-s1">RunJob</span>(<span class="pl-s1">ctx</span>)
 	})
 
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">eg</span>.<span class="pl-en">Wait</span>(); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Println</span>(<span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">eg</span>.<span class="pl-c1">Wait</span>(); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s1">err</span>)
 	}
 }
 
-<span class="pl-k">func</span> <span class="pl-en">FindOne</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>, <span class="pl-s1">out</span> <span class="pl-k">interface</span>{}) (<span class="pl-smi">bool</span>, <span class="pl-smi">error</span>) {
-	<span class="pl-s1">result</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">First</span>(<span class="pl-s1">out</span>)
+<span class="pl-k">func</span> <span class="pl-s1">FindOne</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>, <span class="pl-s1">out</span> <span class="pl-k">interface</span>{}) (<span class="pl-smi">bool</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-s1">result</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">First</span>(<span class="pl-s1">out</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">result</span>.<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-k">if</span> <span class="pl-s1">errors</span>.<span class="pl-en">Is</span>(<span class="pl-s1">err</span>, <span class="pl-s1">gorm</span>.<span class="pl-c1">ErrRecordNotFound</span>) {
+		<span class="pl-k">if</span> <span class="pl-s1">errors</span>.<span class="pl-c1">Is</span>(<span class="pl-s1">err</span>, <span class="pl-s1">gorm</span>.<span class="pl-c1">ErrRecordNotFound</span>) {
 			<span class="pl-k">return</span> <span class="pl-c1">false</span>, <span class="pl-c1">nil</span>
 		}
 		<span class="pl-k">return</span> <span class="pl-c1">false</span>, <span class="pl-s1">err</span>
@@ -442,36 +442,36 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-k">return</span> <span class="pl-c1">true</span>, <span class="pl-c1">nil</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">GetGlobalJobLock</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>) (<span class="pl-smi">bool</span>, <span class="pl-smi">error</span>) {
+<span class="pl-k">func</span> <span class="pl-s1">GetGlobalJobLock</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>) (<span class="pl-smi">bool</span>, <span class="pl-smi">error</span>) {
 	<span class="pl-s1">deployment</span> <span class="pl-c1">:=</span> <span class="pl-smi">ServiceDeployment</span>{
 		<span class="pl-s1">Name</span>: <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>,
 	}
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">FirstOrCreate</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">deployment</span>, <span class="pl-smi">ServiceDeployment</span>{<span class="pl-s1">Name</span>: <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>}).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">FirstOrCreate</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">deployment</span>, <span class="pl-smi">ServiceDeployment</span>{<span class="pl-s1">Name</span>: <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>}).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-c1">false</span>, <span class="pl-s1">err</span>
 	}
 
-	<span class="pl-s1">tx</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Session</span>(<span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Session</span>{<span class="pl-s1">Logger</span>: <span class="pl-s1">logger</span>.<span class="pl-c1">Discard</span>}).<span class="pl-en">Begin</span>() <span class="pl-c">// 不打印错误日志，拿到锁会占用一个数据库连接</span>
-	<span class="pl-s1">exist</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">FindOne</span>(<span class="pl-s1">tx</span>.<span class="pl-en">Clauses</span>(clause.<span class="pl-smi">Locking</span>{<span class="pl-s1">Strength</span>: <span class="pl-s">"UPDATE"</span>, <span class="pl-s1">Options</span>: <span class="pl-s">"NOWAIT"</span>}).<span class="pl-en">Where</span>(<span class="pl-s">"name = ?"</span>, <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>), <span class="pl-c1">&amp;</span><span class="pl-s1">deployment</span>)
+	<span class="pl-s1">tx</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Session</span>(<span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Session</span>{<span class="pl-s1">Logger</span>: <span class="pl-s1">logger</span>.<span class="pl-c1">Discard</span>}).<span class="pl-c1">Begin</span>() <span class="pl-c">// 不打印错误日志，拿到锁会占用一个数据库连接</span>
+	<span class="pl-s1">exist</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">FindOne</span>(<span class="pl-s1">tx</span>.<span class="pl-c1">Clauses</span>(clause.<span class="pl-smi">Locking</span>{<span class="pl-s1">Strength</span>: <span class="pl-s">"UPDATE"</span>, <span class="pl-s1">Options</span>: <span class="pl-s">"NOWAIT"</span>}).<span class="pl-c1">Where</span>(<span class="pl-s">"name = ?"</span>, <span class="pl-s1">ServiceDeploymentNameGlobalJobLock</span>), <span class="pl-c1">&amp;</span><span class="pl-s1">deployment</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">if</span> <span class="pl-s1">pgErr</span>, <span class="pl-s1">ok</span> <span class="pl-c1">:=</span> <span class="pl-s1">err</span>.(<span class="pl-c1">*</span>pgconn.<span class="pl-smi">PgError</span>); <span class="pl-s1">ok</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">pgErr</span>.<span class="pl-c1">Code</span> <span class="pl-c1">==</span> <span class="pl-s">"55P03"</span> {
 			<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-c1">nil</span>
 		}
-		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">tx</span>.<span class="pl-en">Rollback</span>()
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">tx</span>.<span class="pl-c1">Rollback</span>()
 	}
 	<span class="pl-k">return</span> <span class="pl-s1">exist</span>, <span class="pl-s1">err</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">stopTickerUntil</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>, <span class="pl-s1">duration</span> time.<span class="pl-smi">Duration</span>, <span class="pl-s1">stopFunc</span> <span class="pl-k">func</span>() <span class="pl-smi">bool</span>) <span class="pl-smi">error</span> {
-	<span class="pl-s1">ticker</span> <span class="pl-c1">:=</span> <span class="pl-s1">time</span>.<span class="pl-en">NewTicker</span>(<span class="pl-s1">duration</span>)
-	<span class="pl-k">defer</span> <span class="pl-s1">ticker</span>.<span class="pl-en">Stop</span>()
+<span class="pl-k">func</span> <span class="pl-s1">stopTickerUntil</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>, <span class="pl-s1">duration</span> time.<span class="pl-smi">Duration</span>, <span class="pl-s1">stopFunc</span> <span class="pl-k">func</span>() <span class="pl-smi">bool</span>) <span class="pl-smi">error</span> {
+	<span class="pl-s1">ticker</span> <span class="pl-c1">:=</span> <span class="pl-s1">time</span>.<span class="pl-c1">NewTicker</span>(<span class="pl-s1">duration</span>)
+	<span class="pl-k">defer</span> <span class="pl-s1">ticker</span>.<span class="pl-c1">Stop</span>()
 
 Loop:
 	<span class="pl-k">for</span> {
 		<span class="pl-k">select</span> {
-		<span class="pl-k">case</span> <span class="pl-c1">&lt;-</span><span class="pl-s1">ctx</span>.<span class="pl-en">Done</span>():
-			<span class="pl-k">return</span> <span class="pl-s1">ctx</span>.<span class="pl-en">Err</span>()
+		<span class="pl-k">case</span> <span class="pl-c1">&lt;-</span><span class="pl-s1">ctx</span>.<span class="pl-c1">Done</span>():
+			<span class="pl-k">return</span> <span class="pl-s1">ctx</span>.<span class="pl-c1">Err</span>()
 		<span class="pl-k">case</span> <span class="pl-c1">&lt;-</span><span class="pl-s1">ticker</span>.<span class="pl-c1">C</span>:
-			<span class="pl-k">if</span> <span class="pl-en">stopFunc</span>() {
+			<span class="pl-k">if</span> <span class="pl-s1">stopFunc</span>() {
 				<span class="pl-k">break</span> Loop
 			}
 		}
@@ -479,7 +479,7 @@ Loop:
 	<span class="pl-k">return</span> <span class="pl-c1">nil</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">RunJob</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>) <span class="pl-smi">error</span> {
+<span class="pl-k">func</span> <span class="pl-s1">RunJob</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>) <span class="pl-smi">error</span> {
 	<span class="pl-c">// run job</span>
 	<span class="pl-k">return</span> <span class="pl-c1">nil</span>
 }</pre></div></div>

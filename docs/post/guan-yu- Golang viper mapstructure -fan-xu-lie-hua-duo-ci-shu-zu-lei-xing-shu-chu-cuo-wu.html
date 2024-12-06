@@ -137,16 +137,16 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	} <span class="pl-s">`mapstructure:"server"`</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">main</span>() {
-	<span class="pl-s1">raw</span> <span class="pl-c1">:=</span> <span class="pl-s1">viper</span>.<span class="pl-en">NewWithOptions</span>()
-	<span class="pl-s1">raw</span>.<span class="pl-en">SetConfigType</span>(<span class="pl-s">"yaml"</span>)
+<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
+	<span class="pl-s1">raw</span> <span class="pl-c1">:=</span> <span class="pl-s1">viper</span>.<span class="pl-c1">NewWithOptions</span>()
+	<span class="pl-s1">raw</span>.<span class="pl-c1">SetConfigType</span>(<span class="pl-s">"yaml"</span>)
 
 	<span class="pl-s1">config</span> <span class="pl-c1">:=</span> <span class="pl-c1">&amp;</span><span class="pl-smi">Config</span>{
 		<span class="pl-s1">raw</span>: <span class="pl-s1">raw</span>,
 	}
 
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">config</span>.<span class="pl-c1">raw</span>.<span class="pl-en">MergeConfig</span>(<span class="pl-s1">bytes</span>.<span class="pl-en">NewBuffer</span>(<span class="pl-s1">defaultConfigContent</span>)); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-en">panic</span>(<span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">config</span>.<span class="pl-c1">raw</span>.<span class="pl-c1">MergeConfig</span>(<span class="pl-s1">bytes</span>.<span class="pl-c1">NewBuffer</span>(<span class="pl-s1">defaultConfigContent</span>)); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 	}
 
 	<span class="pl-c">// 两次序列化需要开启该注释代码</span>
@@ -154,15 +154,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-c">// 	panic(err)</span>
 	<span class="pl-c">// }</span>
 
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">config</span>.<span class="pl-c1">raw</span>.<span class="pl-en">MergeConfig</span>(<span class="pl-s1">bytes</span>.<span class="pl-en">NewBuffer</span>(<span class="pl-s1">overrideConfigContent</span>)); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-en">panic</span>(<span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">config</span>.<span class="pl-c1">raw</span>.<span class="pl-c1">MergeConfig</span>(<span class="pl-s1">bytes</span>.<span class="pl-c1">NewBuffer</span>(<span class="pl-s1">overrideConfigContent</span>)); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 	}
 
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">config</span>.<span class="pl-c1">raw</span>.<span class="pl-en">Unmarshal</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">config</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-en">panic</span>(<span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">config</span>.<span class="pl-c1">raw</span>.<span class="pl-c1">Unmarshal</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">config</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 	}
 
-	<span class="pl-s1">fmt</span>.<span class="pl-en">Println</span>(<span class="pl-s">"===&gt; config "</span>, <span class="pl-s1">config</span>)
+	<span class="pl-s1">fmt</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"===&gt; config "</span>, <span class="pl-s1">config</span>)
 
 	<span class="pl-c">// 日志打印</span>
 	<span class="pl-c">// 序列化一次 (正确)</span>

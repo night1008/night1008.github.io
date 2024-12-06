@@ -105,13 +105,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-c1">Age</span>   <span class="pl-smi">int64</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">main</span>() {
-	<span class="pl-s1">db</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">gorm</span>.<span class="pl-en">Open</span>(<span class="pl-s1">sqlite</span>.<span class="pl-en">Open</span>(<span class="pl-s">"test.db"</span>), <span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Config</span>{})
+<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
+	<span class="pl-s1">db</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">gorm</span>.<span class="pl-c1">Open</span>(<span class="pl-s1">sqlite</span>.<span class="pl-c1">Open</span>(<span class="pl-s">"test.db"</span>), <span class="pl-c1">&amp;</span>gorm.<span class="pl-smi">Config</span>{})
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">AutoMigrate</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">User</span>{}); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">AutoMigrate</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">User</span>{}); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
 
 	<span class="pl-s1">user</span> <span class="pl-c1">:=</span> <span class="pl-smi">User</span>{
@@ -121,26 +121,26 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	}
 
 	<span class="pl-c">// 错误写法</span>
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">createOrUpdate1</span>(<span class="pl-s1">db</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">user</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">createOrUpdate1</span>(<span class="pl-s1">db</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">user</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
 
 	<span class="pl-c">// 正确写法</span>
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">createOrUpdate2</span>(<span class="pl-s1">db</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">user</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">createOrUpdate2</span>(<span class="pl-s1">db</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">user</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
 }
 
 <span class="pl-c">// 错误写法</span>
-<span class="pl-k">func</span> <span class="pl-en">createOrUpdate1</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>, <span class="pl-s1">user</span> <span class="pl-c1">*</span><span class="pl-smi">User</span>) <span class="pl-smi">error</span> {
-	<span class="pl-s1">result</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Where</span>(<span class="pl-s">"email = ?"</span>, <span class="pl-s1">user</span>.<span class="pl-c1">Email</span>).<span class="pl-en">FirstOrCreate</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>)
+<span class="pl-k">func</span> <span class="pl-s1">createOrUpdate1</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>, <span class="pl-s1">user</span> <span class="pl-c1">*</span><span class="pl-smi">User</span>) <span class="pl-smi">error</span> {
+	<span class="pl-s1">result</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Where</span>(<span class="pl-s">"email = ?"</span>, <span class="pl-s1">user</span>.<span class="pl-c1">Email</span>).<span class="pl-c1">FirstOrCreate</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">result</span>.<span class="pl-c1">Error</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-s1">result</span>.<span class="pl-c1">Error</span>
 	}
 
 	<span class="pl-c">// 此时 user 的字段会更新城数据库里面的值，导致下面语句无效执行</span>
 	<span class="pl-k">if</span> <span class="pl-s1">result</span>.<span class="pl-c1">RowsAffected</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span> {
-		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Save</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Save</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 			<span class="pl-k">return</span> <span class="pl-s1">err</span>
 		}
 	}
@@ -148,10 +148,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 }
 
 <span class="pl-c">// 正确写法</span>
-<span class="pl-k">func</span> <span class="pl-en">createOrUpdate2</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>, <span class="pl-s1">user</span> <span class="pl-c1">*</span><span class="pl-smi">User</span>) <span class="pl-smi">error</span> {
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Where</span>(<span class="pl-s">"email = ?"</span>, <span class="pl-s1">user</span>.<span class="pl-c1">Email</span>).
-		<span class="pl-en">Assign</span>(<span class="pl-smi">User</span>{<span class="pl-s1">Name</span>: <span class="pl-s1">user</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">Age</span>: <span class="pl-s1">user</span>.<span class="pl-c1">Age</span>}).
-		<span class="pl-en">FirstOrCreate</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+<span class="pl-k">func</span> <span class="pl-s1">createOrUpdate2</span>(<span class="pl-s1">db</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>, <span class="pl-s1">user</span> <span class="pl-c1">*</span><span class="pl-smi">User</span>) <span class="pl-smi">error</span> {
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Where</span>(<span class="pl-s">"email = ?"</span>, <span class="pl-s1">user</span>.<span class="pl-c1">Email</span>).
+		<span class="pl-c1">Assign</span>(<span class="pl-smi">User</span>{<span class="pl-s1">Name</span>: <span class="pl-s1">user</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">Age</span>: <span class="pl-s1">user</span>.<span class="pl-c1">Age</span>}).
+		<span class="pl-c1">FirstOrCreate</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">user</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-s1">err</span>
 	}
 	<span class="pl-k">return</span> <span class="pl-c1">nil</span>

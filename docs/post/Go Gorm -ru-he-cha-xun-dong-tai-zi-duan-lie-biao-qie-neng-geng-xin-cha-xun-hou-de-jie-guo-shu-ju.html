@@ -122,9 +122,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 }
 
 <span class="pl-c">// 转换待查询的字段列表为原始的报表字段</span>
-<span class="pl-k">func</span> <span class="pl-en">ConvertStringFieldsToAdReportFields</span>(<span class="pl-s1">fieldNames</span> []<span class="pl-smi">string</span>, <span class="pl-s1">allReportFields</span> <span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-c1">*</span><span class="pl-smi">AdReportField</span>) ([]<span class="pl-c1">*</span><span class="pl-smi">AdReportField</span>, <span class="pl-smi">error</span>) {
-	<span class="pl-s1">reportFields</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-c1">*</span>model.<span class="pl-smi">AdReportField</span>, <span class="pl-c1">0</span>, <span class="pl-en">len</span>(<span class="pl-s1">allReportFields</span>))
-	<span class="pl-s1">existedReportFieldsMap</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>(<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-k">struct</span>{}, <span class="pl-en">len</span>(<span class="pl-s1">allReportFields</span>))
+<span class="pl-k">func</span> <span class="pl-s1">ConvertStringFieldsToAdReportFields</span>(<span class="pl-s1">fieldNames</span> []<span class="pl-smi">string</span>, <span class="pl-s1">allReportFields</span> <span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-c1">*</span><span class="pl-smi">AdReportField</span>) ([]<span class="pl-c1">*</span><span class="pl-smi">AdReportField</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-s1">reportFields</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-c1">*</span>model.<span class="pl-smi">AdReportField</span>, <span class="pl-c1">0</span>, <span class="pl-s1">len</span>(<span class="pl-s1">allReportFields</span>))
+	<span class="pl-s1">existedReportFieldsMap</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>(<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-k">struct</span>{}, <span class="pl-s1">len</span>(<span class="pl-s1">allReportFields</span>))
 	<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">fieldName</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">fieldNames</span> {
 		<span class="pl-s1">reportField</span>, <span class="pl-s1">ok</span> <span class="pl-c1">:=</span> <span class="pl-s1">allReportFields</span>[<span class="pl-s1">fieldName</span>]
 		<span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">ok</span> {
@@ -133,10 +133,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 		<span class="pl-k">if</span> <span class="pl-s1">_</span>, <span class="pl-s1">ok</span> <span class="pl-c1">:=</span> <span class="pl-s1">existedReportFieldsMap</span>[<span class="pl-s1">fieldName</span>]; <span class="pl-s1">ok</span> {
 			<span class="pl-k">continue</span>
 		}
-		<span class="pl-s1">reportFields</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">reportFields</span>, <span class="pl-s1">reportField</span>)
+		<span class="pl-s1">reportFields</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">reportFields</span>, <span class="pl-s1">reportField</span>)
 		<span class="pl-s1">existedReportFieldsMap</span>[<span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>] <span class="pl-c1">=</span> <span class="pl-k">struct</span>{}{}
 		<span class="pl-k">if</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">Expression</span> <span class="pl-c1">!=</span> <span class="pl-s">""</span> {
-			<span class="pl-s1">tokens</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">reportField</span>.<span class="pl-en">ParseMathTokens</span>()
+			<span class="pl-s1">tokens</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">ParseMathTokens</span>()
 			<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 				<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 			}
@@ -150,7 +150,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 					<span class="pl-k">if</span> <span class="pl-s1">_</span>, <span class="pl-s1">ok</span> <span class="pl-c1">:=</span> <span class="pl-s1">existedReportFieldsMap</span>[<span class="pl-s1">tokenField</span>.<span class="pl-c1">Name</span>]; <span class="pl-s1">ok</span> {
 						<span class="pl-k">continue</span>
 					}
-					<span class="pl-s1">reportFields</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">reportFields</span>, <span class="pl-s1">tokenField</span>)
+					<span class="pl-s1">reportFields</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">reportFields</span>, <span class="pl-s1">tokenField</span>)
 					<span class="pl-s1">existedReportFieldsMap</span>[<span class="pl-s1">tokenField</span>.<span class="pl-c1">Name</span>] <span class="pl-c1">=</span> <span class="pl-k">struct</span>{}{}
 				}
 			}
@@ -160,10 +160,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 }</pre></div>
 <hr>
 <h3>思路一：通过反射机制创建动态结构体</h3>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-en">queryByReflect</span>(<span class="pl-s1">fields</span> []<span class="pl-smi">string</span>) (<span class="pl-k">interface</span>{}, <span class="pl-smi">error</span>) {
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-s1">queryByReflect</span>(<span class="pl-s1">fields</span> []<span class="pl-smi">string</span>) (<span class="pl-k">interface</span>{}, <span class="pl-smi">error</span>) {
   <span class="pl-k">var</span> <span class="pl-s1">groupBy</span> []<span class="pl-smi">string</span>
-  <span class="pl-s1">allSelectFields</span> <span class="pl-c1">:=</span> <span class="pl-en">append</span>(<span class="pl-s1">groupBy</span>, <span class="pl-s1">fields</span><span class="pl-c1">...</span>)
-  <span class="pl-s1">reportFields</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">ConvertStringFieldsToAdReportFields</span>(<span class="pl-s1">allSelectFields</span>, <span class="pl-s1">adReportFieldMap</span>)
+  <span class="pl-s1">allSelectFields</span> <span class="pl-c1">:=</span> <span class="pl-s1">append</span>(<span class="pl-s1">groupBy</span>, <span class="pl-s1">fields</span><span class="pl-c1">...</span>)
+  <span class="pl-s1">reportFields</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ConvertStringFieldsToAdReportFields</span>(<span class="pl-s1">allSelectFields</span>, <span class="pl-s1">adReportFieldMap</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 	}
@@ -176,117 +176,117 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 		<span class="pl-k">switch</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">Type</span> {
 		<span class="pl-k">case</span> <span class="pl-s1">PropertyTypeInteger</span>, <span class="pl-s1">PropertyTypeFloat</span>:
 			<span class="pl-k">if</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">ScaleDownValue</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-				<span class="pl-s1">selectColumnNames</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">selectColumnNames</span>, <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"SUM((data-&gt;&gt;'%s')::float) / %f AS %s"</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>, <span class="pl-c1">*</span><span class="pl-s1">reportField</span>.<span class="pl-c1">ScaleDownValue</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>))
+				<span class="pl-s1">selectColumnNames</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">selectColumnNames</span>, <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"SUM((data-&gt;&gt;'%s')::float) / %f AS %s"</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>, <span class="pl-c1">*</span><span class="pl-s1">reportField</span>.<span class="pl-c1">ScaleDownValue</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>))
 			} <span class="pl-k">else</span> {
-				<span class="pl-s1">selectColumnNames</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">selectColumnNames</span>, <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"SUM((data-&gt;&gt;'%s')::float) AS %s"</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>))
+				<span class="pl-s1">selectColumnNames</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">selectColumnNames</span>, <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"SUM((data-&gt;&gt;'%s')::float) AS %s"</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>))
 			}
 		}
 	}
 
-  <span class="pl-s1">rowStruct</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">getReportFieldRowStruct</span>(<span class="pl-s1">reportFields</span>)
+  <span class="pl-s1">rowStruct</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">getReportFieldRowStruct</span>(<span class="pl-s1">reportFields</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 	}
 
-	<span class="pl-s1">items</span> <span class="pl-c1">:=</span> <span class="pl-s1">reflect</span>.<span class="pl-en">New</span>(<span class="pl-s1">reflect</span>.<span class="pl-en">SliceOf</span>(<span class="pl-s1">rowStruct</span>)).<span class="pl-en">Interface</span>()
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">s</span>.<span class="pl-c1">DB</span>.<span class="pl-en">Model</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">AdTencentReport</span>{}).
-		<span class="pl-en">Select</span>(<span class="pl-s1">selectColumnNames</span>).
-		<span class="pl-en">Group</span>(<span class="pl-s">"date"</span>).
-		<span class="pl-en">Find</span>(<span class="pl-s1">items</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+	<span class="pl-s1">items</span> <span class="pl-c1">:=</span> <span class="pl-s1">reflect</span>.<span class="pl-c1">New</span>(<span class="pl-s1">reflect</span>.<span class="pl-c1">SliceOf</span>(<span class="pl-s1">rowStruct</span>)).<span class="pl-c1">Interface</span>()
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">s</span>.<span class="pl-c1">DB</span>.<span class="pl-c1">Model</span>(<span class="pl-c1">&amp;</span><span class="pl-smi">AdTencentReport</span>{}).
+		<span class="pl-c1">Select</span>(<span class="pl-s1">selectColumnNames</span>).
+		<span class="pl-c1">Group</span>(<span class="pl-s">"date"</span>).
+		<span class="pl-c1">Find</span>(<span class="pl-s1">items</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 	}
 
-  <span class="pl-s1">itemValues</span> <span class="pl-c1">:=</span> <span class="pl-s1">reflect</span>.<span class="pl-en">ValueOf</span>(<span class="pl-s1">reflect</span>.<span class="pl-en">ValueOf</span>(<span class="pl-s1">items</span>).<span class="pl-en">Elem</span>().<span class="pl-en">Interface</span>())
+  <span class="pl-s1">itemValues</span> <span class="pl-c1">:=</span> <span class="pl-s1">reflect</span>.<span class="pl-c1">ValueOf</span>(<span class="pl-s1">reflect</span>.<span class="pl-c1">ValueOf</span>(<span class="pl-s1">items</span>).<span class="pl-c1">Elem</span>().<span class="pl-c1">Interface</span>())
 	<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">reportField</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">reportFields</span> {
-		<span class="pl-s1">reportFieldTitleName</span> <span class="pl-c1">:=</span> <span class="pl-en">getAdReportFieldTitleName</span>(<span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>)
+		<span class="pl-s1">reportFieldTitleName</span> <span class="pl-c1">:=</span> <span class="pl-s1">getAdReportFieldTitleName</span>(<span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>)
 		<span class="pl-k">if</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">Expression</span> <span class="pl-c1">!=</span> <span class="pl-s">""</span> {
-			<span class="pl-s1">tokens</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">reportField</span>.<span class="pl-en">GetMathTokens</span>()
+			<span class="pl-s1">tokens</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">GetMathTokens</span>()
 			<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 				<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 			}
-			<span class="pl-s1">expression</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">govaluate</span>.<span class="pl-en">NewEvaluableExpression</span>(<span class="pl-s1">reportField</span>.<span class="pl-c1">Expression</span>)
+			<span class="pl-s1">expression</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">govaluate</span>.<span class="pl-c1">NewEvaluableExpression</span>(<span class="pl-s1">reportField</span>.<span class="pl-c1">Expression</span>)
 			<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 				<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 			}
-			<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">:=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">itemValues</span>.<span class="pl-en">Len</span>(); <span class="pl-s1">i</span><span class="pl-c1">++</span> {
-				<span class="pl-s1">parameters</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>(<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-k">interface</span>{}, <span class="pl-c1">8</span>)
+			<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">:=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">itemValues</span>.<span class="pl-c1">Len</span>(); <span class="pl-s1">i</span><span class="pl-c1">++</span> {
+				<span class="pl-s1">parameters</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>(<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-k">interface</span>{}, <span class="pl-c1">8</span>)
 				<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">token</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">tokens</span> {
 					<span class="pl-k">switch</span> <span class="pl-s1">token</span>.<span class="pl-c1">Type</span> {
 					<span class="pl-k">case</span> <span class="pl-s1">mathtoken</span>.<span class="pl-c1">TypeVariable</span>:
-						<span class="pl-s1">tokenValue</span> <span class="pl-c1">:=</span> <span class="pl-s1">itemValues</span>.<span class="pl-en">Index</span>(<span class="pl-s1">i</span>).<span class="pl-en">FieldByName</span>(<span class="pl-en">getAdReportFieldTitleName</span>(<span class="pl-s1">token</span>.<span class="pl-c1">Value</span>))
+						<span class="pl-s1">tokenValue</span> <span class="pl-c1">:=</span> <span class="pl-s1">itemValues</span>.<span class="pl-c1">Index</span>(<span class="pl-s1">i</span>).<span class="pl-c1">FieldByName</span>(<span class="pl-s1">getAdReportFieldTitleName</span>(<span class="pl-s1">token</span>.<span class="pl-c1">Value</span>))
 						<span class="pl-k">var</span> <span class="pl-s1">value</span> <span class="pl-smi">float64</span>
-						<span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">tokenValue</span>.<span class="pl-en">IsNil</span>() {
-							<span class="pl-s1">value</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenValue</span>.<span class="pl-en">Elem</span>().<span class="pl-en">Float</span>()
+						<span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">tokenValue</span>.<span class="pl-c1">IsNil</span>() {
+							<span class="pl-s1">value</span> <span class="pl-c1">=</span> <span class="pl-s1">tokenValue</span>.<span class="pl-c1">Elem</span>().<span class="pl-c1">Float</span>()
 						}
 						<span class="pl-s1">parameters</span>[<span class="pl-s1">token</span>.<span class="pl-c1">Value</span>] <span class="pl-c1">=</span> <span class="pl-s1">value</span>
 					}
 				}
-				<span class="pl-s1">expressionResult</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">expression</span>.<span class="pl-en">Evaluate</span>(<span class="pl-s1">parameters</span>)
+				<span class="pl-s1">expressionResult</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">expression</span>.<span class="pl-c1">Evaluate</span>(<span class="pl-s1">parameters</span>)
 				<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 					<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 				}
 
 				<span class="pl-k">switch</span> <span class="pl-s1">expressionValue</span> <span class="pl-c1">:=</span> <span class="pl-s1">expressionResult</span>.(<span class="pl-k">type</span>) {
 				<span class="pl-k">case</span> <span class="pl-smi">float64</span>:
-					<span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">math</span>.<span class="pl-en">IsInf</span>(<span class="pl-s1">expressionValue</span>, <span class="pl-c1">0</span>) <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">!</span><span class="pl-s1">math</span>.<span class="pl-en">IsNaN</span>(<span class="pl-s1">expressionValue</span>) {
+					<span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">math</span>.<span class="pl-c1">IsInf</span>(<span class="pl-s1">expressionValue</span>, <span class="pl-c1">0</span>) <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">!</span><span class="pl-s1">math</span>.<span class="pl-c1">IsNaN</span>(<span class="pl-s1">expressionValue</span>) {
 						<span class="pl-s1">percentNum</span> <span class="pl-c1">:=</span> <span class="pl-c1">1.0</span>
 						<span class="pl-k">if</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">IsPercent</span> {
 							<span class="pl-s1">percentNum</span> <span class="pl-c1">=</span> <span class="pl-c1">100.0</span>
 						}
 						<span class="pl-s1">value</span> <span class="pl-c1">:=</span> <span class="pl-s1">expressionValue</span> <span class="pl-c1">*</span> <span class="pl-s1">percentNum</span>
-						<span class="pl-s1">itemValues</span>.<span class="pl-en">Index</span>(<span class="pl-s1">i</span>).<span class="pl-en">FieldByName</span>(<span class="pl-s1">reportFieldTitleName</span>).<span class="pl-en">Set</span>(<span class="pl-s1">reflect</span>.<span class="pl-en">ValueOf</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">value</span>))
+						<span class="pl-s1">itemValues</span>.<span class="pl-c1">Index</span>(<span class="pl-s1">i</span>).<span class="pl-c1">FieldByName</span>(<span class="pl-s1">reportFieldTitleName</span>).<span class="pl-c1">Set</span>(<span class="pl-s1">reflect</span>.<span class="pl-c1">ValueOf</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">value</span>))
 					}
 				}
 			}
 		}
 	}
 
-	<span class="pl-k">return</span> <span class="pl-s1">itemValues</span>.<span class="pl-en">Interface</span>(), <span class="pl-c1">nil</span>
+	<span class="pl-k">return</span> <span class="pl-s1">itemValues</span>.<span class="pl-c1">Interface</span>(), <span class="pl-c1">nil</span>
 }
 
 <span class="pl-c">// 获取报表字段动态反射结构体</span>
-<span class="pl-k">func</span> <span class="pl-en">getReportFieldRowStruct</span>(<span class="pl-s1">reportFields</span> []<span class="pl-c1">*</span><span class="pl-smi">AdReportField</span>) (reflect.<span class="pl-smi">Type</span>, <span class="pl-smi">error</span>) {
+<span class="pl-k">func</span> <span class="pl-s1">getReportFieldRowStruct</span>(<span class="pl-s1">reportFields</span> []<span class="pl-c1">*</span><span class="pl-smi">AdReportField</span>) (reflect.<span class="pl-smi">Type</span>, <span class="pl-smi">error</span>) {
 	<span class="pl-k">var</span> <span class="pl-s1">structFields</span> []reflect.<span class="pl-smi">StructField</span>
 	<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">field</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">reportFields</span> {
-		<span class="pl-s1">name</span> <span class="pl-c1">:=</span> <span class="pl-en">getAdReportFieldTitleName</span>(<span class="pl-s1">field</span>.<span class="pl-c1">Name</span>)
+		<span class="pl-s1">name</span> <span class="pl-c1">:=</span> <span class="pl-s1">getAdReportFieldTitleName</span>(<span class="pl-s1">field</span>.<span class="pl-c1">Name</span>)
 		<span class="pl-k">switch</span> <span class="pl-s1">field</span>.<span class="pl-c1">Type</span> {
 		<span class="pl-k">case</span> <span class="pl-s1">PropertyTypeString</span>:
 			<span class="pl-s1">_type</span> <span class="pl-c1">:=</span> <span class="pl-s">""</span>
-			<span class="pl-s1">structFields</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">structFields</span>, reflect.<span class="pl-smi">StructField</span>{
+			<span class="pl-s1">structFields</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">structFields</span>, reflect.<span class="pl-smi">StructField</span>{
 				<span class="pl-s1">Name</span>: <span class="pl-s1">name</span>,
-				<span class="pl-s1">Type</span>: <span class="pl-s1">reflect</span>.<span class="pl-en">TypeOf</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">_type</span>),
-				<span class="pl-s1">Tag</span>:  <span class="pl-s1">reflect</span>.<span class="pl-en">StructTag</span>(<span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">`json:"%s" gorm:"%s"`</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>)),
+				<span class="pl-s1">Type</span>: <span class="pl-s1">reflect</span>.<span class="pl-c1">TypeOf</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">_type</span>),
+				<span class="pl-s1">Tag</span>:  <span class="pl-s1">reflect</span>.<span class="pl-c1">StructTag</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">`json:"%s" gorm:"%s"`</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>)),
 			})
 		<span class="pl-k">case</span> <span class="pl-s1">PropertyTypeInteger</span>, <span class="pl-s1">PropertyTypeFloat</span>:
-			<span class="pl-s1">_type</span> <span class="pl-c1">:=</span> <span class="pl-en">float64</span>(<span class="pl-c1">0</span>)
-			<span class="pl-s1">structFields</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">structFields</span>, reflect.<span class="pl-smi">StructField</span>{
+			<span class="pl-s1">_type</span> <span class="pl-c1">:=</span> <span class="pl-s1">float64</span>(<span class="pl-c1">0</span>)
+			<span class="pl-s1">structFields</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">structFields</span>, reflect.<span class="pl-smi">StructField</span>{
 				<span class="pl-s1">Name</span>: <span class="pl-s1">name</span>,
-				<span class="pl-s1">Type</span>: <span class="pl-s1">reflect</span>.<span class="pl-en">TypeOf</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">_type</span>),
-				<span class="pl-s1">Tag</span>:  <span class="pl-s1">reflect</span>.<span class="pl-en">StructTag</span>(<span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">`json:"%s" gorm:"%s"`</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>)),
+				<span class="pl-s1">Type</span>: <span class="pl-s1">reflect</span>.<span class="pl-c1">TypeOf</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">_type</span>),
+				<span class="pl-s1">Tag</span>:  <span class="pl-s1">reflect</span>.<span class="pl-c1">StructTag</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">`json:"%s" gorm:"%s"`</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>)),
 			})
 		<span class="pl-k">default</span>:
-			<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">fmt</span>.<span class="pl-en">Errorf</span>(<span class="pl-s">"report field name %s type %s not found"</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Type</span>)
+			<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">fmt</span>.<span class="pl-c1">Errorf</span>(<span class="pl-s">"report field name %s type %s not found"</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">field</span>.<span class="pl-c1">Type</span>)
 		}
 	}
-	<span class="pl-k">return</span> <span class="pl-s1">reflect</span>.<span class="pl-en">StructOf</span>(<span class="pl-s1">structFields</span>), <span class="pl-c1">nil</span>
+	<span class="pl-k">return</span> <span class="pl-s1">reflect</span>.<span class="pl-c1">StructOf</span>(<span class="pl-s1">structFields</span>), <span class="pl-c1">nil</span>
 }
 
 <span class="pl-c">// 字段名称下划线转驼峰</span>
-<span class="pl-k">func</span> <span class="pl-en">getAdReportFieldTitleName</span>(<span class="pl-s1">name</span> <span class="pl-smi">string</span>) <span class="pl-smi">string</span> {
-	<span class="pl-s1">parts</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-en">Split</span>(<span class="pl-s1">name</span>, <span class="pl-s">"_"</span>)
-	<span class="pl-s1">titleParts</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">string</span>, <span class="pl-c1">0</span>, <span class="pl-en">len</span>(<span class="pl-s1">parts</span>))
+<span class="pl-k">func</span> <span class="pl-s1">getAdReportFieldTitleName</span>(<span class="pl-s1">name</span> <span class="pl-smi">string</span>) <span class="pl-smi">string</span> {
+	<span class="pl-s1">parts</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-c1">Split</span>(<span class="pl-s1">name</span>, <span class="pl-s">"_"</span>)
+	<span class="pl-s1">titleParts</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-smi">string</span>, <span class="pl-c1">0</span>, <span class="pl-s1">len</span>(<span class="pl-s1">parts</span>))
 	<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">part</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">parts</span> {
-		<span class="pl-s1">titleParts</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">titleParts</span>, <span class="pl-s1">cases</span>.<span class="pl-en">Title</span>(<span class="pl-s1">language</span>.<span class="pl-c1">English</span>).<span class="pl-en">String</span>(<span class="pl-s1">part</span>))
+		<span class="pl-s1">titleParts</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">titleParts</span>, <span class="pl-s1">cases</span>.<span class="pl-c1">Title</span>(<span class="pl-s1">language</span>.<span class="pl-c1">English</span>).<span class="pl-c1">String</span>(<span class="pl-s1">part</span>))
 	}
-	<span class="pl-k">return</span> <span class="pl-s1">strings</span>.<span class="pl-en">Join</span>(<span class="pl-s1">titleParts</span>, <span class="pl-s">""</span>)
+	<span class="pl-k">return</span> <span class="pl-s1">strings</span>.<span class="pl-c1">Join</span>(<span class="pl-s1">titleParts</span>, <span class="pl-s">""</span>)
 }</pre></div>
 <hr>
 <h3>思路二：通过字典方式存储动态数据结构</h3>
 <p><a href="https://gorm.io/docs/advanced_query.html#Find-To-Map" rel="nofollow">Find-To-Map</a></p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-en">queryByMap</span>(<span class="pl-s1">fields</span> []<span class="pl-smi">string</span>) (<span class="pl-k">interface</span>{}, <span class="pl-smi">error</span>) {
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-s1">queryByMap</span>(<span class="pl-s1">fields</span> []<span class="pl-smi">string</span>) (<span class="pl-k">interface</span>{}, <span class="pl-smi">error</span>) {
   <span class="pl-k">var</span> <span class="pl-s1">groupBy</span> []<span class="pl-smi">string</span>
-  <span class="pl-s1">allSelectFields</span> <span class="pl-c1">:=</span> <span class="pl-en">append</span>(<span class="pl-s1">groupBy</span>, <span class="pl-s1">fields</span><span class="pl-c1">...</span>)
-  <span class="pl-s1">reportFields</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">ConvertStringFieldsToBaseAdReportFields</span>(<span class="pl-s1">allSelectFields</span>, <span class="pl-s1">adReportFieldMap</span>)
+  <span class="pl-s1">allSelectFields</span> <span class="pl-c1">:=</span> <span class="pl-s1">append</span>(<span class="pl-s1">groupBy</span>, <span class="pl-s1">fields</span><span class="pl-c1">...</span>)
+  <span class="pl-s1">reportFields</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ConvertStringFieldsToBaseAdReportFields</span>(<span class="pl-s1">allSelectFields</span>, <span class="pl-s1">adReportFieldMap</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 	}
@@ -299,33 +299,33 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 		<span class="pl-k">switch</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">Type</span> {
 		<span class="pl-k">case</span> <span class="pl-s1">PropertyTypeInteger</span>, <span class="pl-s1">PropertyTypeFloat</span>:
 			<span class="pl-k">if</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">ScaleDownValue</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-				<span class="pl-s1">selectColumnNames</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">selectColumnNames</span>, <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"SUM((data-&gt;&gt;'%s')::float) / %f AS %s"</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>, <span class="pl-c1">*</span><span class="pl-s1">reportField</span>.<span class="pl-c1">ScaleDownValue</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>))
+				<span class="pl-s1">selectColumnNames</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">selectColumnNames</span>, <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"SUM((data-&gt;&gt;'%s')::float) / %f AS %s"</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>, <span class="pl-c1">*</span><span class="pl-s1">reportField</span>.<span class="pl-c1">ScaleDownValue</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>))
 			} <span class="pl-k">else</span> {
-				<span class="pl-s1">selectColumnNames</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">selectColumnNames</span>, <span class="pl-s1">fmt</span>.<span class="pl-en">Sprintf</span>(<span class="pl-s">"SUM((data-&gt;&gt;'%s')::float) AS %s"</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>))
+				<span class="pl-s1">selectColumnNames</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">selectColumnNames</span>, <span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">"SUM((data-&gt;&gt;'%s')::float) AS %s"</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>, <span class="pl-s1">reportField</span>.<span class="pl-c1">Name</span>))
 			}
 		}
 	}
 
   <span class="pl-k">var</span> <span class="pl-s1">items</span> []<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-k">interface</span>{}
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-en">Table</span>(<span class="pl-s">"ad_reports"</span>).
-		<span class="pl-en">Select</span>(<span class="pl-s1">selectColumnNames</span>).
-		<span class="pl-en">Group</span>(<span class="pl-s">"date"</span>).
-		<span class="pl-en">Find</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">items</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Table</span>(<span class="pl-s">"ad_reports"</span>).
+		<span class="pl-c1">Select</span>(<span class="pl-s1">selectColumnNames</span>).
+		<span class="pl-c1">Group</span>(<span class="pl-s">"date"</span>).
+		<span class="pl-c1">Find</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">items</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 	}
 
   <span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">reportField</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">reportFields</span> {
 		<span class="pl-k">if</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">Expression</span> <span class="pl-c1">!=</span> <span class="pl-s">""</span> {
-			<span class="pl-s1">tokens</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">reportField</span>.<span class="pl-en">ParseMathTokens</span>()
+			<span class="pl-s1">tokens</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">ParseMathTokens</span>()
 			<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 				<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 			}
-			<span class="pl-s1">expression</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">govaluate</span>.<span class="pl-en">NewEvaluableExpression</span>(<span class="pl-s1">reportField</span>.<span class="pl-c1">Expression</span>)
+			<span class="pl-s1">expression</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">govaluate</span>.<span class="pl-c1">NewEvaluableExpression</span>(<span class="pl-s1">reportField</span>.<span class="pl-c1">Expression</span>)
 			<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 				<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 			}
 			<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">item</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">items</span> {
-				<span class="pl-s1">parameters</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>(<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-k">interface</span>{}, <span class="pl-c1">8</span>)
+				<span class="pl-s1">parameters</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>(<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-k">interface</span>{}, <span class="pl-c1">8</span>)
 				<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">token</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">tokens</span> {
 					<span class="pl-k">switch</span> <span class="pl-s1">token</span>.<span class="pl-c1">Type</span> {
 					<span class="pl-k">case</span> <span class="pl-s1">mathtoken</span>.<span class="pl-c1">TypeVariable</span>:
@@ -337,7 +337,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 						<span class="pl-s1">parameters</span>[<span class="pl-s1">token</span>.<span class="pl-c1">Value</span>] <span class="pl-c1">=</span> <span class="pl-s1">value</span>
 					}
 				}
-				<span class="pl-s1">expressionResult</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">expression</span>.<span class="pl-en">Evaluate</span>(<span class="pl-s1">parameters</span>)
+				<span class="pl-s1">expressionResult</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">expression</span>.<span class="pl-c1">Evaluate</span>(<span class="pl-s1">parameters</span>)
 				<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 					<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 				}
@@ -345,7 +345,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 				<span class="pl-k">var</span> <span class="pl-s1">hasValue</span> <span class="pl-smi">bool</span>
 				<span class="pl-k">switch</span> <span class="pl-s1">expressionValue</span> <span class="pl-c1">:=</span> <span class="pl-s1">expressionResult</span>.(<span class="pl-k">type</span>) {
 				<span class="pl-k">case</span> <span class="pl-smi">float64</span>:
-					<span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">math</span>.<span class="pl-en">IsInf</span>(<span class="pl-s1">expressionValue</span>, <span class="pl-c1">0</span>) <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">!</span><span class="pl-s1">math</span>.<span class="pl-en">IsNaN</span>(<span class="pl-s1">expressionValue</span>) {
+					<span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">math</span>.<span class="pl-c1">IsInf</span>(<span class="pl-s1">expressionValue</span>, <span class="pl-c1">0</span>) <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">!</span><span class="pl-s1">math</span>.<span class="pl-c1">IsNaN</span>(<span class="pl-s1">expressionValue</span>) {
 						<span class="pl-s1">percentNum</span> <span class="pl-c1">:=</span> <span class="pl-c1">1.0</span>
 						<span class="pl-k">if</span> <span class="pl-s1">reportField</span>.<span class="pl-c1">IsPercent</span> {
 							<span class="pl-s1">percentNum</span> <span class="pl-c1">=</span> <span class="pl-c1">100.0</span>

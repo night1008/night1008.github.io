@@ -157,12 +157,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="content">
 <div class="markdown-body" id="postBody"><h3>可以对 error 进行 switch 判断</h3>
 <p>来源：<a href="https://github.com/prashanthpai/sqlcache/blob/4bf943bfd00f02394a480c5437e86af4b5be074c/cache_redis.go#L24">https://github.com/prashanthpai/sqlcache/blob/4bf943bfd00f02394a480c5437e86af4b5be074c/cache_redis.go#L24</a></p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> (<span class="pl-s1">r</span> <span class="pl-c1">*</span><span class="pl-smi">Redis</span>) <span class="pl-en">Get</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>, <span class="pl-s1">key</span> <span class="pl-smi">string</span>) (<span class="pl-c1">*</span>cache.<span class="pl-smi">Item</span>, <span class="pl-smi">bool</span>, <span class="pl-smi">error</span>) {
-	<span class="pl-s1">b</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">r</span>.<span class="pl-c1">c</span>.<span class="pl-en">Get</span>(<span class="pl-s1">ctx</span>, <span class="pl-s1">r</span>.<span class="pl-c1">keyPrefix</span><span class="pl-c1">+</span><span class="pl-s1">key</span>).<span class="pl-en">Bytes</span>()
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> (<span class="pl-s1">r</span> <span class="pl-c1">*</span><span class="pl-smi">Redis</span>) <span class="pl-c1">Get</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>, <span class="pl-s1">key</span> <span class="pl-smi">string</span>) (<span class="pl-c1">*</span>cache.<span class="pl-smi">Item</span>, <span class="pl-smi">bool</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-s1">b</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">r</span>.<span class="pl-c1">c</span>.<span class="pl-c1">Get</span>(<span class="pl-s1">ctx</span>, <span class="pl-s1">r</span>.<span class="pl-c1">keyPrefix</span><span class="pl-c1">+</span><span class="pl-s1">key</span>).<span class="pl-c1">Bytes</span>()
 	<span class="pl-k">switch</span> <span class="pl-s1">err</span> {
 	<span class="pl-k">case</span> <span class="pl-c1">nil</span>:
 		<span class="pl-k">var</span> <span class="pl-s1">item</span> cache.<span class="pl-smi">Item</span>
-		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">msgpack</span>.<span class="pl-en">Unmarshal</span>(<span class="pl-s1">b</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">item</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">msgpack</span>.<span class="pl-c1">Unmarshal</span>(<span class="pl-s1">b</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">item</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 			<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-c1">true</span>, <span class="pl-s1">err</span>
 		}
 		<span class="pl-k">return</span> <span class="pl-c1">&amp;</span><span class="pl-s1">item</span>, <span class="pl-c1">true</span>, <span class="pl-c1">nil</span>
@@ -181,7 +181,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 }
 
 <span class="pl-k">var</span> <span class="pl-s1">r</span> <span class="pl-smi">result</span>
-<span class="pl-s1">fmt</span>.<span class="pl-en">Println</span>(<span class="pl-s1">r</span>.<span class="pl-c1">string</span>, <span class="pl-s1">r</span>.<span class="pl-c1">bool</span>)</pre></div></div>
+<span class="pl-s1">fmt</span>.<span class="pl-c1">Println</span>(<span class="pl-s1">r</span>.<span class="pl-c1">string</span>, <span class="pl-s1">r</span>.<span class="pl-c1">bool</span>)</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
