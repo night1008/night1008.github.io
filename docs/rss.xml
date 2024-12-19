@@ -1,10 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 19 Dec 2024 06:48:44 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>分布式任务调度设计要点</title><link>https://night1008.github.io/post/fen-bu-shi-ren-wu-diao-du-she-ji-yao-dian.html</link><description>设计要点：&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 19 Dec 2024 08:10:06 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>分布式任务调度设计要点</title><link>https://night1008.github.io/post/fen-bu-shi-ren-wu-diao-du-she-ji-yao-dian.html</link><description>设计要点：&#13;
 1. 任务函数注册方便，参考 http 函数注册&#13;
 2. 任务创建可以指定参数，比如重试次数，延迟执行，超时时间等&#13;
 3. 任务可以分队列，避免阻塞，比如高中低优先级&#13;
 4. 任务执行 worker 数量可以任意扩展&#13;
 5. 支持指定定时任务，定时任务的产生可以通过数据库生成，这样方便修改任务信息&#13;
+6. 相同定时任务可以指定不同定时时间，不同时区&#13;
 &#13;
 因为业务上有定时任务的场景，之前思考如何使用 redis 达到上面的设计要点时，一直没想通怎么做，  &#13;
 直到看到 https://github.com/hibiken/asynq 的实现，没想到可以通过外部定时器发送定时任务的方式达到效果。</description><guid isPermaLink="true">https://night1008.github.io/post/fen-bu-shi-ren-wu-diao-du-she-ji-yao-dian.html</guid><pubDate>Thu, 19 Dec 2024 06:48:23 +0000</pubDate></item><item><title>Go Gorm 如何查询动态字段列表且能更新查询后的结果数据</title><link>https://night1008.github.io/post/Go%20Gorm%20-ru-he-cha-xun-dong-tai-zi-duan-lie-biao-qie-neng-geng-xin-cha-xun-hou-de-jie-guo-shu-ju.html</link><description>### 背景&#13;
