@@ -11,3 +11,49 @@ ALTER TABLE public.ad_advertisers DROP CONSTRAINT ad_advertisers_pkey;
 UPDATE ad_advertisers SET account_type = '' WHERE account_type IS NULL;
 ALTER TABLE public.ad_advertisers ADD CONSTRAINT ad_advertisers_pkey PRIMARY KEY (app_id, channel_name, account_type, account_id);
 ```
+
+---
+
+### 重置数据库表 ID
+
+```sql
+ALTER SEQUENCE users_id_seq RESTART WITH 7;
+```
+
+---
+
+### 查看表结构
+
+```sql
+pg_dump -h localhost -p 5432 -U postgres -d db_name -t table_name --schema-only
+```
+
+---
+
+### 表大小情况查询
+
+```sql
+-- 查看每个表的占用空间大小
+select
+  table_name, 
+  pg_size_pretty(pg_total_relation_size(quote_ident(table_name))),
+  pg_relation_size(quote_ident(table_name))
+from information_schema.tables
+where table_schema = 'public'
+order by 3 desc;
+
+-- 查看每个表的行数
+SELECT 
+    schemaname AS schema,
+    relname AS table,
+    n_live_tup AS estimated_row_count
+FROM 
+    pg_stat_user_tables
+ORDER BY 3 desc;
+
+-- 查看某个数据库磁盘占用情况
+select pg_size_pretty(pg_database_size('funnydb_web'));
+
+-- 查看全部数据库磁盘占用情况
+SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by db_usage desc;
+```

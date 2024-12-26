@@ -22,7 +22,54 @@ CREATE UNIQUE INDEX ad_advertisers_pkey ON public.ad_advertisers USING btree (ap
 ALTER TABLE public.ad_advertisers DROP CONSTRAINT ad_advertisers_pkey;
 UPDATE ad_advertisers SET account_type = '' WHERE account_type IS NULL;
 ALTER TABLE public.ad_advertisers ADD CONSTRAINT ad_advertisers_pkey PRIMARY KEY (app_id, channel_name, account_type, account_id);
-```。">
+```
+
+---
+
+### 重置数据库表 ID
+
+```sql
+ALTER SEQUENCE users_id_seq RESTART WITH 7;
+```
+
+---
+
+### 查看表结构
+
+```sql
+pg_dump -h localhost -p 5432 -U postgres -d db_name -t table_name --schema-only
+```
+
+---
+
+### 表大小情况查询
+
+```sql
+-- 查看每个表的占用空间大小
+select
+  table_name, 
+  pg_size_pretty(pg_total_relation_size(quote_ident(table_name))),
+  pg_relation_size(quote_ident(table_name))
+from information_schema.tables
+where table_schema = 'public'
+order by 3 desc;
+
+-- 查看每个表的行数
+SELECT 
+    schemaname AS schema,
+    relname AS table,
+    n_live_tup AS estimated_row_count
+FROM 
+    pg_stat_user_tables
+ORDER BY 3 desc;
+
+-- 查看某个数据库磁盘占用情况
+select pg_size_pretty(pg_database_size('funnydb_web'));
+
+-- 查看全部数据库磁盘占用情况
+SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by db_usage desc;
+```
+。">
 <meta property="og:title" content="PostgreSQL 业务使用手册">
 <meta property="og:description" content="### 手动修改联合主键表索引
 
@@ -36,7 +83,54 @@ CREATE UNIQUE INDEX ad_advertisers_pkey ON public.ad_advertisers USING btree (ap
 ALTER TABLE public.ad_advertisers DROP CONSTRAINT ad_advertisers_pkey;
 UPDATE ad_advertisers SET account_type = '' WHERE account_type IS NULL;
 ALTER TABLE public.ad_advertisers ADD CONSTRAINT ad_advertisers_pkey PRIMARY KEY (app_id, channel_name, account_type, account_id);
-```。">
+```
+
+---
+
+### 重置数据库表 ID
+
+```sql
+ALTER SEQUENCE users_id_seq RESTART WITH 7;
+```
+
+---
+
+### 查看表结构
+
+```sql
+pg_dump -h localhost -p 5432 -U postgres -d db_name -t table_name --schema-only
+```
+
+---
+
+### 表大小情况查询
+
+```sql
+-- 查看每个表的占用空间大小
+select
+  table_name, 
+  pg_size_pretty(pg_total_relation_size(quote_ident(table_name))),
+  pg_relation_size(quote_ident(table_name))
+from information_schema.tables
+where table_schema = 'public'
+order by 3 desc;
+
+-- 查看每个表的行数
+SELECT 
+    schemaname AS schema,
+    relname AS table,
+    n_live_tup AS estimated_row_count
+FROM 
+    pg_stat_user_tables
+ORDER BY 3 desc;
+
+-- 查看某个数据库磁盘占用情况
+select pg_size_pretty(pg_database_size('funnydb_web'));
+
+-- 查看全部数据库磁盘占用情况
+SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by db_usage desc;
+```
+。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/PostgreSQL%20-ye-wu-shi-yong-shou-ce.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
@@ -115,7 +209,38 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">public</span>.<span class="pl-c1">ad_advertisers</span> DROP <span class="pl-k">CONSTRAINT</span> ad_advertisers_pkey;
 <span class="pl-k">UPDATE</span> ad_advertisers <span class="pl-k">SET</span> account_type <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> <span class="pl-k">WHERE</span> account_type IS <span class="pl-k">NULL</span>;
-<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">public</span>.<span class="pl-c1">ad_advertisers</span> ADD <span class="pl-k">CONSTRAINT</span> ad_advertisers_pkey <span class="pl-k">PRIMARY KEY</span> (app_id, channel_name, account_type, account_id);</pre></div></div>
+<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">public</span>.<span class="pl-c1">ad_advertisers</span> ADD <span class="pl-k">CONSTRAINT</span> ad_advertisers_pkey <span class="pl-k">PRIMARY KEY</span> (app_id, channel_name, account_type, account_id);</pre></div>
+<hr>
+<h3>重置数据库表 ID</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">ALTER</span> <span class="pl-k">SEQUENCE</span> users_id_seq RESTART WITH <span class="pl-c1">7</span>;</pre></div>
+<hr>
+<h3>查看表结构</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate">pg_dump <span class="pl-k">-</span>h localhost <span class="pl-k">-</span>p <span class="pl-c1">5432</span> <span class="pl-k">-</span>U postgres <span class="pl-k">-</span>d db_name <span class="pl-k">-</span>t table_name <span class="pl-c"><span class="pl-c">--</span>schema-only</span></pre></div>
+<hr>
+<h3>表大小情况查询</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 查看每个表的占用空间大小</span>
+<span class="pl-k">select</span>
+  table_name, 
+  pg_size_pretty(pg_total_relation_size(quote_ident(table_name))),
+  pg_relation_size(quote_ident(table_name))
+<span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">tables</span>
+<span class="pl-k">where</span> table_schema <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>public<span class="pl-pds">'</span></span>
+<span class="pl-k">order by</span> <span class="pl-c1">3</span> <span class="pl-k">desc</span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 查看每个表的行数</span>
+<span class="pl-k">SELECT</span> 
+    schemaname <span class="pl-k">AS</span> schema,
+    relname <span class="pl-k">AS</span> table,
+    n_live_tup <span class="pl-k">AS</span> estimated_row_count
+<span class="pl-k">FROM</span> 
+    pg_stat_user_tables
+<span class="pl-k">ORDER BY</span> <span class="pl-c1">3</span> <span class="pl-k">desc</span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 查看某个数据库磁盘占用情况</span>
+<span class="pl-k">select</span> pg_size_pretty(pg_database_size(<span class="pl-s"><span class="pl-pds">'</span>funnydb_web<span class="pl-pds">'</span></span>));
+
+<span class="pl-c"><span class="pl-c">--</span> 查看全部数据库磁盘占用情况</span>
+<span class="pl-k">SELECT</span> datname <span class="pl-k">as</span> db_name, pg_size_pretty(pg_database_size(datname)) <span class="pl-k">as</span> db_usage <span class="pl-k">FROM</span> pg_database <span class="pl-k">order by</span> db_usage <span class="pl-k">desc</span>;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
