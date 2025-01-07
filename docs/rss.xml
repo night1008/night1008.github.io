@@ -1,5 +1,22 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Mon, 06 Jan 2025 07:10:33 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Clickhouse Golang 从缓存中读取时间类型字段丢失时区的问题</title><link>https://night1008.github.io/post/Clickhouse%20Golang%20-cong-huan-cun-zhong-du-qu-shi-jian-lei-xing-zi-duan-diu-shi-shi-qu-de-wen-ti.html</link><description>---&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Tue, 07 Jan 2025 02:06:52 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Clickhouse Golang 从缓存中读取时间类型字段丢失时区的问题</title><link>https://night1008.github.io/post/Clickhouse%20Golang%20-cong-huan-cun-zhong-du-qu-shi-jian-lei-xing-zi-duan-diu-shi-shi-qu-de-wen-ti.html</link><description>### 背景&#13;
+&#13;
+使用以下两个包进行 clickhouse 查询数据缓存，发现命中缓存时，返回的时间类型字段的值偏移了八个小时，服务器时区是零时区&#13;
+- https://github.com/ClickHouse/clickhouse-go&#13;
+- https://github.com/night1008/sqlcache&#13;
+&#13;
+### 问题原因&#13;
+直接通过数据库查询的时间是东八区，比如 `2024-12-05 00:00:05.657 +0800 CST`，&#13;
+但是后面命中缓存从中拿到的时区是零时区(服务器时区是零时区)，比如 `2024-12-04 16:00:05.657 +0000 UTC`，&#13;
+这样再对时间字段做格式化的时候就会差了八个时区，&#13;
+不过这时候缓存已丢失了最开始查询所携带的时区&#13;
+&#13;
+### 解决方法&#13;
+1. 缓存查询数据的同时，缓存列的信息，来自 sql.DatabaseTypeName()，比如 DateTime64(3, 'Asia/Shanghai')&#13;
+2. 查询命中缓存时通过解析列信息列得到时区&#13;
+3. 对时间字段指定解析后的时区进行格式化&#13;
+&#13;
+---&#13;
 &#13;
 发现一个有意思的现象，通过 `union` 的方式查询两条不同时区的数据，后续的数据都会转换成第一条数据所拥有的时区。</description><guid isPermaLink="true">https://night1008.github.io/post/Clickhouse%20Golang%20-cong-huan-cun-zhong-du-qu-shi-jian-lei-xing-zi-duan-diu-shi-shi-qu-de-wen-ti.html</guid><pubDate>Mon, 06 Jan 2025 07:09:51 +0000</pubDate></item><item><title>Go 全局时区设置</title><link>https://night1008.github.io/post/Go%20-quan-ju-shi-qu-she-zhi.html</link><description>正常本地开发环境的时区是东八区，线上服务器的时区是零时区，  &#13;
 调试一些线上服务器的时区问题的时候，如何通过设置全局时区在本地进行调试呢。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-quan-ju-shi-qu-she-zhi.html</guid><pubDate>Mon, 06 Jan 2025 02:08:02 +0000</pubDate></item><item><title>PostgreSQL 业务使用手册</title><link>https://night1008.github.io/post/PostgreSQL%20-ye-wu-shi-yong-shou-ce.html</link><description>### 手动修改联合主键表索引&#13;

@@ -10,11 +10,45 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="---
+<meta name="description" content="### 背景
+
+使用以下两个包进行 clickhouse 查询数据缓存，发现命中缓存时，返回的时间类型字段的值偏移了八个小时，服务器时区是零时区
+- https://github.com/ClickHouse/clickhouse-go
+- https://github.com/night1008/sqlcache
+
+### 问题原因
+直接通过数据库查询的时间是东八区，比如 `2024-12-05 00:00:05.657 +0800 CST`，
+但是后面命中缓存从中拿到的时区是零时区(服务器时区是零时区)，比如 `2024-12-04 16:00:05.657 +0000 UTC`，
+这样再对时间字段做格式化的时候就会差了八个时区，
+不过这时候缓存已丢失了最开始查询所携带的时区
+
+### 解决方法
+1. 缓存查询数据的同时，缓存列的信息，来自 sql.DatabaseTypeName()，比如 DateTime64(3, 'Asia/Shanghai')
+2. 查询命中缓存时通过解析列信息列得到时区
+3. 对时间字段指定解析后的时区进行格式化
+
+---
 
 发现一个有意思的现象，通过 `union` 的方式查询两条不同时区的数据，后续的数据都会转换成第一条数据所拥有的时区。">
 <meta property="og:title" content="Clickhouse Golang 从缓存中读取时间类型字段丢失时区的问题">
-<meta property="og:description" content="---
+<meta property="og:description" content="### 背景
+
+使用以下两个包进行 clickhouse 查询数据缓存，发现命中缓存时，返回的时间类型字段的值偏移了八个小时，服务器时区是零时区
+- https://github.com/ClickHouse/clickhouse-go
+- https://github.com/night1008/sqlcache
+
+### 问题原因
+直接通过数据库查询的时间是东八区，比如 `2024-12-05 00:00:05.657 +0800 CST`，
+但是后面命中缓存从中拿到的时区是零时区(服务器时区是零时区)，比如 `2024-12-04 16:00:05.657 +0000 UTC`，
+这样再对时间字段做格式化的时候就会差了八个时区，
+不过这时候缓存已丢失了最开始查询所携带的时区
+
+### 解决方法
+1. 缓存查询数据的同时，缓存列的信息，来自 sql.DatabaseTypeName()，比如 DateTime64(3, 'Asia/Shanghai')
+2. 查询命中缓存时通过解析列信息列得到时区
+3. 对时间字段指定解析后的时区进行格式化
+
+---
 
 发现一个有意思的现象，通过 `union` 的方式查询两条不同时区的数据，后续的数据都会转换成第一条数据所拥有的时区。">
 <meta property="og:type" content="article">
@@ -77,7 +111,24 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><hr>
+<div class="markdown-body" id="postBody"><h3>背景</h3>
+<p>使用以下两个包进行 clickhouse 查询数据缓存，发现命中缓存时，返回的时间类型字段的值偏移了八个小时，服务器时区是零时区</p>
+<ul>
+<li><a href="https://github.com/ClickHouse/clickhouse-go">https://github.com/ClickHouse/clickhouse-go</a></li>
+<li><a href="https://github.com/night1008/sqlcache">https://github.com/night1008/sqlcache</a></li>
+</ul>
+<h3>问题原因</h3>
+<p>直接通过数据库查询的时间是东八区，比如 <code class="notranslate">2024-12-05 00:00:05.657 +0800 CST</code>，<br>
+但是后面命中缓存从中拿到的时区是零时区(服务器时区是零时区)，比如 <code class="notranslate">2024-12-04 16:00:05.657 +0000 UTC</code>，<br>
+这样再对时间字段做格式化的时候就会差了八个时区，<br>
+不过这时候缓存已丢失了最开始查询所携带的时区</p>
+<h3>解决方法</h3>
+<ol>
+<li>缓存查询数据的同时，缓存列的信息，来自 sql.DatabaseTypeName()，比如 DateTime64(3, 'Asia/Shanghai')</li>
+<li>查询命中缓存时通过解析列信息列得到时区</li>
+<li>对时间字段指定解析后的时区进行格式化</li>
+</ol>
+<hr>
 <p>发现一个有意思的现象，通过 <code class="notranslate">union</code> 的方式查询两条不同时区的数据，后续的数据都会转换成第一条数据所拥有的时区。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3bf69877-926a-4761-a63b-263e2307ceef"><img src="https://github.com/user-attachments/assets/3bf69877-926a-4761-a63b-263e2307ceef" alt="企业微信截图_340b3956-8237-464e-8e13-e09e3077606c" style="max-width: 100%;"></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
