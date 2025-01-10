@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 10 Jan 2025 15:01:42 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>分布分析中如何划分区间</title><link>https://night1008.github.io/post/fen-bu-fen-xi-zhong-ru-he-hua-fen-qu-jian.html</link><description>### 问题&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 10 Jan 2025 15:05:04 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>分布分析中如何划分区间</title><link>https://night1008.github.io/post/fen-bu-fen-xi-zhong-ru-he-hua-fen-qu-jian.html</link><description>### 问题&#13;
 分布分析中需要根据某一步长对一组值进行区间划分，且其包含正负数。</description><guid isPermaLink="true">https://night1008.github.io/post/fen-bu-fen-xi-zhong-ru-he-hua-fen-qu-jian.html</guid><pubDate>Fri, 10 Jan 2025 06:30:43 +0000</pubDate></item><item><title>Clickhouse Golang 从缓存中读取时间类型字段丢失时区的问题</title><link>https://night1008.github.io/post/Clickhouse%20Golang%20-cong-huan-cun-zhong-du-qu-shi-jian-lei-xing-zi-duan-diu-shi-shi-qu-de-wen-ti.html</link><description>### 背景&#13;
 &#13;
 使用以下两个包进行 clickhouse 查询数据缓存，发现命中缓存时，返回的时间类型字段的值偏移了八个小时，服务器时区是零时区&#13;
@@ -16,6 +16,11 @@
 1. 缓存查询数据的同时，缓存列的信息，来自 sql.DatabaseTypeName()，比如 DateTime64(3, 'Asia/Shanghai')&#13;
 2. 查询命中缓存时通过解析列信息列得到时区&#13;
 3. 对时间字段指定解析后的时区进行格式化&#13;
+&#13;
+不过本质原因是缓存包使用 `msgpack` 进行序列化，该方式没有保存时区信息，  &#13;
+因此还可以有其他的解决方法，&#13;
+1. 寻找`msgpack` 关于时间类型的扩展&#13;
+2. 实现新的缓存包的接口，使用其他序列化方式，比如 `json`&#13;
 &#13;
 ---&#13;
 &#13;

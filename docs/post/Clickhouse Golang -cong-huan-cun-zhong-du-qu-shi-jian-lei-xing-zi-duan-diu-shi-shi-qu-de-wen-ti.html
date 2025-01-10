@@ -27,6 +27,11 @@
 2. 查询命中缓存时通过解析列信息列得到时区
 3. 对时间字段指定解析后的时区进行格式化
 
+不过本质原因是缓存包使用 `msgpack` 进行序列化，该方式没有保存时区信息，  
+因此还可以有其他的解决方法，
+1. 寻找`msgpack` 关于时间类型的扩展
+2. 实现新的缓存包的接口，使用其他序列化方式，比如 `json`
+
 ---
 
 发现一个有意思的现象，通过 `union` 的方式查询两条不同时区的数据，后续的数据都会转换成第一条数据所拥有的时区。">
@@ -47,6 +52,11 @@
 1. 缓存查询数据的同时，缓存列的信息，来自 sql.DatabaseTypeName()，比如 DateTime64(3, 'Asia/Shanghai')
 2. 查询命中缓存时通过解析列信息列得到时区
 3. 对时间字段指定解析后的时区进行格式化
+
+不过本质原因是缓存包使用 `msgpack` 进行序列化，该方式没有保存时区信息，  
+因此还可以有其他的解决方法，
+1. 寻找`msgpack` 关于时间类型的扩展
+2. 实现新的缓存包的接口，使用其他序列化方式，比如 `json`
 
 ---
 
@@ -127,6 +137,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>缓存查询数据的同时，缓存列的信息，来自 sql.DatabaseTypeName()，比如 DateTime64(3, 'Asia/Shanghai')</li>
 <li>查询命中缓存时通过解析列信息列得到时区</li>
 <li>对时间字段指定解析后的时区进行格式化</li>
+</ol>
+<p>不过本质原因是缓存包使用 <code class="notranslate">msgpack</code> 进行序列化，该方式没有保存时区信息，<br>
+因此还可以有其他的解决方法，</p>
+<ol>
+<li>寻找<code class="notranslate">msgpack</code> 关于时间类型的扩展</li>
+<li>实现新的缓存包的接口，使用其他序列化方式，比如 <code class="notranslate">json</code></li>
 </ol>
 <hr>
 <p>发现一个有意思的现象，通过 <code class="notranslate">union</code> 的方式查询两条不同时区的数据，后续的数据都会转换成第一条数据所拥有的时区。</p>
