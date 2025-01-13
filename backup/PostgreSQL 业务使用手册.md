@@ -57,3 +57,19 @@ select pg_size_pretty(pg_database_size('funnydb_web'));
 -- 查看全部数据库磁盘占用情况
 SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by db_usage desc;
 ```
+
+---
+
+### 查询列的字段类型
+```sql
+select pg_typeof("column1"), pg_typeof("column2") from table1;
+```
+
+---
+
+### 文本类型字段的数字匹配
+```sql
+SELECT value, value::numeric FROM property_values where value ~ '^[-0-9.]+$' limit 1000;
+
+select min(id) from (select '10005' as id union all select '995' as id);  -- 错误写法
+```
