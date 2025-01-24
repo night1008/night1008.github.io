@@ -21,7 +21,7 @@ select * from cluster('all-sharded', 'system', 'query_log') where query_id  = '4
 ### 数据导出成CSV
 ```sql
 SELECT * FROM events
-SETTINGS join_use_nulls=1
+SETTINGS join_use_nulls=1, allow_experimental_analyzer=0
 INTO OUTFILE '新玩家首日首场战场数据.csv.gz'
 FORMAT CSVWithNames;
 ```
