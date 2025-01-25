@@ -1,0 +1,1 @@
+1. [Git Stash](https://marketplace.visualstudio.com/items?itemName=arturock.gitstash)
