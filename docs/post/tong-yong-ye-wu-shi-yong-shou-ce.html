@@ -26,7 +26,23 @@
 
 比如以任务执行为例，在任务开始，任务阶段1，任务阶段2，... 任务阶段N，任务结束都可以打印一些关键信息
 
-优点：方便查看执行情况和后续定位问题。">
+优点：方便查看执行情况和后续定位问题
+
+---
+
+### 数据库字段名称命名规则
+
+1. 小写字母 + 下划线
+> 字段名称中只能包含字母、数字和下划线 _
+> 比如 user_id, created_at, first_name
+> 不使用驼峰命名法，因为某些数据库（如 PostgreSQL）默认将字段名称转换为小写，可能导致问题
+
+2. 使用前缀来区分字段类型或用途
+> 使用 is_ 或 has_ 前缀表示布尔值，比如，is_active：是否激活；has_permission：是否有权限
+> 比如为了区分系统预置和用户自定义，可以对预置属性增加 pre_ 的前缀
+
+3. 避免特殊字符
+> 尽量不要使用如 #, $, _ 的前缀，以免出现通过字段名称构建路径的问题。">
 <meta property="og:title" content="通用业务使用手册">
 <meta property="og:description" content="### 数据库表标识字段生成规则
 
@@ -44,7 +60,23 @@
 
 比如以任务执行为例，在任务开始，任务阶段1，任务阶段2，... 任务阶段N，任务结束都可以打印一些关键信息
 
-优点：方便查看执行情况和后续定位问题。">
+优点：方便查看执行情况和后续定位问题
+
+---
+
+### 数据库字段名称命名规则
+
+1. 小写字母 + 下划线
+> 字段名称中只能包含字母、数字和下划线 _
+> 比如 user_id, created_at, first_name
+> 不使用驼峰命名法，因为某些数据库（如 PostgreSQL）默认将字段名称转换为小写，可能导致问题
+
+2. 使用前缀来区分字段类型或用途
+> 使用 is_ 或 has_ 前缀表示布尔值，比如，is_active：是否激活；has_permission：是否有权限
+> 比如为了区分系统预置和用户自定义，可以对预置属性增加 pre_ 的前缀
+
+3. 避免特殊字符
+> 尽量不要使用如 #, $, _ 的前缀，以免出现通过字段名称构建路径的问题。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/tong-yong-ye-wu-shi-yong-shou-ce.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
@@ -114,7 +146,30 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <hr>
 <h3>业务关键步骤打印日志</h3>
 <p>比如以任务执行为例，在任务开始，任务阶段1，任务阶段2，... 任务阶段N，任务结束都可以打印一些关键信息</p>
-<p>优点：方便查看执行情况和后续定位问题</p></div>
+<p>优点：方便查看执行情况和后续定位问题</p>
+<hr>
+<h3>数据库字段名称命名规则</h3>
+<ol>
+<li>小写字母 + 下划线</li>
+</ol>
+<blockquote>
+<p>字段名称中只能包含字母、数字和下划线 _<br>
+比如 user_id, created_at, first_name<br>
+不使用驼峰命名法，因为某些数据库（如 PostgreSQL）默认将字段名称转换为小写，可能导致问题</p>
+</blockquote>
+<ol start="2">
+<li>使用前缀来区分字段类型或用途</li>
+</ol>
+<blockquote>
+<p>使用 is_ 或 has_ 前缀表示布尔值，比如，is_active：是否激活；has_permission：是否有权限<br>
+比如为了区分系统预置和用户自定义，可以对预置属性增加 pre_ 的前缀</p>
+</blockquote>
+<ol start="3">
+<li>避免特殊字符</li>
+</ol>
+<blockquote>
+<p>尽量不要使用如 #, $, _ 的前缀，以免出现通过字段名称构建路径的问题</p>
+</blockquote></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
