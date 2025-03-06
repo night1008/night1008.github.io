@@ -7,6 +7,8 @@
 
 如何用 Clickhouse 语言实现间隔分析？
 
+可以使用 [ASOF JOIN](https://clickhouse.com/docs/sql-reference/statements/select/join#asof-join-usage) 找出配对记录，测试语句如下所示，
+
 ```sql
 -- 建表语句
 CREATE TABLE IF NOT EXISTS interval_test (
