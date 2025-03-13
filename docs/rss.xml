@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Mon, 10 Mar 2025 09:23:08 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Golang MySQL 通过 interface{} 解析查询结果的内容为 []byte</title><link>https://night1008.github.io/post/Golang%20MySQL%20-tong-guo-%20interface%7B%7D%20-jie-xi-cha-xun-jie-guo-de-nei-rong-wei-%20%5B%5Dbyte.html</link><description>发现 Golang MySQL 下，MySQL 驱动默认把 interface{} 类型解析为 []byte，导致字符串和数字以 Base64 编码形式返回。</description><guid isPermaLink="true">https://night1008.github.io/post/Golang%20MySQL%20-tong-guo-%20interface%7B%7D%20-jie-xi-cha-xun-jie-guo-de-nei-rong-wei-%20%5B%5Dbyte.html</guid><pubDate>Mon, 10 Mar 2025 09:20:24 +0000</pubDate></item><item><title>不同广告渠道报表类型级别的对应关系</title><link>https://night1008.github.io/post/bu-tong-guang-gao-qu-dao-bao-biao-lei-xing-ji-bie-de-dui-ying-guan-xi.html</link><description>不同广告渠道报表类型级别的对应关系
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 13 Mar 2025 08:15:00 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Golang MySQL 通过 interface{} 解析查询结果的内容为 []byte</title><link>https://night1008.github.io/post/Golang%20MySQL%20-tong-guo-%20interface%7B%7D%20-jie-xi-cha-xun-jie-guo-de-nei-rong-wei-%20%5B%5Dbyte.html</link><description>发现 Golang MySQL 下，MySQL 驱动默认把 interface{} 类型解析为 []byte，导致字符串和数字以 Base64 编码形式返回。</description><guid isPermaLink="true">https://night1008.github.io/post/Golang%20MySQL%20-tong-guo-%20interface%7B%7D%20-jie-xi-cha-xun-jie-guo-de-nei-rong-wei-%20%5B%5Dbyte.html</guid><pubDate>Mon, 10 Mar 2025 09:20:24 +0000</pubDate></item><item><title>不同广告渠道报表类型级别的对应关系</title><link>https://night1008.github.io/post/bu-tong-guang-gao-qu-dao-bao-biao-lei-xing-ji-bie-de-dui-ying-guan-xi.html</link><description>不同广告渠道报表类型级别的对应关系
 
 |    | 腾讯广告 | 巨量广告 |
 | -------- | ------- | ------- |
@@ -168,81 +168,88 @@ select `_part`, `#dt`, `#event`, `#log_id`, count(1), groupArray(hostname()) fro
 ---&#13;
 &#13;
 发现一个有意思的现象，通过 `union` 的方式查询两条不同时区的数据，后续的数据都会转换成第一条数据所拥有的时区。</description><guid isPermaLink="true">https://night1008.github.io/post/Clickhouse%20Golang%20-cong-huan-cun-zhong-du-qu-shi-jian-lei-xing-zi-duan-diu-shi-shi-qu-de-wen-ti.html</guid><pubDate>Mon, 06 Jan 2025 07:09:51 +0000</pubDate></item><item><title>Go 全局时区设置</title><link>https://night1008.github.io/post/Go%20-quan-ju-shi-qu-she-zhi.html</link><description>正常本地开发环境的时区是东八区，线上服务器的时区是零时区，  &#13;
-调试一些线上服务器的时区问题的时候，如何通过设置全局时区在本地进行调试呢。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-quan-ju-shi-qu-she-zhi.html</guid><pubDate>Mon, 06 Jan 2025 02:08:02 +0000</pubDate></item><item><title>PostgreSQL 业务使用手册</title><link>https://night1008.github.io/post/PostgreSQL%20-ye-wu-shi-yong-shou-ce.html</link><description>### 手动修改联合主键表索引&#13;
-&#13;
-原本 `ad_advertisers` 表以 `app_id`, `channel_name`, `account_id` 三个字段为主键，现在如何往中间再加一个主键字段&#13;
-&#13;
-```sql&#13;
-CREATE UNIQUE INDEX ad_advertisers_pkey ON public.ad_advertisers USING btree (app_id, channel_name, account_id);&#13;
-&#13;
-=&gt;&#13;
-&#13;
-ALTER TABLE public.ad_advertisers DROP CONSTRAINT ad_advertisers_pkey;&#13;
-UPDATE ad_advertisers SET account_type = '' WHERE account_type IS NULL;&#13;
-ALTER TABLE public.ad_advertisers ADD CONSTRAINT ad_advertisers_pkey PRIMARY KEY (app_id, channel_name, account_type, account_id);&#13;
-```&#13;
-&#13;
----&#13;
-&#13;
-### 重置数据库表 ID&#13;
-&#13;
-```sql&#13;
-ALTER SEQUENCE users_id_seq RESTART WITH 7;&#13;
-```&#13;
-&#13;
----&#13;
-&#13;
-### 查看表结构&#13;
-&#13;
-```sql&#13;
-pg_dump -h localhost -p 5432 -U postgres -d db_name -t table_name --schema-only&#13;
-```&#13;
-&#13;
----&#13;
-&#13;
-### 表大小情况查询&#13;
-&#13;
-```sql&#13;
--- 查看每个表的占用空间大小&#13;
-select&#13;
-  table_name, &#13;
-  pg_size_pretty(pg_total_relation_size(quote_ident(table_name))),&#13;
-  pg_relation_size(quote_ident(table_name))&#13;
-from information_schema.tables&#13;
-where table_schema = 'public'&#13;
-order by 3 desc;&#13;
-&#13;
--- 查看每个表的行数&#13;
-SELECT &#13;
-    schemaname AS schema,&#13;
-    relname AS table,&#13;
-    n_live_tup AS estimated_row_count&#13;
-FROM &#13;
-    pg_stat_user_tables&#13;
-ORDER BY 3 desc;&#13;
-&#13;
--- 查看某个数据库磁盘占用情况&#13;
-select pg_size_pretty(pg_database_size('funnydb_web'));&#13;
-&#13;
--- 查看全部数据库磁盘占用情况&#13;
-SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by db_usage desc;&#13;
-```&#13;
-&#13;
----&#13;
-&#13;
-### 查询列的字段类型&#13;
-```sql&#13;
-select pg_typeof('column1'), pg_typeof('column2') from table1;&#13;
-```&#13;
-&#13;
----&#13;
-&#13;
-### 文本类型字段的数字匹配&#13;
-```sql&#13;
-SELECT value, value::numeric FROM property_values where value ~ '^[-0-9.]+$' limit 1000;&#13;
-&#13;
-select min(id) from (select '10005' as id union all select '995' as id);  -- 错误写法&#13;
-```&#13;
+调试一些线上服务器的时区问题的时候，如何通过设置全局时区在本地进行调试呢。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-quan-ju-shi-qu-she-zhi.html</guid><pubDate>Mon, 06 Jan 2025 02:08:02 +0000</pubDate></item><item><title>PostgreSQL 业务使用手册</title><link>https://night1008.github.io/post/PostgreSQL%20-ye-wu-shi-yong-shou-ce.html</link><description>### 手动修改联合主键表索引
+
+原本 `ad_advertisers` 表以 `app_id`, `channel_name`, `account_id` 三个字段为主键，现在如何往中间再加一个主键字段
+
+```sql
+CREATE UNIQUE INDEX ad_advertisers_pkey ON public.ad_advertisers USING btree (app_id, channel_name, account_id);
+
+=&gt;
+
+ALTER TABLE public.ad_advertisers DROP CONSTRAINT ad_advertisers_pkey;
+UPDATE ad_advertisers SET account_type = '' WHERE account_type IS NULL;
+ALTER TABLE public.ad_advertisers ADD CONSTRAINT ad_advertisers_pkey PRIMARY KEY (app_id, channel_name, account_type, account_id);
+```
+
+---
+
+### 重置数据库表 ID
+
+```sql
+ALTER SEQUENCE users_id_seq RESTART WITH 7;
+```
+
+---
+
+### 查看表结构
+
+```sql
+pg_dump -h localhost -p 5432 -U postgres -d db_name -t table_name --schema-only
+```
+
+---
+
+### 表大小情况查询
+
+```sql
+-- 查看每个表的占用空间大小
+select
+  table_name, 
+  pg_size_pretty(pg_total_relation_size(quote_ident(table_name))),
+  pg_relation_size(quote_ident(table_name))
+from information_schema.tables
+where table_schema = 'public'
+order by 3 desc;
+
+-- 查看每个表的行数
+SELECT 
+    schemaname AS schema,
+    relname AS table,
+    n_live_tup AS estimated_row_count
+FROM 
+    pg_stat_user_tables
+ORDER BY 3 desc;
+
+-- 查看某个数据库磁盘占用情况
+select pg_size_pretty(pg_database_size('funnydb_web'));
+
+-- 查看全部数据库磁盘占用情况
+SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by db_usage desc;
+```
+
+---
+
+### 查询列的字段类型
+```sql
+select pg_typeof('column1'), pg_typeof('column2') from table1;
+```
+
+---
+
+### 文本类型字段的数字匹配
+```sql
+SELECT value, value::numeric FROM property_values where value ~ '^[-0-9.]+$' limit 1000;
+
+select min(id) from (select '10005' as id union all select '995' as id);  -- 错误写法
+```
+
+---
+
+### 复制表
+```sql
+create table users_old as (select * from users);
+```
 。</description><guid isPermaLink="true">https://night1008.github.io/post/PostgreSQL%20-ye-wu-shi-yong-shou-ce.html</guid><pubDate>Thu, 26 Dec 2024 06:22:19 +0000</pubDate></item><item><title>分布式任务调度设计要点</title><link>https://night1008.github.io/post/fen-bu-shi-ren-wu-diao-du-she-ji-yao-dian.html</link><description>设计要点：&#13;
 1. 任务函数注册方便，参考 http 函数注册&#13;
 2. 任务创建可以指定参数，比如重试次数，延迟执行，超时时间等&#13;

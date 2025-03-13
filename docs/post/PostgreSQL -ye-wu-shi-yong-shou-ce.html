@@ -85,6 +85,13 @@ SELECT value, value::numeric FROM property_values where value ~ '^[-0-9.]+$' lim
 
 select min(id) from (select '10005' as id union all select '995' as id);  -- 错误写法
 ```
+
+---
+
+### 复制表
+```sql
+create table users_old as (select * from users);
+```
 。">
 <meta property="og:title" content="PostgreSQL 业务使用手册">
 <meta property="og:description" content="### 手动修改联合主键表索引
@@ -161,6 +168,13 @@ select pg_typeof('column1'), pg_typeof('column2') from table1;
 SELECT value, value::numeric FROM property_values where value ~ '^[-0-9.]+$' limit 1000;
 
 select min(id) from (select '10005' as id union all select '995' as id);  -- 错误写法
+```
+
+---
+
+### 复制表
+```sql
+create table users_old as (select * from users);
 ```
 。">
 <meta property="og:type" content="article">
@@ -280,7 +294,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h3>文本类型字段的数字匹配</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> value, value::<span class="pl-k">numeric</span> <span class="pl-k">FROM</span> property_values <span class="pl-k">where</span> value ~ <span class="pl-s"><span class="pl-pds">'</span>^[-0-9.]+$<span class="pl-pds">'</span></span> <span class="pl-k">limit</span> <span class="pl-c1">1000</span>;
 
-<span class="pl-k">select</span> <span class="pl-c1">min</span>(id) <span class="pl-k">from</span> (<span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">'</span>10005<span class="pl-pds">'</span></span> <span class="pl-k">as</span> id <span class="pl-k">union all</span> <span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">'</span>995<span class="pl-pds">'</span></span> <span class="pl-k">as</span> id);  <span class="pl-c"><span class="pl-c">--</span> 错误写法</span></pre></div></div>
+<span class="pl-k">select</span> <span class="pl-c1">min</span>(id) <span class="pl-k">from</span> (<span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">'</span>10005<span class="pl-pds">'</span></span> <span class="pl-k">as</span> id <span class="pl-k">union all</span> <span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">'</span>995<span class="pl-pds">'</span></span> <span class="pl-k">as</span> id);  <span class="pl-c"><span class="pl-c">--</span> 错误写法</span></pre></div>
+<hr>
+<h3>复制表</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">create</span> <span class="pl-k">table</span> <span class="pl-en">users_old</span> <span class="pl-k">as</span> (<span class="pl-k">select</span> <span class="pl-k">*</span> <span class="pl-k">from</span> users);</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

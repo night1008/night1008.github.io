@@ -73,3 +73,10 @@ SELECT value, value::numeric FROM property_values where value ~ '^[-0-9.]+$' lim
 
 select min(id) from (select '10005' as id union all select '995' as id);  -- 错误写法
 ```
+
+---
+
+### 复制表
+```sql
+create table users_old as (select * from users);
+```
