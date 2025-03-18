@@ -7,7 +7,7 @@
 
 如何用 Clickhouse 语言实现间隔分析？
 
-可以使用 [ASOF JOIN](https://clickhouse.com/docs/sql-reference/statements/select/join#asof-join-usage) 找出配对记录，测试语句如下所示，
+可以使用 [ASOF JOIN](https://clickhouse.com/docs/sql-reference/statements/select/join#asof-join-usage) 找出配对记录，再对配对记录进行排序去重后得到结果。测试语句如下所示，
 
 ```sql
 -- 建表语句
