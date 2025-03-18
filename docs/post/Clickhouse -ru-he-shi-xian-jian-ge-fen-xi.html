@@ -84,10 +84,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><p>通过间隔分析查看转化时长的分布情况。</p>
-<p>假设用户在过去某个时间段内行为序列是：<code class="notranslate">A1 -&gt; A2 -&gt; A3 -&gt; B1 -&gt; B2 -&gt; B3 -&gt; A4 -&gt; B4</code>，<br>
+<p>假设用户在过去某个时间段内行为序列是：<code class="notranslate">A1 -&gt; A2 -&gt; A3 -&gt; B4 -&gt; B5 -&gt; B6 -&gt; A7 -&gt; B8</code>，<br>
 初始行为 A 事件，后续行为 B 事件，<br>
-以距离初始行为事件最近的规则得到，<code class="notranslate">(A1 -&gt; B1), (A4 -&gt; B4)</code><br>
-以距离后续行为事件最近的规则得到，<code class="notranslate">(A3 -&gt; B1), (A4 -&gt; B4)</code></p>
+以距离初始行为事件最近的规则得到，<code class="notranslate">(A1 -&gt; B4), (A7 -&gt; B8)</code><br>
+以距离后续行为事件最近的规则得到，<code class="notranslate">(A3 -&gt; B4), (A7 -&gt; B8)</code></p>
 <p>如何用 Clickhouse 语言实现间隔分析？</p>
 <p>可以使用 <a href="https://clickhouse.com/docs/sql-reference/statements/select/join#asof-join-usage" rel="nofollow">ASOF JOIN</a> 找出配对记录，测试语句如下所示，</p>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 建表语句</span>
