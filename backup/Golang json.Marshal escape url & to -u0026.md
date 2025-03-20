@@ -9,19 +9,20 @@ import (
 )
 
 func main() {
-	str := "https://example.com?a=1&b=2"
+	str := "https://p6-mapi-sign.creativityeco.com/web.business.image/202503055d0df5342ee12cfe444cbc29~tplv-iq460dd072-origin.image?key=%23cqMGg8EHUcPdvl7lyx75cSmxgtrV7Zt1JYWCH2NEcMpx9LgfapWMYa%2B4m9Ide3O4mMSJ%2F1pPxQEkH3MqXIHxEyQKAfhBdr70klV0Is7iidjK45XGe6cXRr6VkYIt7PImdC%2B2vVGfTiLWKzPhuryx01mGcybPwVFc1AgOnrpSDBVlIhQTFXrGXzsNyxg%3D&lk3s=62ea907e&sign_for=m_api&x-expires=1742499103&x-signature=AcvUBb0BTT3hFAIyueNdTd%2BbHoE%3D"
 	strBytes, _ := json.Marshal(str)
-	fmt.Println(string(strBytes))
-	// 输出结果: https://example.com?a=1\u0026b=2
+	str2 := string(strBytes)
+	fmt.Println(str2)
+	// 输出结果: "https://p6-mapi-sign.creativityeco.com/web.business.image/202503055d0df5342ee12cfe444cbc29~tplv-iq460dd072-origin.image?key=%23cqMGg8EHUcPdvl7lyx75cSmxgtrV7Zt1JYWCH2NEcMpx9LgfapWMYa%2B4m9Ide3O4mMSJ%2F1pPxQEkH3MqXIHxEyQKAfhBdr70klV0Is7iidjK45XGe6cXRr6VkYIt7PImdC%2B2vVGfTiLWKzPhuryx01mGcybPwVFc1AgOnrpSDBVlIhQTFXrGXzsNyxg%3D\u0026lk3s=62ea907e\u0026sign_for=m_api\u0026x-expires=1742499103\u0026x-signature=AcvUBb0BTT3hFAIyueNdTd%2BbHoE%3D"
 
 	// 解决方法，可以反序列化回去
 
-	var str2 string
-	if err := json.Unmarshal(strBytes, &str2); err != nil {
+	var str3 string
+	if err := json.Unmarshal([]byte(str2), &str3); err != nil {
 		panic(err)
 	}
-	fmt.Println(str2)
-	// 输出结果: https://example.com?a=1&b=2
+	fmt.Println(str3)
+	// 输出结果: https://p6-mapi-sign.creativityeco.com/web.business.image/202503055d0df5342ee12cfe444cbc29~tplv-iq460dd072-origin.image?key=%23cqMGg8EHUcPdvl7lyx75cSmxgtrV7Zt1JYWCH2NEcMpx9LgfapWMYa%2B4m9Ide3O4mMSJ%2F1pPxQEkH3MqXIHxEyQKAfhBdr70klV0Is7iidjK45XGe6cXRr6VkYIt7PImdC%2B2vVGfTiLWKzPhuryx01mGcybPwVFc1AgOnrpSDBVlIhQTFXrGXzsNyxg%3D&lk3s=62ea907e&sign_for=m_api&x-expires=1742499103&x-signature=AcvUBb0BTT3hFAIyueNdTd%2BbHoE%3D
 }
 ```
 
