@@ -1,5 +1,145 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 20 Mar 2025 09:03:15 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Golang json.Marshal 序列化转义问题</title><link>https://night1008.github.io/post/Golang%20json.Marshal%20-xu-lie-hua-zhuan-yi-wen-ti.html</link><description>Golang 对包含链接地址的数据进行序列化后发现地址不能直接使用了，测试代码如下。</description><guid isPermaLink="true">https://night1008.github.io/post/Golang%20json.Marshal%20-xu-lie-hua-zhuan-yi-wen-ti.html</guid><pubDate>Thu, 20 Mar 2025 08:27:22 +0000</pubDate></item><item><title>Golang MySQL 通过 interface{} 解析查询结果的内容为 []byte</title><link>https://night1008.github.io/post/Golang%20MySQL%20-tong-guo-%20interface%7B%7D%20-jie-xi-cha-xun-jie-guo-de-nei-rong-wei-%20%5B%5Dbyte.html</link><description>发现 Golang MySQL 下，MySQL 驱动默认把 interface{} 类型解析为 []byte，导致字符串和数字以 Base64 编码形式返回。</description><guid isPermaLink="true">https://night1008.github.io/post/Golang%20MySQL%20-tong-guo-%20interface%7B%7D%20-jie-xi-cha-xun-jie-guo-de-nei-rong-wei-%20%5B%5Dbyte.html</guid><pubDate>Mon, 10 Mar 2025 09:20:24 +0000</pubDate></item><item><title>不同广告渠道报表类型级别的对应关系</title><link>https://night1008.github.io/post/bu-tong-guang-gao-qu-dao-bao-biao-lei-xing-ji-bie-de-dui-ying-guan-xi.html</link><description>不同广告渠道报表类型级别的对应关系
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Tue, 08 Apr 2025 10:20:38 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Golang gorm 实现任意层级的文件夹模型</title><link>https://night1008.github.io/post/Golang%20gorm%20-shi-xian-ren-yi-ceng-ji-de-wen-jian-jia-mo-xing.html</link><description>记录一下如何使用 gorm 实现任意层级的文件夹模型，代码如下
+
+
+```go
+type AdFolder struct {
+	ID        uint64 `gorm:'primarykey'`           // 数据库ID
+	CreatedAt int64  `gorm:'autoCreateTime:milli'` // 记录创建时间，单位 milli
+	UpdatedAt int64  `gorm:'autoUpdateTime:milli'` // 记录更新时间，单位 milli
+
+	AppID       uint64 `gorm:'index:idx_ad_folders_type'` // 应用ID
+	Type        string `gorm:'index:idx_ad_folders_type'` // 分类类型
+	Title       string // 标题
+	Description string // 说明
+	ParentID    uint64 `gorm:'index'` // 父文件夹ID
+	RootID      uint64 `gorm:'index'` // 根文件夹ID
+
+	CreatorID    uint64 // 创建用户ID
+	LastEditorID uint64 // 最后编辑用户ID
+
+	Parent      *AdFolder   `gorm:'foreignKey:ParentID'` // 父节点
+	Children    []*AdFolder `gorm:'foreignKey:ParentID'` // 直系子节点
+	Root        *AdFolder   `gorm:'foreignKey:RootID'`   // 根节点
+	Descendants []*AdFolder `gorm:'foreignKey:RootID'`   // 根系子节点
+}
+
+
+// 获取根文件夹ID
+func (a *AdFolder) GetFolderRootID() uint64 {
+	var rootID uint64
+	if a.RootID != 0 {
+		rootID = a.RootID
+	} else if a.ID != 0 {
+		rootID = a.ID
+	}
+	return rootID
+}
+
+// 获取相同根节点的文件夹列表
+func (a *AdFolder) GetSameRootAdFolders(tx *gorm.DB) ([]*AdFolder, error) {
+	var adFolders []*AdFolder
+	query := tx.Model(&amp;AdFolder{}).
+		Where('app_id = ?', a.AppID).
+		Where('type = ?', a.Type)
+	if a.RootID == 0 {
+		query = query.Where('(id = ? OR root_id = ?)', a.ID, a.ID)
+	} else {
+		query = query.Where('(id = ? OR root_id = ?)', a.RootID, a.RootID)
+	}
+	if err := query.Order('id DESC').
+		Find(&amp;adFolders).Error; err != nil {
+		return nil, err
+	}
+	return adFolders, nil
+}
+
+// 构造文件夹父节点数组
+func (a *AdFolder) GetAdFolderParents(tx *gorm.DB) ([]*AdFolder, error) {
+	adFolders, err := a.GetSameRootAdFolders(tx)
+	if err != nil {
+		return nil, err
+	}
+	adFoldersMap := make(map[uint64]*AdFolder, len(adFolders))
+	parentAdFoldersMap := make(map[uint64]uint64, len(adFolders)) // children : parent
+	for _, folder := range adFolders {
+		adFoldersMap[folder.ID] = folder
+		if folder.ParentID != 0 {
+			parentAdFoldersMap[folder.ID] = folder.ParentID
+		}
+	}
+
+	var parents []*AdFolder
+	currentID := a.ID
+	for {
+		parentID, exists := parentAdFoldersMap[currentID]
+		if !exists {
+			break
+		}
+
+		parent, ok := adFoldersMap[parentID]
+		if !ok {
+			break
+		}
+
+		parents = append([]*AdFolder{parent}, parents...)
+		currentID = parentID
+	}
+	return parents, nil
+}
+
+// 构造文件夹树形结构
+func BuildAdFolderTree(adFolders []*AdFolder) []*AdFolder {
+	adFoldersMap := make(map[uint64]*AdFolder, len(adFolders))
+	for _, adFolder := range adFolders {
+		adFoldersMap[adFolder.ID] = adFolder
+	}
+
+	var roots []*AdFolder
+	for _, adFolder := range adFolders {
+		if adFolder.ParentID == 0 {
+			roots = append(roots, adFolder)
+		} else {
+			if parent, ok := adFoldersMap[adFolder.ParentID]; ok {
+				parent.Children = append(parent.Children, adFolder)
+				adFoldersMap[adFolder.ParentID] = parent
+			}
+		}
+	}
+	return roots
+}
+
+// 寻找所有后代节点
+func (a *AdFolder) GetAdFolderDescendants(tx *gorm.DB) ([]*AdFolder, error) {
+	adFolders, err := a.GetSameRootAdFolders(tx)
+	if err != nil {
+		return nil, err
+	}
+	adFoldersMap := make(map[uint64]*AdFolder)
+	childrenMap := make(map[uint64][]uint64)
+
+	for _, adFolder := range adFolders {
+		adFoldersMap[adFolder.ID] = adFolder
+		if adFolder.ParentID != 0 {
+			childrenMap[adFolder.ParentID] = append(childrenMap[adFolder.ParentID], adFolder.ID)
+		}
+	}
+
+	var children []*AdFolder
+	queue := []uint64{a.ID}
+	for len(queue) &gt; 0 {
+		currentID := queue[0]
+		queue = queue[1:]
+		for _, childID := range childrenMap[currentID] {
+			if child, exists := adFoldersMap[childID]; exists {
+				children = append(children, child)
+				queue = append(queue, childID)
+			}
+		}
+	}
+	return children, nil
+}
+```。</description><guid isPermaLink="true">https://night1008.github.io/post/Golang%20gorm%20-shi-xian-ren-yi-ceng-ji-de-wen-jian-jia-mo-xing.html</guid><pubDate>Tue, 08 Apr 2025 10:19:54 +0000</pubDate></item><item><title>Golang json.Marshal 序列化转义问题</title><link>https://night1008.github.io/post/Golang%20json.Marshal%20-xu-lie-hua-zhuan-yi-wen-ti.html</link><description>Golang 对包含链接地址的数据进行序列化后发现地址不能直接使用了，测试代码如下。</description><guid isPermaLink="true">https://night1008.github.io/post/Golang%20json.Marshal%20-xu-lie-hua-zhuan-yi-wen-ti.html</guid><pubDate>Thu, 20 Mar 2025 08:27:22 +0000</pubDate></item><item><title>Golang MySQL 通过 interface{} 解析查询结果的内容为 []byte</title><link>https://night1008.github.io/post/Golang%20MySQL%20-tong-guo-%20interface%7B%7D%20-jie-xi-cha-xun-jie-guo-de-nei-rong-wei-%20%5B%5Dbyte.html</link><description>发现 Golang MySQL 下，MySQL 驱动默认把 interface{} 类型解析为 []byte，导致字符串和数字以 Base64 编码形式返回。</description><guid isPermaLink="true">https://night1008.github.io/post/Golang%20MySQL%20-tong-guo-%20interface%7B%7D%20-jie-xi-cha-xun-jie-guo-de-nei-rong-wei-%20%5B%5Dbyte.html</guid><pubDate>Mon, 10 Mar 2025 09:20:24 +0000</pubDate></item><item><title>不同广告渠道报表类型级别的对应关系</title><link>https://night1008.github.io/post/bu-tong-guang-gao-qu-dao-bao-biao-lei-xing-ji-bie-de-dui-ying-guan-xi.html</link><description>不同广告渠道报表类型级别的对应关系
 
 |    | 腾讯广告 | 巨量广告 |
 | -------- | ------- | ------- |
