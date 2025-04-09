@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Tue, 08 Apr 2025 10:20:38 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Golang gorm 实现任意层级的文件夹模型</title><link>https://night1008.github.io/post/Golang%20gorm%20-shi-xian-ren-yi-ceng-ji-de-wen-jian-jia-mo-xing.html</link><description>记录一下如何使用 gorm 实现任意层级的文件夹模型，代码如下
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Wed, 09 Apr 2025 01:51:02 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Golang gorm 实现任意层级的文件夹模型</title><link>https://night1008.github.io/post/Golang%20gorm%20-shi-xian-ren-yi-ceng-ji-de-wen-jian-jia-mo-xing.html</link><description>记录一下如何使用 gorm 实现任意层级的文件夹模型，代码如下
 
 
 ```go
@@ -249,7 +249,13 @@ select *, arrayJoin(range(1, length(if(empty(a), [null], a)) + 1)) AS b_item_ind
 &gt; 比如为了区分系统预置和用户自定义，可以对预置属性增加 pre_ 的前缀
 
 3. 避免特殊字符
-&gt; 尽量不要使用如 #, $, _ 的前缀，以免出现通过字段名称构建路径的问题。</description><guid isPermaLink="true">https://night1008.github.io/post/tong-yong-ye-wu-shi-yong-shou-ce.html</guid><pubDate>Thu, 16 Jan 2025 07:35:10 +0000</pubDate></item><item><title>Clickhouse 业务使用手册</title><link>https://night1008.github.io/post/Clickhouse%20-ye-wu-shi-yong-shou-ce.html</link><description>### 变更语句是否执行完
+&gt; 尽量不要使用如 #, $, _ 的前缀，以免出现通过字段名称构建路径的问题。</description><guid isPermaLink="true">https://night1008.github.io/post/tong-yong-ye-wu-shi-yong-shou-ce.html</guid><pubDate>Thu, 16 Jan 2025 07:35:10 +0000</pubDate></item><item><title>Clickhouse 业务使用手册</title><link>https://night1008.github.io/post/Clickhouse%20-ye-wu-shi-yong-shou-ce.html</link><description>### 时间戳转时间
+```sql
+select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coalesce(`#zone_offset`, 8) * 60 minute) from events where `#event` = '#device_login' and `#dt` = '2025-03-01' limit 100;
+```
+---
+
+### 变更语句是否执行完
 ```sql
 select hostname(),* from clusterAllReplicas('default','system.mutations') where is_done = 0;
 ```

@@ -10,7 +10,13 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="### 变更语句是否执行完
+<meta name="description" content="### 时间戳转时间
+```sql
+select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coalesce(`#zone_offset`, 8) * 60 minute) from events where `#event` = '#device_login' and `#dt` = '2025-03-01' limit 100;
+```
+---
+
+### 变更语句是否执行完
 ```sql
 select hostname(),* from clusterAllReplicas('default','system.mutations') where is_done = 0;
 ```
@@ -45,7 +51,13 @@ select `_part`, `#dt`, `#event`, `#log_id`, count(1), groupArray(hostname()) fro
 ```
 。">
 <meta property="og:title" content="Clickhouse 业务使用手册">
-<meta property="og:description" content="### 变更语句是否执行完
+<meta property="og:description" content="### 时间戳转时间
+```sql
+select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coalesce(`#zone_offset`, 8) * 60 minute) from events where `#event` = '#device_login' and `#dt` = '2025-03-01' limit 100;
+```
+---
+
+### 变更语句是否执行完
 ```sql
 select hostname(),* from clusterAllReplicas('default','system.mutations') where is_done = 0;
 ```
@@ -149,7 +161,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h3>变更语句是否执行完</h3>
+<div class="markdown-body" id="postBody"><h3>时间戳转时间</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">`</span>#time<span class="pl-pds">`</span></span>, timestamp_add(fromUnixTimestamp64Milli(<span class="pl-s"><span class="pl-pds">`</span>#time<span class="pl-pds">`</span></span>), interval coalesce(<span class="pl-s"><span class="pl-pds">`</span>#zone_offset<span class="pl-pds">`</span></span>, <span class="pl-c1">8</span>) <span class="pl-k">*</span> <span class="pl-c1">60</span> minute) <span class="pl-k">from</span> events <span class="pl-k">where</span> <span class="pl-s"><span class="pl-pds">`</span>#event<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>#device_login<span class="pl-pds">'</span></span> <span class="pl-k">and</span> <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>2025-03-01<span class="pl-pds">'</span></span> <span class="pl-k">limit</span> <span class="pl-c1">100</span>;</pre></div>
+<hr>
+<h3>变更语句是否执行完</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> hostname(),<span class="pl-k">*</span> <span class="pl-k">from</span> clusterAllReplicas(<span class="pl-s"><span class="pl-pds">'</span>default<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>system.mutations<span class="pl-pds">'</span></span>) <span class="pl-k">where</span> is_done <span class="pl-k">=</span> <span class="pl-c1">0</span>;</pre></div>
 <hr>
 <h3>清理数据库表</h3>

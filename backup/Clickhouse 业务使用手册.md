@@ -1,3 +1,9 @@
+### 时间戳转时间
+```sql
+select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coalesce(`#zone_offset`, 8) * 60 minute) from events where `#event` = '#device_login' and `#dt` = '2025-03-01' limit 100;
+```
+---
+
 ### 变更语句是否执行完
 ```sql
 select hostname(),* from clusterAllReplicas('default','system.mutations') where is_done = 0;
