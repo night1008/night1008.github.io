@@ -1,3 +1,12 @@
+### 指定周任意起始日
+```sql
+select arrayJoin([0,1,2,3,4,5,6]) as start_day, 
+  toDateTime('2025-04-10') as t,
+  toDayOfWeek(t),
+  date_add(DAY, -((toDayOfWeek(t) - start_day) % 7), t) AS week_start_day;
+```
+---
+
 ### 时间戳转时间
 ```sql
 select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coalesce(`#zone_offset`, 8) * 60 minute) from events where `#event` = '#device_login' and `#dt` = '2025-03-01' limit 100;
