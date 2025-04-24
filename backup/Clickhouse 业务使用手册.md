@@ -3,7 +3,10 @@
 select arrayJoin([0,1,2,3,4,5,6]) as start_day, 
   toDateTime('2025-04-10') as t,
   toDayOfWeek(t),
-  date_add(DAY, -((toDayOfWeek(t) - start_day) % 7), t) AS week_start_day;
+  if(start_day <= toDayOfWeek(t), 
+     date_add(DAY, -((toDayOfWeek(t) - start_day) % 7), t),
+     date_add(DAY, -7-((toDayOfWeek(t) - start_day) % 7), t)
+  ) AS week_start_day;
 ```
 ---
 

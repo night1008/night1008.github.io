@@ -10,115 +10,109 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="### 指定周任意起始日
-```sql
-select arrayJoin([0,1,2,3,4,5,6]) as start_day, 
-  toDateTime('2025-04-10') as t,
-  toDayOfWeek(t),
-  if(start_day <= toDayOfWeek(t), 
-     date_add(DAY, -((toDayOfWeek(t) - start_day) % 7), t),
-     date_add(DAY, -7-((toDayOfWeek(t) - start_day) % 7), t)
-  ) AS week_start_day;
-```
----
+<meta name="description" content="最近尝试使用阿里云函数计算，发现使用`定时器触发器`的方式传入的参数内容无法正确反序列化，如下所示，
 
-### 时间戳转时间
-```sql
-select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coalesce(`#zone_offset`, 8) * 60 minute) from events where `#event` = '#device_login' and `#dt` = '2025-03-01' limit 100;
+```go
+func HandleRequest(ctx context.Context, event SomeStruct) error {
+	log.Println('===> param: ', event)
+}
 ```
----
 
-### 变更语句是否执行完
-```sql
-select hostname(),* from clusterAllReplicas('default','system.mutations') where is_done = 0;
+后面把 event 为指定为 `map[string]interface{}`，打印后发现，不同调用方式的传入参数内容不同，如下所示，
+
+```go
+func HandleRequest(ctx context.Context, event map[string]interface{}) error {
+	log.Println('===> param: ', event)
+}
 ```
----
 
-### 清理数据库表
-```sql
-truncate table demo.events_local;
-truncate table demo_global.users_local;
-truncate table demo_global.devices_local;
+### 定时器触发器
 ```
----
-
-### 根据 query 查询 clickhouse 日志
-```sql
-select * from cluster('all-sharded', 'system', 'query_log') where query_id  = '4efbbb9b-b853-44ca-84b2-95ff066895af';
+map[payload:{'debug':true,'app_id':74,'account_ids':[1823998827268096,1823998807388364,1823998819034986,1823998841668699,1823998805359619,1823998842198409]} triggerName:funnyads_ad_material_monitor triggerTime:2025-04-24T09:46:00Z]
 ```
----
 
-### 数据导出成CSV
-```sql
-SELECT * FROM events
-SETTINGS join_use_nulls=1, allow_experimental_analyzer=0
-INTO OUTFILE '新玩家首日首场战场数据.csv.gz'
-FORMAT CSVWithNames;
+### 网页测试接口
 ```
----
+map[account_ids:[1823998827268096,1823998807388364,1823998819034986,1823998841668699,1823998805359619,1823998842198409] app_id:74 debug:true]
+```
 
-### 数据去重验证
-```sql
-select `_part`, `#dt`, `#event`, `#log_id`, count(1), groupArray(hostname()) from events where `#dt` = '2024-07-28' group by 1, 2, 3, 4 order by 5 desc limit 100;
+可以用以下方式做兼容处理
+
+```go
+func HandleRequest(ctx context.Context, event map[string]interface{}) error {
+  var param SomeStruct
+	// 先简单判断是否来自定时触发器
+	if _, ok := event['payload']; ok {
+		if err := json.Unmarshal([]byte(event['payload'].(string)), &param); err != nil {
+			return err
+		}
+	} else {
+		eventData, err := json.Marshal(event)
+		if err != nil {
+			return err
+		}
+		if err := json.Unmarshal(eventData, &param); err != nil {
+			return err
+		}
+	}
+  ...
+}
 ```
 。">
-<meta property="og:title" content="Clickhouse 业务使用手册">
-<meta property="og:description" content="### 指定周任意起始日
-```sql
-select arrayJoin([0,1,2,3,4,5,6]) as start_day, 
-  toDateTime('2025-04-10') as t,
-  toDayOfWeek(t),
-  if(start_day <= toDayOfWeek(t), 
-     date_add(DAY, -((toDayOfWeek(t) - start_day) % 7), t),
-     date_add(DAY, -7-((toDayOfWeek(t) - start_day) % 7), t)
-  ) AS week_start_day;
-```
----
+<meta property="og:title" content="阿里云函数计算 Go 语言下不同调用方式传入参数的反序列化问题">
+<meta property="og:description" content="最近尝试使用阿里云函数计算，发现使用`定时器触发器`的方式传入的参数内容无法正确反序列化，如下所示，
 
-### 时间戳转时间
-```sql
-select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coalesce(`#zone_offset`, 8) * 60 minute) from events where `#event` = '#device_login' and `#dt` = '2025-03-01' limit 100;
+```go
+func HandleRequest(ctx context.Context, event SomeStruct) error {
+	log.Println('===> param: ', event)
+}
 ```
----
 
-### 变更语句是否执行完
-```sql
-select hostname(),* from clusterAllReplicas('default','system.mutations') where is_done = 0;
+后面把 event 为指定为 `map[string]interface{}`，打印后发现，不同调用方式的传入参数内容不同，如下所示，
+
+```go
+func HandleRequest(ctx context.Context, event map[string]interface{}) error {
+	log.Println('===> param: ', event)
+}
 ```
----
 
-### 清理数据库表
-```sql
-truncate table demo.events_local;
-truncate table demo_global.users_local;
-truncate table demo_global.devices_local;
+### 定时器触发器
 ```
----
-
-### 根据 query 查询 clickhouse 日志
-```sql
-select * from cluster('all-sharded', 'system', 'query_log') where query_id  = '4efbbb9b-b853-44ca-84b2-95ff066895af';
+map[payload:{'debug':true,'app_id':74,'account_ids':[1823998827268096,1823998807388364,1823998819034986,1823998841668699,1823998805359619,1823998842198409]} triggerName:funnyads_ad_material_monitor triggerTime:2025-04-24T09:46:00Z]
 ```
----
 
-### 数据导出成CSV
-```sql
-SELECT * FROM events
-SETTINGS join_use_nulls=1, allow_experimental_analyzer=0
-INTO OUTFILE '新玩家首日首场战场数据.csv.gz'
-FORMAT CSVWithNames;
+### 网页测试接口
 ```
----
+map[account_ids:[1823998827268096,1823998807388364,1823998819034986,1823998841668699,1823998805359619,1823998842198409] app_id:74 debug:true]
+```
 
-### 数据去重验证
-```sql
-select `_part`, `#dt`, `#event`, `#log_id`, count(1), groupArray(hostname()) from events where `#dt` = '2024-07-28' group by 1, 2, 3, 4 order by 5 desc limit 100;
+可以用以下方式做兼容处理
+
+```go
+func HandleRequest(ctx context.Context, event map[string]interface{}) error {
+  var param SomeStruct
+	// 先简单判断是否来自定时触发器
+	if _, ok := event['payload']; ok {
+		if err := json.Unmarshal([]byte(event['payload'].(string)), &param); err != nil {
+			return err
+		}
+	} else {
+		eventData, err := json.Marshal(event)
+		if err != nil {
+			return err
+		}
+		if err := json.Unmarshal(eventData, &param); err != nil {
+			return err
+		}
+	}
+  ...
+}
 ```
 。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://night1008.github.io/post/Clickhouse%20-ye-wu-shi-yong-shou-ce.html">
+<meta property="og:url" content="https://night1008.github.io/post/a-li-yun-han-shu-ji-suan-%20Go%20-yu-yan-xia-bu-tong-diao-yong-fang-shi-chuan-ru-can-shu-de-fan-xu-lie-hua-wen-ti.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
-<title>Clickhouse 业务使用手册</title>
+<title>阿里云函数计算 Go 语言下不同调用方式传入参数的反序列化问题</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
@@ -161,7 +155,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">Clickhouse 业务使用手册</h1>
+<h1 class="postTitle">阿里云函数计算 Go 语言下不同调用方式传入参数的反序列化问题</h1>
 <div class="title-right">
     <a href="https://night1008.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -169,7 +163,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/night1008/night1008.github.io/issues/29" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/night1008/night1008.github.io/issues/40" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -185,37 +179,39 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h3>指定周任意起始日</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> arrayJoin([<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>]) <span class="pl-k">as</span> start_day, 
-  toDateTime(<span class="pl-s"><span class="pl-pds">'</span>2025-04-10<span class="pl-pds">'</span></span>) <span class="pl-k">as</span> t,
-  toDayOfWeek(t),
-  if(start_day <span class="pl-k">&lt;=</span> toDayOfWeek(t), 
-     date_add(DAY, <span class="pl-k">-</span>((toDayOfWeek(t) <span class="pl-k">-</span> start_day) % <span class="pl-c1">7</span>), t),
-     date_add(DAY, <span class="pl-k">-</span><span class="pl-c1">7</span><span class="pl-k">-</span>((toDayOfWeek(t) <span class="pl-k">-</span> start_day) % <span class="pl-c1">7</span>), t)
-  ) <span class="pl-k">AS</span> week_start_day;</pre></div>
-<hr>
-<h3>时间戳转时间</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">`</span>#time<span class="pl-pds">`</span></span>, timestamp_add(fromUnixTimestamp64Milli(<span class="pl-s"><span class="pl-pds">`</span>#time<span class="pl-pds">`</span></span>), interval coalesce(<span class="pl-s"><span class="pl-pds">`</span>#zone_offset<span class="pl-pds">`</span></span>, <span class="pl-c1">8</span>) <span class="pl-k">*</span> <span class="pl-c1">60</span> minute) <span class="pl-k">from</span> events <span class="pl-k">where</span> <span class="pl-s"><span class="pl-pds">`</span>#event<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>#device_login<span class="pl-pds">'</span></span> <span class="pl-k">and</span> <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>2025-03-01<span class="pl-pds">'</span></span> <span class="pl-k">limit</span> <span class="pl-c1">100</span>;</pre></div>
-<hr>
-<h3>变更语句是否执行完</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> hostname(),<span class="pl-k">*</span> <span class="pl-k">from</span> clusterAllReplicas(<span class="pl-s"><span class="pl-pds">'</span>default<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>system.mutations<span class="pl-pds">'</span></span>) <span class="pl-k">where</span> is_done <span class="pl-k">=</span> <span class="pl-c1">0</span>;</pre></div>
-<hr>
-<h3>清理数据库表</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate">truncate table <span class="pl-c1">demo</span>.<span class="pl-c1">events_local</span>;
-truncate table <span class="pl-c1">demo_global</span>.<span class="pl-c1">users_local</span>;
-truncate table <span class="pl-c1">demo_global</span>.<span class="pl-c1">devices_local</span>;</pre></div>
-<hr>
-<h3>根据 query 查询 clickhouse 日志</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> <span class="pl-k">*</span> <span class="pl-k">from</span> cluster(<span class="pl-s"><span class="pl-pds">'</span>all-sharded<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>system<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>query_log<span class="pl-pds">'</span></span>) <span class="pl-k">where</span> query_id  <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>4efbbb9b-b853-44ca-84b2-95ff066895af<span class="pl-pds">'</span></span>;</pre></div>
-<hr>
-<h3>数据导出成CSV</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> events
-SETTINGS join_use_nulls<span class="pl-k">=</span><span class="pl-c1">1</span>, allow_experimental_analyzer<span class="pl-k">=</span><span class="pl-c1">0</span>
-INTO OUTFILE <span class="pl-s"><span class="pl-pds">'</span>新玩家首日首场战场数据.csv.gz<span class="pl-pds">'</span></span>
-FORMAT CSVWithNames;</pre></div>
-<hr>
-<h3>数据去重验证</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">`</span>_part<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#event<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#log_id<span class="pl-pds">`</span></span>, <span class="pl-c1">count</span>(<span class="pl-c1">1</span>), groupArray(hostname()) <span class="pl-k">from</span> events <span class="pl-k">where</span> <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>2024-07-28<span class="pl-pds">'</span></span> <span class="pl-k">group by</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span> <span class="pl-k">order by</span> <span class="pl-c1">5</span> <span class="pl-k">desc</span> <span class="pl-k">limit</span> <span class="pl-c1">100</span>;</pre></div></div>
+<div class="markdown-body" id="postBody"><p>最近尝试使用阿里云函数计算，发现使用<code class="notranslate">定时器触发器</code>的方式传入的参数内容无法正确反序列化，如下所示，</p>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-s1">HandleRequest</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>, <span class="pl-s1">event</span> <span class="pl-smi">SomeStruct</span>) <span class="pl-smi">error</span> {
+	<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"===&gt; param: "</span>, <span class="pl-s1">event</span>)
+}</pre></div>
+<p>后面把 event 为指定为 <code class="notranslate">map[string]interface{}</code>，打印后发现，不同调用方式的传入参数内容不同，如下所示，</p>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-s1">HandleRequest</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>, <span class="pl-s1">event</span> <span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-k">interface</span>{}) <span class="pl-smi">error</span> {
+	<span class="pl-s1">log</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"===&gt; param: "</span>, <span class="pl-s1">event</span>)
+}</pre></div>
+<h3>定时器触发器</h3>
+<pre class="notranslate"><code class="notranslate">map[payload:{"debug":true,"app_id":74,"account_ids":[1823998827268096,1823998807388364,1823998819034986,1823998841668699,1823998805359619,1823998842198409]} triggerName:funnyads_ad_material_monitor triggerTime:2025-04-24T09:46:00Z]
+</code></pre>
+<h3>网页测试接口</h3>
+<pre class="notranslate"><code class="notranslate">map[account_ids:[1823998827268096,1823998807388364,1823998819034986,1823998841668699,1823998805359619,1823998842198409] app_id:74 debug:true]
+</code></pre>
+<p>可以用以下方式做兼容处理</p>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-s1">HandleRequest</span>(<span class="pl-s1">ctx</span> context.<span class="pl-smi">Context</span>, <span class="pl-s1">event</span> <span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-k">interface</span>{}) <span class="pl-smi">error</span> {
+  <span class="pl-k">var</span> <span class="pl-s1">param</span> <span class="pl-smi">SomeStruct</span>
+	<span class="pl-c">// 先简单判断是否来自定时触发器</span>
+	<span class="pl-k">if</span> <span class="pl-s1">_</span>, <span class="pl-s1">ok</span> <span class="pl-c1">:=</span> <span class="pl-s1">event</span>[<span class="pl-s">"payload"</span>]; <span class="pl-s1">ok</span> {
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">json</span>.<span class="pl-c1">Unmarshal</span>([]<span class="pl-smi">byte</span>(<span class="pl-s1">event</span>[<span class="pl-s">"payload"</span>].(<span class="pl-smi">string</span>)), <span class="pl-c1">&amp;</span><span class="pl-s1">param</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-k">return</span> <span class="pl-s1">err</span>
+		}
+	} <span class="pl-k">else</span> {
+		<span class="pl-s1">eventData</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">json</span>.<span class="pl-c1">Marshal</span>(<span class="pl-s1">event</span>)
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-k">return</span> <span class="pl-s1">err</span>
+		}
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">json</span>.<span class="pl-c1">Unmarshal</span>(<span class="pl-s1">eventData</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">param</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-k">return</span> <span class="pl-s1">err</span>
+		}
+	}
+  <span class="pl-c1">...</span>
+}</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

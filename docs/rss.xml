@@ -1,5 +1,53 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Mon, 14 Apr 2025 09:58:52 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>阿里云 SLS 使用记录</title><link>https://night1008.github.io/post/a-li-yun-%20SLS%20-shi-yong-ji-lu.html</link><description>### 正则匹配某个容器下的日志
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 24 Apr 2025 15:03:03 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>阿里云函数计算 Go 语言下不同调用方式传入参数的反序列化问题</title><link>https://night1008.github.io/post/a-li-yun-han-shu-ji-suan-%20Go%20-yu-yan-xia-bu-tong-diao-yong-fang-shi-chuan-ru-can-shu-de-fan-xu-lie-hua-wen-ti.html</link><description>最近尝试使用阿里云函数计算，发现使用`定时器触发器`的方式传入的参数内容无法正确反序列化，如下所示，
+
+```go
+func HandleRequest(ctx context.Context, event SomeStruct) error {
+	log.Println('===&gt; param: ', event)
+}
+```
+
+后面把 event 为指定为 `map[string]interface{}`，打印后发现，不同调用方式的传入参数内容不同，如下所示，
+
+```go
+func HandleRequest(ctx context.Context, event map[string]interface{}) error {
+	log.Println('===&gt; param: ', event)
+}
+```
+
+### 定时器触发器
+```
+map[payload:{'debug':true,'app_id':74,'account_ids':[1823998827268096,1823998807388364,1823998819034986,1823998841668699,1823998805359619,1823998842198409]} triggerName:funnyads_ad_material_monitor triggerTime:2025-04-24T09:46:00Z]
+```
+
+### 网页测试接口
+```
+map[account_ids:[1823998827268096,1823998807388364,1823998819034986,1823998841668699,1823998805359619,1823998842198409] app_id:74 debug:true]
+```
+
+可以用以下方式做兼容处理
+
+```go
+func HandleRequest(ctx context.Context, event map[string]interface{}) error {
+  var param SomeStruct
+	// 先简单判断是否来自定时触发器
+	if _, ok := event['payload']; ok {
+		if err := json.Unmarshal([]byte(event['payload'].(string)), &amp;param); err != nil {
+			return err
+		}
+	} else {
+		eventData, err := json.Marshal(event)
+		if err != nil {
+			return err
+		}
+		if err := json.Unmarshal(eventData, &amp;param); err != nil {
+			return err
+		}
+	}
+  ...
+}
+```
+。</description><guid isPermaLink="true">https://night1008.github.io/post/a-li-yun-han-shu-ji-suan-%20Go%20-yu-yan-xia-bu-tong-diao-yong-fang-shi-chuan-ru-can-shu-de-fan-xu-lie-hua-wen-ti.html</guid><pubDate>Thu, 24 Apr 2025 10:06:42 +0000</pubDate></item><item><title>阿里云 SLS 使用记录</title><link>https://night1008.github.io/post/a-li-yun-%20SLS%20-shi-yong-ji-lu.html</link><description>### 正则匹配某个容器下的日志
 
 ```sql
 _container_name_ = pod-name and content:#'foo'
@@ -260,7 +308,10 @@ select *, arrayJoin(range(1, length(if(empty(a), [null], a)) + 1)) AS b_item_ind
 select arrayJoin([0,1,2,3,4,5,6]) as start_day, 
   toDateTime('2025-04-10') as t,
   toDayOfWeek(t),
-  date_add(DAY, -((toDayOfWeek(t) - start_day) % 7), t) AS week_start_day;
+  if(start_day &lt;= toDayOfWeek(t), 
+     date_add(DAY, -((toDayOfWeek(t) - start_day) % 7), t),
+     date_add(DAY, -7-((toDayOfWeek(t) - start_day) % 7), t)
+  ) AS week_start_day;
 ```
 ---
 
@@ -593,24 +644,25 @@ func RunJob(ctx context.Context) error {&#13;
 &#13;
 ### 需求&#13;
 &#13;
-产品给出的流失定义为：某天完成了初始事件的分析主体，在初始事件日期后的第 1 日至第 N 日都没有完成“回访事件”，即为第 N 日的“流失用户”。</description><guid isPermaLink="true">https://night1008.github.io/post/Clickhouse%20-liu-cun-fen-xi-zhong-ru-he-ji-suan-fen-xi-zhu-ti-de-liu-shi-shu.html</guid><pubDate>Mon, 19 Aug 2024 08:25:07 +0000</pubDate></item><item><title>看过的电影合集</title><link>https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</link><description>电影链接到 [豆瓣电影](https://movie.douban.com)&#13;
----&#13;
-&#13;
-- [ ] [九龙城寨之围城](https://movie.douban.com/subject/24284175) (一般)&#13;
-- [ ] [年会不能停](https://movie.douban.com/subject/35725869) (还可以)&#13;
-- [ ] [三大队](https://movie.douban.com/subject/35208463) (还可以)&#13;
-- [ ] [孤注一掷](https://movie.douban.com/subject/35267224) (还可以)&#13;
-- [ ] [瀑布](https://movie.douban.com/subject/35242938) (还可以)&#13;
-- [ ] [周处除三害](https://movie.douban.com/subject/36151692) (还可以)&#13;
-- [ ] [老狐狸](https://movie.douban.com/subject/35611467) (不错)&#13;
-- [ ] [破墓](https://movie.douban.com/subject/35490167) (还可以)&#13;
-- [ ] [首](https://movie.douban.com/subject/35359717) (还可以)&#13;
-- [ ] [沙丘1](https://movie.douban.com/subject/3001114) (还可以)&#13;
-- [ ] [沙丘2](https://movie.douban.com/subject/35575567) (还可以)&#13;
-- [ ] [月满轩尼诗](https://movie.douban.com/subject/3777800) (还可以)&#13;
-- [ ] [因果报应 Maharaja](https://movie.douban.com/subject/36934908/) (还不错)&#13;
-- [ ] [心里的声音](https://movie.douban.com/subject/26435723/) (还可以)&#13;
-- [ ] [椒麻堂会](https://movie.douban.com/subject/27305997/) (有点意思)。</description><guid isPermaLink="true">https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</guid><pubDate>Sat, 06 Jul 2024 14:59:53 +0000</pubDate></item><item><title>Go recover from panic</title><link>https://night1008.github.io/post/Go%20recover%20from%20panic.html</link><description>```go&#13;
+产品给出的流失定义为：某天完成了初始事件的分析主体，在初始事件日期后的第 1 日至第 N 日都没有完成“回访事件”，即为第 N 日的“流失用户”。</description><guid isPermaLink="true">https://night1008.github.io/post/Clickhouse%20-liu-cun-fen-xi-zhong-ru-he-ji-suan-fen-xi-zhu-ti-de-liu-shi-shu.html</guid><pubDate>Mon, 19 Aug 2024 08:25:07 +0000</pubDate></item><item><title>看过的电影合集</title><link>https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</link><description>电影链接到 [豆瓣电影](https://movie.douban.com)
+---
+
+- [ ] [九龙城寨之围城](https://movie.douban.com/subject/24284175) (一般)
+- [ ] [年会不能停](https://movie.douban.com/subject/35725869) (还可以)
+- [ ] [三大队](https://movie.douban.com/subject/35208463) (还可以)
+- [ ] [孤注一掷](https://movie.douban.com/subject/35267224) (还可以)
+- [ ] [瀑布](https://movie.douban.com/subject/35242938) (还可以)
+- [ ] [周处除三害](https://movie.douban.com/subject/36151692) (还可以)
+- [ ] [老狐狸](https://movie.douban.com/subject/35611467) (不错)
+- [ ] [破墓](https://movie.douban.com/subject/35490167) (还可以)
+- [ ] [首](https://movie.douban.com/subject/35359717) (还可以)
+- [ ] [沙丘1](https://movie.douban.com/subject/3001114) (还可以)
+- [ ] [沙丘2](https://movie.douban.com/subject/35575567) (还可以)
+- [ ] [月满轩尼诗](https://movie.douban.com/subject/3777800) (还可以)
+- [ ] [因果报应 Maharaja](https://movie.douban.com/subject/36934908/) (还不错)
+- [ ] [心里的声音](https://movie.douban.com/subject/26435723/) (还可以)
+- [ ] [椒麻堂会](https://movie.douban.com/subject/27305997/) (有点意思)
+- [ ] [射雕英雄传：侠之大者](https://m.douban.com/movie/subject/36289423/) (不行)。</description><guid isPermaLink="true">https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</guid><pubDate>Sat, 06 Jul 2024 14:59:53 +0000</pubDate></item><item><title>Go recover from panic</title><link>https://night1008.github.io/post/Go%20recover%20from%20panic.html</link><description>```go&#13;
 package main&#13;
 &#13;
 import (&#13;
