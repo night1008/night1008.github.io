@@ -40,7 +40,7 @@ select * from cluster('all-sharded', 'system', 'query_log') where query_id  = '4
 ```sql
 SELECT * FROM events
 SETTINGS join_use_nulls=1, allow_experimental_analyzer=0
-INTO OUTFILE '新玩家首日首场战场数据.csv.gz'
+INTO OUTFILE '新玩家首日首场战场数据.csv.gz' TRUNCATE
 FORMAT CSVWithNames;
 ```
 ---
