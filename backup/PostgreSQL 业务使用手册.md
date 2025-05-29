@@ -55,7 +55,7 @@ ORDER BY 3 desc;
 select pg_size_pretty(pg_database_size('funnydb_web'));
 
 -- 查看全部数据库磁盘占用情况
-SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by db_usage desc;
+SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by pg_database_size(datname) desc;
 ```
 
 ---

@@ -67,7 +67,7 @@ ORDER BY 3 desc;
 select pg_size_pretty(pg_database_size('funnydb_web'));
 
 -- 查看全部数据库磁盘占用情况
-SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by db_usage desc;
+SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by pg_database_size(datname) desc;
 ```
 
 ---
@@ -151,7 +151,7 @@ ORDER BY 3 desc;
 select pg_size_pretty(pg_database_size('funnydb_web'));
 
 -- 查看全部数据库磁盘占用情况
-SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by db_usage desc;
+SELECT datname as db_name, pg_size_pretty(pg_database_size(datname)) as db_usage FROM pg_database order by pg_database_size(datname) desc;
 ```
 
 ---
@@ -286,7 +286,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-k">select</span> pg_size_pretty(pg_database_size(<span class="pl-s"><span class="pl-pds">'</span>funnydb_web<span class="pl-pds">'</span></span>));
 
 <span class="pl-c"><span class="pl-c">--</span> 查看全部数据库磁盘占用情况</span>
-<span class="pl-k">SELECT</span> datname <span class="pl-k">as</span> db_name, pg_size_pretty(pg_database_size(datname)) <span class="pl-k">as</span> db_usage <span class="pl-k">FROM</span> pg_database <span class="pl-k">order by</span> db_usage <span class="pl-k">desc</span>;</pre></div>
+<span class="pl-k">SELECT</span> datname <span class="pl-k">as</span> db_name, pg_size_pretty(pg_database_size(datname)) <span class="pl-k">as</span> db_usage <span class="pl-k">FROM</span> pg_database <span class="pl-k">order by</span> pg_database_size(datname) <span class="pl-k">desc</span>;</pre></div>
 <hr>
 <h3>查询列的字段类型</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> pg_typeof(<span class="pl-s"><span class="pl-pds">"</span>column1<span class="pl-pds">"</span></span>), pg_typeof(<span class="pl-s"><span class="pl-pds">"</span>column2<span class="pl-pds">"</span></span>) <span class="pl-k">from</span> table1;</pre></div>
