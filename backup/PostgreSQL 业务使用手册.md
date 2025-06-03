@@ -35,12 +35,12 @@ pg_dump -h localhost -p 5432 -U postgres -d db_name -t table_name --schema-only
 ```sql
 -- 查看每个表的占用空间大小
 select
-  table_name, 
-  pg_size_pretty(pg_total_relation_size(quote_ident(table_name))),
-  pg_relation_size(quote_ident(table_name))
+  table_name, 
+  pg_size_pretty(pg_total_relation_size(quote_ident(table_name))),
+  pg_size_pretty(pg_relation_size(quote_ident(table_name)))
 from information_schema.tables
 where table_schema = 'public'
-order by 3 desc;
+order by pg_total_relation_size(quote_ident(table_name)) desc;
 
 -- 查看每个表的行数
 SELECT 
