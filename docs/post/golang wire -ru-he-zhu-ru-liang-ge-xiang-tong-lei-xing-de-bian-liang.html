@@ -16,7 +16,7 @@
 
 ---
 
-解决方式，先对变量定义新类型，最后创建的时候再转换成原来的类型。">
+解决方式，先对变量定义新类型，最后使用的时候再转换成原来的类型。">
 <meta property="og:title" content="golang wire 如何注入两个相同类型的变量">
 <meta property="og:description" content="如果使用 wire 初始化两个相同类型的变量，会报以下错误，
 
@@ -24,7 +24,7 @@
 
 ---
 
-解决方式，先对变量定义新类型，最后创建的时候再转换成原来的类型。">
+解决方式，先对变量定义新类型，最后使用的时候再转换成原来的类型。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/golang%20wire%20-ru-he-zhu-ru-liang-ge-xiang-tong-lei-xing-de-bian-liang.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
@@ -100,7 +100,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>BaseProviderSet has multiple bindings for *gorm.io/gorm.DB</p>
 </blockquote>
 <hr>
-<p>解决方式，先对变量定义新类型，最后创建的时候再转换成原来的类型。</p>
+<p>解决方式，先对变量定义新类型，最后使用的时候再转换成原来的类型。</p>
 <p>伪代码如下，</p>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">type</span> <span class="pl-smi">DB1</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>
 
