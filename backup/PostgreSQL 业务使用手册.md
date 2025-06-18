@@ -80,3 +80,18 @@ select min(id) from (select '10005' as id union all select '995' as id);  -- 错
 ```sql
 create table users_old as (select * from users);
 ```
+
+---
+
+### 计算列（Generated Columns）
+PostgreSQL 12+ 支持生成列（Generated Columns），这些列的值会自动计算并存储：
+
+```sql
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    price DECIMAL(10,2),
+    quantity INTEGER,
+    total_price DECIMAL(10,2) GENERATED ALWAYS AS (price * quantity) STORED
+);
+```
+STORED 表示值会被实际存储（物化），而不是每次查询时计算。

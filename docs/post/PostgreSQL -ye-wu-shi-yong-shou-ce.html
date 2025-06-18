@@ -92,7 +92,21 @@ select min(id) from (select '10005' as id union all select '995' as id);  -- 错
 ```sql
 create table users_old as (select * from users);
 ```
-。">
+
+---
+
+### 计算列（Generated Columns）
+PostgreSQL 12+ 支持生成列（Generated Columns），这些列的值会自动计算并存储：
+
+```sql
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    price DECIMAL(10,2),
+    quantity INTEGER,
+    total_price DECIMAL(10,2) GENERATED ALWAYS AS (price * quantity) STORED
+);
+```
+STORED 表示值会被实际存储（物化），而不是每次查询时计算。">
 <meta property="og:title" content="PostgreSQL 业务使用手册">
 <meta property="og:description" content="### 手动修改联合主键表索引
 
@@ -176,7 +190,21 @@ select min(id) from (select '10005' as id union all select '995' as id);  -- 错
 ```sql
 create table users_old as (select * from users);
 ```
-。">
+
+---
+
+### 计算列（Generated Columns）
+PostgreSQL 12+ 支持生成列（Generated Columns），这些列的值会自动计算并存储：
+
+```sql
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    price DECIMAL(10,2),
+    quantity INTEGER,
+    total_price DECIMAL(10,2) GENERATED ALWAYS AS (price * quantity) STORED
+);
+```
+STORED 表示值会被实际存储（物化），而不是每次查询时计算。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/PostgreSQL%20-ye-wu-shi-yong-shou-ce.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
@@ -297,7 +325,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-k">select</span> <span class="pl-c1">min</span>(id) <span class="pl-k">from</span> (<span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">'</span>10005<span class="pl-pds">'</span></span> <span class="pl-k">as</span> id <span class="pl-k">union all</span> <span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">'</span>995<span class="pl-pds">'</span></span> <span class="pl-k">as</span> id);  <span class="pl-c"><span class="pl-c">--</span> 错误写法</span></pre></div>
 <hr>
 <h3>复制表</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">create</span> <span class="pl-k">table</span> <span class="pl-en">users_old</span> <span class="pl-k">as</span> (<span class="pl-k">select</span> <span class="pl-k">*</span> <span class="pl-k">from</span> users);</pre></div></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">create</span> <span class="pl-k">table</span> <span class="pl-en">users_old</span> <span class="pl-k">as</span> (<span class="pl-k">select</span> <span class="pl-k">*</span> <span class="pl-k">from</span> users);</pre></div>
+<hr>
+<h3>计算列（Generated Columns）</h3>
+<p>PostgreSQL 12+ 支持生成列（Generated Columns），这些列的值会自动计算并存储：</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">products</span> (
+    id <span class="pl-k">SERIAL</span> <span class="pl-k">PRIMARY KEY</span>,
+    price <span class="pl-k">DECIMAL</span>(<span class="pl-c1">10</span>,<span class="pl-c1">2</span>),
+    quantity <span class="pl-k">INTEGER</span>,
+    total_price <span class="pl-k">DECIMAL</span>(<span class="pl-c1">10</span>,<span class="pl-c1">2</span>) GENERATED ALWAYS <span class="pl-k">AS</span> (price <span class="pl-k">*</span> quantity) STORED
+);</pre></div>
+<p>STORED 表示值会被实际存储（物化），而不是每次查询时计算。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
