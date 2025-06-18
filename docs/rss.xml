@@ -1,5 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 12 Jun 2025 02:52:06 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>golang wire 如何注入两个相同类型的变量</title><link>https://night1008.github.io/post/golang%20wire%20-ru-he-zhu-ru-liang-ge-xiang-tong-lei-xing-de-bian-liang.html</link><description>如果使用 wire 初始化两个相同类型的变量，会报以下错误，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Wed, 18 Jun 2025 03:16:22 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>markdown 用法记录</title><link>https://night1008.github.io/post/markdown%20-yong-fa-ji-lu.html</link><description>### 删除线
+
+```
+~~这段文本会被划掉~~
+```
+
+~~这段文本会被划掉~~。</description><guid isPermaLink="true">https://night1008.github.io/post/markdown%20-yong-fa-ji-lu.html</guid><pubDate>Wed, 18 Jun 2025 03:15:53 +0000</pubDate></item><item><title>golang wire 如何注入两个相同类型的变量</title><link>https://night1008.github.io/post/golang%20wire%20-ru-he-zhu-ru-liang-ge-xiang-tong-lei-xing-de-bian-liang.html</link><description>如果使用 wire 初始化两个相同类型的变量，会报以下错误，
 
 &gt; BaseProviderSet has multiple bindings for *gorm.io/gorm.DB
 
