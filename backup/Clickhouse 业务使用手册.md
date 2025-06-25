@@ -25,7 +25,11 @@ select hostname(),* from clusterAllReplicas('default','system.mutations') where 
 
 ### 加快字段删除速度
 ```sql
-alter table demo.events_local modify setting number_of_free_entries_in_pool_to_execute_mutation = 1;
+-- 每次变更之前执行
+alter table demo.users_local modify setting number_of_free_entries_in_pool_to_execute_mutation = 1;
+
+-- 变更完成后执行
+alter table demo.users_local reset setting number_of_free_entries_in_pool_to_execute_mutation;
 ```
 
 ---
