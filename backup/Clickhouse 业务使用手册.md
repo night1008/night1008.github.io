@@ -20,6 +20,14 @@ select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coales
 ```sql
 select hostname(),* from clusterAllReplicas('default','system.mutations') where is_done = 0;
 ```
+
+---
+
+### 加快字段删除速度
+```sql
+alter table demo.events_local modify setting number_of_free_entries_in_pool_to_execute_mutation = 1;
+```
+
 ---
 
 ### 清理数据库表

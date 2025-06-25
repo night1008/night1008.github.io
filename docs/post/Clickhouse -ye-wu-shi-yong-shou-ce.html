@@ -32,6 +32,14 @@ select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coales
 ```sql
 select hostname(),* from clusterAllReplicas('default','system.mutations') where is_done = 0;
 ```
+
+---
+
+### 加快字段删除速度
+```sql
+alter table demo.events_local modify setting number_of_free_entries_in_pool_to_execute_mutation = 1;
+```
+
 ---
 
 ### 清理数据库表
@@ -85,6 +93,14 @@ select `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval coales
 ```sql
 select hostname(),* from clusterAllReplicas('default','system.mutations') where is_done = 0;
 ```
+
+---
+
+### 加快字段删除速度
+```sql
+alter table demo.events_local modify setting number_of_free_entries_in_pool_to_execute_mutation = 1;
+```
+
 ---
 
 ### 清理数据库表
@@ -199,6 +215,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <hr>
 <h3>变更语句是否执行完</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> hostname(),<span class="pl-k">*</span> <span class="pl-k">from</span> clusterAllReplicas(<span class="pl-s"><span class="pl-pds">'</span>default<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>system.mutations<span class="pl-pds">'</span></span>) <span class="pl-k">where</span> is_done <span class="pl-k">=</span> <span class="pl-c1">0</span>;</pre></div>
+<hr>
+<h3>加快字段删除速度</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">alter</span> <span class="pl-k">table</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events_local</span> modify setting number_of_free_entries_in_pool_to_execute_mutation <span class="pl-k">=</span> <span class="pl-c1">1</span>;</pre></div>
 <hr>
 <h3>清理数据库表</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate">truncate table <span class="pl-c1">demo</span>.<span class="pl-c1">events_local</span>;
