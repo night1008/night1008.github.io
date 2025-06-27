@@ -10,7 +10,18 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="### 手动修改联合主键表索引
+<meta name="description" content="### 只读账号授权
+```sql
+GRANT CONNECT ON DATABASE demo_web TO demo_web_ro;
+
+GRANT USAGE ON SCHEMA public TO demo_web_ro;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO demo_web_ro;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO demo_web_ro;
+```
+
+---
+
+### 手动修改联合主键表索引
 
 原本 `ad_advertisers` 表以 `app_id`, `channel_name`, `account_id` 三个字段为主键，现在如何往中间再加一个主键字段
 
@@ -108,7 +119,18 @@ CREATE TABLE products (
 ```
 STORED 表示值会被实际存储（物化），而不是每次查询时计算。">
 <meta property="og:title" content="PostgreSQL 业务使用手册">
-<meta property="og:description" content="### 手动修改联合主键表索引
+<meta property="og:description" content="### 只读账号授权
+```sql
+GRANT CONNECT ON DATABASE demo_web TO demo_web_ro;
+
+GRANT USAGE ON SCHEMA public TO demo_web_ro;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO demo_web_ro;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO demo_web_ro;
+```
+
+---
+
+### 手动修改联合主键表索引
 
 原本 `ad_advertisers` 表以 `app_id`, `channel_name`, `account_id` 三个字段为主键，现在如何往中间再加一个主键字段
 
@@ -275,7 +297,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h3>手动修改联合主键表索引</h3>
+<div class="markdown-body" id="postBody"><h3>只读账号授权</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">GRANT</span> CONNECT <span class="pl-k">ON</span> DATABASE demo_web TO demo_web_ro;
+
+<span class="pl-k">GRANT</span> USAGE <span class="pl-k">ON</span> SCHEMA public TO demo_web_ro;
+<span class="pl-k">GRANT</span> <span class="pl-k">SELECT</span> <span class="pl-k">ON</span> ALL TABLES <span class="pl-k">IN</span> SCHEMA public TO demo_web_ro;
+ALTER DEFAULT PRIVILEGES <span class="pl-k">IN</span> SCHEMA public <span class="pl-k">GRANT</span> <span class="pl-k">SELECT</span> <span class="pl-k">ON</span> TABLES TO demo_web_ro;</pre></div>
+<hr>
+<h3>手动修改联合主键表索引</h3>
 <p>原本 <code class="notranslate">ad_advertisers</code> 表以 <code class="notranslate">app_id</code>, <code class="notranslate">channel_name</code>, <code class="notranslate">account_id</code> 三个字段为主键，现在如何往中间再加一个主键字段</p>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">CREATE</span> <span class="pl-k">UNIQUE INDEX</span> <span class="pl-en">ad_advertisers_pkey</span> <span class="pl-k">ON</span> <span class="pl-c1">public</span>.<span class="pl-c1">ad_advertisers</span> USING btree (app_id, channel_name, account_id);
 

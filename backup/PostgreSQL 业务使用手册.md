@@ -1,3 +1,14 @@
+### 只读账号授权
+```sql
+GRANT CONNECT ON DATABASE demo_web TO demo_web_ro;
+
+GRANT USAGE ON SCHEMA public TO demo_web_ro;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO demo_web_ro;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO demo_web_ro;
+```
+
+---
+
 ### 手动修改联合主键表索引
 
 原本 `ad_advertisers` 表以 `app_id`, `channel_name`, `account_id` 三个字段为主键，现在如何往中间再加一个主键字段

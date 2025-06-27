@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Wed, 25 Jun 2025 08:46:59 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>golang 如何独立 gin swagger 启动命令</title><link>https://night1008.github.io/post/golang%20-ru-he-du-li-%20gin%20swagger%20-qi-dong-ming-ling.html</link><description>之前的业务代码中需要生成 gin swagger 用于和前端联调，且和主流程代码放在一起，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 27 Jun 2025 03:47:49 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>golang 如何独立 gin swagger 启动命令</title><link>https://night1008.github.io/post/golang%20-ru-he-du-li-%20gin%20swagger%20-qi-dong-ming-ling.html</link><description>之前的业务代码中需要生成 gin swagger 用于和前端联调，且和主流程代码放在一起，
 导致打包镜像的时候也需要先生成 swagger，目前看这个只是用于本地和前端联调，
 因此独立 gin swagger 启动命令。</description><guid isPermaLink="true">https://night1008.github.io/post/golang%20-ru-he-du-li-%20gin%20swagger%20-qi-dong-ming-ling.html</guid><pubDate>Thu, 19 Jun 2025 02:30:49 +0000</pubDate></item><item><title>markdown 用法记录</title><link>https://night1008.github.io/post/markdown%20-yong-fa-ji-lu.html</link><description>### 删除线
 
@@ -413,7 +413,18 @@ select `_part`, `#dt`, `#event`, `#log_id`, count(1), groupArray(hostname()) fro
 ---&#13;
 &#13;
 发现一个有意思的现象，通过 `union` 的方式查询两条不同时区的数据，后续的数据都会转换成第一条数据所拥有的时区。</description><guid isPermaLink="true">https://night1008.github.io/post/Clickhouse%20Golang%20-cong-huan-cun-zhong-du-qu-shi-jian-lei-xing-zi-duan-diu-shi-shi-qu-de-wen-ti.html</guid><pubDate>Mon, 06 Jan 2025 07:09:51 +0000</pubDate></item><item><title>Go 全局时区设置</title><link>https://night1008.github.io/post/Go%20-quan-ju-shi-qu-she-zhi.html</link><description>正常本地开发环境的时区是东八区，线上服务器的时区是零时区，  &#13;
-调试一些线上服务器的时区问题的时候，如何通过设置全局时区在本地进行调试呢。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-quan-ju-shi-qu-she-zhi.html</guid><pubDate>Mon, 06 Jan 2025 02:08:02 +0000</pubDate></item><item><title>PostgreSQL 业务使用手册</title><link>https://night1008.github.io/post/PostgreSQL%20-ye-wu-shi-yong-shou-ce.html</link><description>### 手动修改联合主键表索引
+调试一些线上服务器的时区问题的时候，如何通过设置全局时区在本地进行调试呢。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-quan-ju-shi-qu-she-zhi.html</guid><pubDate>Mon, 06 Jan 2025 02:08:02 +0000</pubDate></item><item><title>PostgreSQL 业务使用手册</title><link>https://night1008.github.io/post/PostgreSQL%20-ye-wu-shi-yong-shou-ce.html</link><description>### 只读账号授权
+```sql
+GRANT CONNECT ON DATABASE demo_web TO demo_web_ro;
+
+GRANT USAGE ON SCHEMA public TO demo_web_ro;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO demo_web_ro;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO demo_web_ro;
+```
+
+---
+
+### 手动修改联合主键表索引
 
 原本 `ad_advertisers` 表以 `app_id`, `channel_name`, `account_id` 三个字段为主键，现在如何往中间再加一个主键字段
 
