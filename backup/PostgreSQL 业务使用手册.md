@@ -29,6 +29,9 @@ ALTER TABLE public.ad_advertisers ADD CONSTRAINT ad_advertisers_pkey PRIMARY KEY
 
 ```sql
 ALTER SEQUENCE users_id_seq RESTART WITH 7;
+
+-- 根据表已有的数据进行重置
+SELECT setval('users_id_seq', (SELECT coalesce(max(id), 0) FROM users));
 ```
 
 ---

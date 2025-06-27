@@ -41,6 +41,9 @@ ALTER TABLE public.ad_advertisers ADD CONSTRAINT ad_advertisers_pkey PRIMARY KEY
 
 ```sql
 ALTER SEQUENCE users_id_seq RESTART WITH 7;
+
+-- 根据表已有的数据进行重置
+SELECT setval('users_id_seq', (SELECT coalesce(max(id), 0) FROM users));
 ```
 
 ---
@@ -150,6 +153,9 @@ ALTER TABLE public.ad_advertisers ADD CONSTRAINT ad_advertisers_pkey PRIMARY KEY
 
 ```sql
 ALTER SEQUENCE users_id_seq RESTART WITH 7;
+
+-- 根据表已有的数据进行重置
+SELECT setval('users_id_seq', (SELECT coalesce(max(id), 0) FROM users));
 ```
 
 ---
@@ -315,7 +321,10 @@ ALTER DEFAULT PRIVILEGES <span class="pl-k">IN</span> SCHEMA public <span class=
 <span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">public</span>.<span class="pl-c1">ad_advertisers</span> ADD <span class="pl-k">CONSTRAINT</span> ad_advertisers_pkey <span class="pl-k">PRIMARY KEY</span> (app_id, channel_name, account_type, account_id);</pre></div>
 <hr>
 <h3>重置数据库表 ID</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">ALTER</span> <span class="pl-k">SEQUENCE</span> users_id_seq RESTART WITH <span class="pl-c1">7</span>;</pre></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">ALTER</span> <span class="pl-k">SEQUENCE</span> users_id_seq RESTART WITH <span class="pl-c1">7</span>;
+
+<span class="pl-c"><span class="pl-c">--</span> 根据表已有的数据进行重置</span>
+<span class="pl-k">SELECT</span> setval(<span class="pl-s"><span class="pl-pds">'</span>users_id_seq<span class="pl-pds">'</span></span>, (<span class="pl-k">SELECT</span> coalesce(<span class="pl-c1">max</span>(id), <span class="pl-c1">0</span>) <span class="pl-k">FROM</span> users));</pre></div>
 <hr>
 <h3>查看表结构</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate">pg_dump <span class="pl-k">-</span>h localhost <span class="pl-k">-</span>p <span class="pl-c1">5432</span> <span class="pl-k">-</span>U postgres <span class="pl-k">-</span>d db_name <span class="pl-k">-</span>t table_name <span class="pl-c"><span class="pl-c">--</span>schema-only</span></pre></div>
