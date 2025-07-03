@@ -1,5 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Tue, 01 Jul 2025 07:24:00 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Golang 如何加快镜像打包速度</title><link>https://night1008.github.io/post/Golang%20-ru-he-jia-kuai-jing-xiang-da-bao-su-du.html</link><description>原来镜像打包过程中可以指定挂载缓存和编译结果路径
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 03 Jul 2025 09:46:52 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Go Gorm 使用记录</title><link>https://night1008.github.io/post/Go%20Gorm%20-shi-yong-ji-lu.html</link><description>### 先 union 再聚合
+
+```go
+var results []struct {
+    Category string
+    SumTotal int
+}
+
+err := db.Table('(?) as t', 
+    db.Model(&amp;Table1{}).Select('category, COUNT(*) as total').Group('category').
+    Union(db.Model(&amp;Table2{}).Select('category, COUNT(*) as total').Group('category')),
+).
+Select('category, SUM(total) as sum_total').
+Group('category').
+Find(&amp;results).Error
+
+if err != nil {
+    // 处理错误
+}
+```。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20Gorm%20-shi-yong-ji-lu.html</guid><pubDate>Thu, 03 Jul 2025 09:46:19 +0000</pubDate></item><item><title>Golang 如何加快镜像打包速度</title><link>https://night1008.github.io/post/Golang%20-ru-he-jia-kuai-jing-xiang-da-bao-su-du.html</link><description>原来镜像打包过程中可以指定挂载缓存和编译结果路径
 
 ```sh
 FROM golang:1.23.9-alpine3.21 AS builder
