@@ -12,11 +12,11 @@
     </script>
 <meta name="description" content="不同广告渠道报表类型级别的对应关系
 
-|    | 腾讯广告 | 巨量广告 |
-| -------- | ------- | ------- |
-| 广告主帐号  | 账号ID(account_id)    | 广告主id(advertiser_id)   |
-| 广告计划 | 广告组ID(adgroup_id)   | 项目ID(cdp_project_id)   |
-| 广告创意    | 动态创意id(dynamic_creative_id)   | 广告ID(cdp_promotion_id)    |
+|    | 广告主帐号 | 广告计划 | 广告创意 |
+| -------- | ------- | ------- | ------- |
+| 腾讯广告  | 账号ID(account_id)  | 广告组ID(adgroup_id)   | 动态创意ID(dynamic_creative_id) | 
+| 巨量广告 | 广告主ID(advertiser_id)  | 项目ID(cdp_project_id)   | 广告ID(cdp_promotion_id) |
+
 
 参考链接
 - [腾讯广告 - 获取日报表](https://developers.e.qq.com/v3.0/docs/api/daily_reports/get)
@@ -25,11 +25,11 @@
 <meta property="og:title" content="不同广告渠道报表类型级别的对应关系">
 <meta property="og:description" content="不同广告渠道报表类型级别的对应关系
 
-|    | 腾讯广告 | 巨量广告 |
-| -------- | ------- | ------- |
-| 广告主帐号  | 账号ID(account_id)    | 广告主id(advertiser_id)   |
-| 广告计划 | 广告组ID(adgroup_id)   | 项目ID(cdp_project_id)   |
-| 广告创意    | 动态创意id(dynamic_creative_id)   | 广告ID(cdp_promotion_id)    |
+|    | 广告主帐号 | 广告计划 | 广告创意 |
+| -------- | ------- | ------- | ------- |
+| 腾讯广告  | 账号ID(account_id)  | 广告组ID(adgroup_id)   | 动态创意ID(dynamic_creative_id) | 
+| 巨量广告 | 广告主ID(advertiser_id)  | 项目ID(cdp_project_id)   | 广告ID(cdp_promotion_id) |
+
 
 参考链接
 - [腾讯广告 - 获取日报表](https://developers.e.qq.com/v3.0/docs/api/daily_reports/get)
@@ -100,24 +100,22 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <thead>
 <tr>
 <th></th>
-<th>腾讯广告</th>
-<th>巨量广告</th>
+<th>广告主帐号</th>
+<th>广告计划</th>
+<th>广告创意</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>广告主帐号</td>
+<td>腾讯广告</td>
 <td>账号ID(account_id)</td>
-<td>广告主id(advertiser_id)</td>
-</tr>
-<tr>
-<td>广告计划</td>
 <td>广告组ID(adgroup_id)</td>
-<td>项目ID(cdp_project_id)</td>
+<td>动态创意ID(dynamic_creative_id)</td>
 </tr>
 <tr>
-<td>广告创意</td>
-<td>动态创意id(dynamic_creative_id)</td>
+<td>巨量广告</td>
+<td>广告主ID(advertiser_id)</td>
+<td>项目ID(cdp_project_id)</td>
 <td>广告ID(cdp_promotion_id)</td>
 </tr>
 </tbody>
