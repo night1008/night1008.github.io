@@ -21,7 +21,7 @@ LTV 是 Life Time Value 缩写，即用户在生命周期中贡献的商业价�
 <meta property="og:url" content="https://night1008.github.io/post/Clickhouse%20-ru-he-shi-xian-%20LTV%20-fen-xi.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>Clickhouse 如何实现 LTV 分析</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -45,7 +45,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
 </style>
 
 
@@ -96,33 +106,32 @@ LTV 分析计算的是累计人均值。留存分析中的同时显示功能，�
 </ol>
 <p>下面介绍各个 LTV 模型如何实现。</p>
 <p>先建立 LTV 查询测试表。</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 建表语句
-CREATE TABLE IF NOT EXISTS ltv_test (
-  time DateTime,
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 建表语句</span>
+<span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">IF</span> NOT EXISTS ltv_test (
+  <span class="pl-k">time</span> DateTime,
   event String,
   user_id UInt64,
   amount Int64
-) ENGINE = Memory;
+) ENGINE <span class="pl-k">=</span> Memory;
 
 
---- 插入数据
-INSERT INTO ltv_test VALUES
-('2024-08-01 00:00:00', 'user_create', 1, 0),
-('2024-08-01 01:00:00', 'user_create', 1, 0),
-('2024-08-01 00:00:00', 'user_login', 1, 1),
-('2024-08-02 00:00:00', 'user_login', 1, 2),
-('2024-08-05 00:00:00', 'user_login', 1, 3),
-('2024-08-05 00:00:00', 'user_login', 1, 4),
-('2024-08-05 00:00:00', 'user_login', 1, 5),
-('2024-08-01 00:00:00', 'user_create', 2, 0),
-('2024-08-02 00:00:00', 'user_login', 2, 1),
-('2024-08-10 00:00:00', 'user_login', 2, 2),
-('2024-08-02 00:00:00', 'user_create', 3, 0),
-('2024-08-03 00:00:00', 'user_login', 3, 1),
-('2024-08-06 00:00:00', 'user_login', 3, 2),
-('2024-08-10 00:00:00', 'user_login', 3, 3),
-('2024-08-01 00:00:00', 'user_create', 4, 0);
-</code></pre>
+<span class="pl-c"><span class="pl-c">--</span>- 插入数据</span>
+<span class="pl-k">INSERT INTO</span> ltv_test <span class="pl-k">VALUES</span>
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-01 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">0</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-01 01:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">0</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-01 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">1</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-02 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">2</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-05 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">3</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-05 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">4</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-05 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">5</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-01 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, <span class="pl-c1">0</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-02 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, <span class="pl-c1">1</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-10 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, <span class="pl-c1">2</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-02 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>, <span class="pl-c1">3</span>, <span class="pl-c1">0</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-03 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">3</span>, <span class="pl-c1">1</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-06 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">3</span>, <span class="pl-c1">2</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-10 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>, <span class="pl-c1">3</span>, <span class="pl-c1">3</span>),
+(<span class="pl-s"><span class="pl-pds">'</span>2024-08-01 00:00:00<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>, <span class="pl-c1">4</span>, <span class="pl-c1">0</span>);</pre></div>
 <hr>
 <h3>ARPU (阶段累计人均值)</h3>
 <p>目的：反映公司从每位用户那里获得的平均收入，可以更好的理解用户价值。<br>
@@ -136,47 +145,46 @@ INSERT INTO ltv_test VALUES
 <li>计算每个初始事件触发日期下的 N 天阶段累计总和除以触发初始事件的用户总数</li>
 </ol>
 <p>示例代码：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- ARPU (阶段累计人均值)
-WITH range(-1, 7) AS date_interval_nums, arrayEnumerate(date_interval_nums) AS date_interval_nums_enumerate
-SELECT init_date, ltv_data,
-      arrayMap(x -&gt; round(x / if(ltv_data[1] = 0, 1, ltv_data[1]), 2), arrayCumSum(base_ltv_amount)) AS ltv_amount,
-      arrayCumSum(base_ltv_amount) AS total_ltv_amount
-  FROM (
-  SELECT init_date,
-        groupArray(r) AS ltv_data_list,
-        groupArray(a) AS base_ltv_amount_list,
-        arrayMap(i -&gt; arraySum(arrayMap(x -&gt; x[i], ltv_data_list)), range(1, length(ltv_data_list[1])+1)) AS ltv_data,
-        arrayMap(i -&gt; round(arraySum(arrayMap(x -&gt; x[i], base_ltv_amount_list)), 2), range(1, length(base_ltv_amount_list[1])+1)) AS base_ltv_amount
-    FROM (
-      SELECT init_date, user_id,
-        cast((groupArray(date_time), groupArray(amount)) AS Map(Datetime, Float64)) AS date_amounts_map,
-        arrayMap(x -&gt; if(x == -1, 1, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) AS r,
-        arrayMap(x -&gt; multiIf(x == 1, 0, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], 0), date_interval_nums_enumerate) AS a
-        FROM (
-          SELECT init_date, user_id, date_trunc('day', coalesce(t2.time, toDateTime(0))) AS date_time, toFloat64(coalesce(SUM(t2.value), 0))  AS amount
-            FROM (
-            SELECT DISTINCT ON (user_id) time AS init_date, user_id, time
-              FROM ltv_test
-            WHERE event = 'user_create'
-            ORDER BY time
-          ) AS t1 GLOBAL LEFT JOIN (
-            SELECT user_id, time, amount AS value
-              FROM ltv_test
-              WHERE event = 'user_login'
-          ) AS t2 ON t1.user_id = t2.user_id WHERE t1.time &lt; t2.time OR t2.time IS NULL
-          GROUP BY 1, 2, 3
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> ARPU (阶段累计人均值)</span>
+WITH range(<span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">7</span>) <span class="pl-k">AS</span> date_interval_nums, arrayEnumerate(date_interval_nums) <span class="pl-k">AS</span> date_interval_nums_enumerate
+<span class="pl-k">SELECT</span> init_date, ltv_data,
+      arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> round(x <span class="pl-k">/</span> if(ltv_data[<span class="pl-c1">1</span>] <span class="pl-k">=</span> <span class="pl-c1">0</span>, <span class="pl-c1">1</span>, ltv_data[<span class="pl-c1">1</span>]), <span class="pl-c1">2</span>), arrayCumSum(base_ltv_amount)) <span class="pl-k">AS</span> ltv_amount,
+      arrayCumSum(base_ltv_amount) <span class="pl-k">AS</span> total_ltv_amount
+  <span class="pl-k">FROM</span> (
+  <span class="pl-k">SELECT</span> init_date,
+        groupArray(r) <span class="pl-k">AS</span> ltv_data_list,
+        groupArray(a) <span class="pl-k">AS</span> base_ltv_amount_list,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], ltv_data_list)), range(<span class="pl-c1">1</span>, length(ltv_data_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> ltv_data,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> round(arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], base_ltv_amount_list)), <span class="pl-c1">2</span>), range(<span class="pl-c1">1</span>, length(base_ltv_amount_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> base_ltv_amount
+    <span class="pl-k">FROM</span> (
+      <span class="pl-k">SELECT</span> init_date, user_id,
+        cast((groupArray(date_time), groupArray(amount)) <span class="pl-k">AS</span> Map(Datetime, Float64)) <span class="pl-k">AS</span> date_amounts_map,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> if(x <span class="pl-k">==</span> <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) <span class="pl-k">AS</span> r,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> multiIf(x <span class="pl-k">==</span> <span class="pl-c1">1</span>, <span class="pl-c1">0</span>, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], <span class="pl-c1">0</span>), date_interval_nums_enumerate) <span class="pl-k">AS</span> a
+        <span class="pl-k">FROM</span> (
+          <span class="pl-k">SELECT</span> init_date, user_id, date_trunc(<span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>, coalesce(<span class="pl-c1">t2</span>.<span class="pl-c1">time</span>, toDateTime(<span class="pl-c1">0</span>))) <span class="pl-k">AS</span> date_time, toFloat64(coalesce(<span class="pl-c1">SUM</span>(<span class="pl-c1">t2</span>.<span class="pl-c1">value</span>), <span class="pl-c1">0</span>))  <span class="pl-k">AS</span> amount
+            <span class="pl-k">FROM</span> (
+            <span class="pl-k">SELECT DISTINCT</span> <span class="pl-k">ON</span> (user_id) <span class="pl-k">time</span> <span class="pl-k">AS</span> init_date, user_id, <span class="pl-k">time</span>
+              <span class="pl-k">FROM</span> ltv_test
+            <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>
+            <span class="pl-k">ORDER BY</span> <span class="pl-k">time</span>
+          ) <span class="pl-k">AS</span> t1 GLOBAL <span class="pl-k">LEFT JOIN</span> (
+            <span class="pl-k">SELECT</span> user_id, <span class="pl-k">time</span>, amount <span class="pl-k">AS</span> value
+              <span class="pl-k">FROM</span> ltv_test
+              <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>
+          ) <span class="pl-k">AS</span> t2 <span class="pl-k">ON</span> <span class="pl-c1">t1</span>.<span class="pl-c1">user_id</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">user_id</span> <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">time</span> <span class="pl-k">&lt;</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> <span class="pl-k">OR</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> IS <span class="pl-k">NULL</span>
+          <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>
         )
-        GROUP BY 1, 2
+        <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>
     )
-    GROUP BY 1
+    <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>
   )
-  ORDER BY 1 SETTINGS join_use_nulls=1;
+  <span class="pl-k">ORDER BY</span> <span class="pl-c1">1</span> SETTINGS join_use_nulls<span class="pl-k">=</span><span class="pl-c1">1</span>;
 
 ┌───────────init_date─┬─ltv_data──────────┬─ltv_amount────────┬─total_ltv_amount─────┐
-│ 2024-08-01 00:00:00 │ [3,0,2,0,0,1,0,0] │ [0,0,1,1,1,5,5,5] │ [0,0,3,3,3,15,15,15] │
-│ 2024-08-02 00:00:00 │ [1,0,1,0,0,1,0,0] │ [0,0,1,1,1,3,3,3] │ [0,0,1,1,1,3,3,3]    │
-└─────────────────────┴───────────────────┴───────────────────┴──────────────────────┘
-</code></pre>
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">01</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">5</span>,<span class="pl-c1">5</span>,<span class="pl-c1">5</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">15</span>,<span class="pl-c1">15</span>,<span class="pl-c1">15</span>] │
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">02</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>]    │
+└─────────────────────┴───────────────────┴───────────────────┴──────────────────────┘</pre></div>
 <hr>
 <h3>总营收（阶段累计总和）</h3>
 <p>目的：用户营收追踪，全面的评估用户在特定时间段内对业务的贡献。<br>
@@ -190,47 +198,46 @@ SELECT init_date, ltv_data,
 <li>计算每个初始事件触发日期下的 N 天的阶段累计总和</li>
 </ol>
 <p>示例代码：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 总营收 (阶段累计总和)
-WITH range(-1, 7) AS date_interval_nums, arrayEnumerate(date_interval_nums) AS date_interval_nums_enumerate
-SELECT init_date, ltv_data,
-      arrayCumSum(base_ltv_amount) AS ltv_amount,
-      arrayCumSum(base_ltv_amount) AS total_ltv_amount
-  FROM (
-  SELECT init_date,
-        groupArray(r) AS ltv_data_list,
-        groupArray(a) AS base_ltv_amount_list,
-        arrayMap(i -&gt; arraySum(arrayMap(x -&gt; x[i], ltv_data_list)), range(1, length(ltv_data_list[1])+1)) AS ltv_data,
-        arrayMap(i -&gt; round(arraySum(arrayMap(x -&gt; x[i], base_ltv_amount_list)), 2), range(1, length(base_ltv_amount_list[1])+1)) AS base_ltv_amount
-    FROM (
-      SELECT init_date, user_id,
-        cast((groupArray(date_time), groupArray(amount)) AS Map(Datetime, Float64)) AS date_amounts_map,
-        arrayMap(x -&gt; if(x == -1, 1, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) AS r,
-        arrayMap(x -&gt; multiIf(x == 1, 0, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], 0), date_interval_nums_enumerate) AS a
-        FROM (
-          SELECT init_date, user_id, date_trunc('day', coalesce(t2.time, toDateTime(0))) AS date_time, toFloat64(coalesce(SUM(t2.value), 0))  AS amount
-            FROM (
-            SELECT DISTINCT ON (user_id) time AS init_date, user_id, time
-              FROM ltv_test
-            WHERE event = 'user_create'
-            ORDER BY time
-          ) AS t1 GLOBAL LEFT JOIN (
-            SELECT user_id, time, amount AS value
-              FROM ltv_test
-              WHERE event = 'user_login'
-          ) AS t2 ON t1.user_id = t2.user_id WHERE t1.time &lt; t2.time OR t2.time IS NULL
-          GROUP BY 1, 2, 3
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 总营收 (阶段累计总和)</span>
+WITH range(<span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">7</span>) <span class="pl-k">AS</span> date_interval_nums, arrayEnumerate(date_interval_nums) <span class="pl-k">AS</span> date_interval_nums_enumerate
+<span class="pl-k">SELECT</span> init_date, ltv_data,
+      arrayCumSum(base_ltv_amount) <span class="pl-k">AS</span> ltv_amount,
+      arrayCumSum(base_ltv_amount) <span class="pl-k">AS</span> total_ltv_amount
+  <span class="pl-k">FROM</span> (
+  <span class="pl-k">SELECT</span> init_date,
+        groupArray(r) <span class="pl-k">AS</span> ltv_data_list,
+        groupArray(a) <span class="pl-k">AS</span> base_ltv_amount_list,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], ltv_data_list)), range(<span class="pl-c1">1</span>, length(ltv_data_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> ltv_data,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> round(arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], base_ltv_amount_list)), <span class="pl-c1">2</span>), range(<span class="pl-c1">1</span>, length(base_ltv_amount_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> base_ltv_amount
+    <span class="pl-k">FROM</span> (
+      <span class="pl-k">SELECT</span> init_date, user_id,
+        cast((groupArray(date_time), groupArray(amount)) <span class="pl-k">AS</span> Map(Datetime, Float64)) <span class="pl-k">AS</span> date_amounts_map,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> if(x <span class="pl-k">==</span> <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) <span class="pl-k">AS</span> r,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> multiIf(x <span class="pl-k">==</span> <span class="pl-c1">1</span>, <span class="pl-c1">0</span>, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], <span class="pl-c1">0</span>), date_interval_nums_enumerate) <span class="pl-k">AS</span> a
+        <span class="pl-k">FROM</span> (
+          <span class="pl-k">SELECT</span> init_date, user_id, date_trunc(<span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>, coalesce(<span class="pl-c1">t2</span>.<span class="pl-c1">time</span>, toDateTime(<span class="pl-c1">0</span>))) <span class="pl-k">AS</span> date_time, toFloat64(coalesce(<span class="pl-c1">SUM</span>(<span class="pl-c1">t2</span>.<span class="pl-c1">value</span>), <span class="pl-c1">0</span>))  <span class="pl-k">AS</span> amount
+            <span class="pl-k">FROM</span> (
+            <span class="pl-k">SELECT DISTINCT</span> <span class="pl-k">ON</span> (user_id) <span class="pl-k">time</span> <span class="pl-k">AS</span> init_date, user_id, <span class="pl-k">time</span>
+              <span class="pl-k">FROM</span> ltv_test
+            <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>
+            <span class="pl-k">ORDER BY</span> <span class="pl-k">time</span>
+          ) <span class="pl-k">AS</span> t1 GLOBAL <span class="pl-k">LEFT JOIN</span> (
+            <span class="pl-k">SELECT</span> user_id, <span class="pl-k">time</span>, amount <span class="pl-k">AS</span> value
+              <span class="pl-k">FROM</span> ltv_test
+              <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>
+          ) <span class="pl-k">AS</span> t2 <span class="pl-k">ON</span> <span class="pl-c1">t1</span>.<span class="pl-c1">user_id</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">user_id</span> <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">time</span> <span class="pl-k">&lt;</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> <span class="pl-k">OR</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> IS <span class="pl-k">NULL</span>
+          <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>
         )
-        GROUP BY 1, 2
+        <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>
     )
-    GROUP BY 1
+    <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>
   )
-  ORDER BY 1 SETTINGS join_use_nulls=1;
+  <span class="pl-k">ORDER BY</span> <span class="pl-c1">1</span> SETTINGS join_use_nulls<span class="pl-k">=</span><span class="pl-c1">1</span>;
 
 ┌───────────init_date─┬─ltv_data──────────┬─ltv_amount───────────┬─total_ltv_amount─────┐
-│ 2024-08-01 00:00:00 │ [3,0,2,0,0,1,0,0] │ [0,0,3,3,3,15,15,15] │ [0,0,3,3,3,15,15,15] │
-│ 2024-08-02 00:00:00 │ [1,0,1,0,0,1,0,0] │ [0,0,1,1,1,3,3,3]    │ [0,0,1,1,1,3,3,3]    │
-└─────────────────────┴───────────────────┴──────────────────────┴──────────────────────┘
-</code></pre>
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">01</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">15</span>,<span class="pl-c1">15</span>,<span class="pl-c1">15</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">15</span>,<span class="pl-c1">15</span>,<span class="pl-c1">15</span>] │
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">02</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>]    │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">1</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>,<span class="pl-c1">3</span>]    │
+└─────────────────────┴───────────────────┴──────────────────────┴──────────────────────┘</pre></div>
 <hr>
 <h3>日营收（单日营收汇总）</h3>
 <p>目的：了解用户在完成初始事件行为的商业价值，帮助衡量单一时间点的用户贡献，评估市场策略和用户忠诚度。<br>
@@ -243,47 +250,46 @@ SELECT init_date, ltv_data,
 <li>计算每个初始事件触发日期下的 N 天的累计总和</li>
 </ol>
 <p>示例代码：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 日营收 (单日营收汇总)
-WITH range(-1, 7) AS date_interval_nums, arrayEnumerate(date_interval_nums) AS date_interval_nums_enumerate
-SELECT init_date, ltv_data,
-      base_ltv_amount AS ltv_amount,
-      base_ltv_amount AS total_ltv_amount
-  FROM (
-  SELECT init_date,
-        groupArray(r) AS ltv_data_list,
-        groupArray(a) AS base_ltv_amount_list,
-        arrayMap(i -&gt; arraySum(arrayMap(x -&gt; x[i], ltv_data_list)), range(1, length(ltv_data_list[1])+1)) AS ltv_data,
-        arrayMap(i -&gt; round(arraySum(arrayMap(x -&gt; x[i], base_ltv_amount_list)), 2), range(1, length(base_ltv_amount_list[1])+1)) AS base_ltv_amount
-    FROM (
-      SELECT init_date, user_id,
-        cast((groupArray(date_time), groupArray(amount)) AS Map(Datetime, Float64)) AS date_amounts_map,
-        arrayMap(x -&gt; if(x == -1, 1, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) AS r,
-        arrayMap(x -&gt; multiIf(x == 1, 0, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], 0), date_interval_nums_enumerate) AS a
-        FROM (
-          SELECT init_date, user_id, date_trunc('day', coalesce(t2.time, toDateTime(0))) AS date_time, toFloat64(coalesce(SUM(t2.value), 0))  AS amount
-            FROM (
-            SELECT DISTINCT ON (user_id) time AS init_date, user_id, time
-              FROM ltv_test
-            WHERE event = 'user_create'
-            ORDER BY time
-          ) AS t1 GLOBAL LEFT JOIN (
-            SELECT user_id, time, amount AS value
-              FROM ltv_test
-              WHERE event = 'user_login'
-          ) AS t2 ON t1.user_id = t2.user_id WHERE t1.time &lt; t2.time OR t2.time IS NULL
-          GROUP BY 1, 2, 3
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 日营收 (单日营收汇总)</span>
+WITH range(<span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">7</span>) <span class="pl-k">AS</span> date_interval_nums, arrayEnumerate(date_interval_nums) <span class="pl-k">AS</span> date_interval_nums_enumerate
+<span class="pl-k">SELECT</span> init_date, ltv_data,
+      base_ltv_amount <span class="pl-k">AS</span> ltv_amount,
+      base_ltv_amount <span class="pl-k">AS</span> total_ltv_amount
+  <span class="pl-k">FROM</span> (
+  <span class="pl-k">SELECT</span> init_date,
+        groupArray(r) <span class="pl-k">AS</span> ltv_data_list,
+        groupArray(a) <span class="pl-k">AS</span> base_ltv_amount_list,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], ltv_data_list)), range(<span class="pl-c1">1</span>, length(ltv_data_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> ltv_data,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> round(arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], base_ltv_amount_list)), <span class="pl-c1">2</span>), range(<span class="pl-c1">1</span>, length(base_ltv_amount_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> base_ltv_amount
+    <span class="pl-k">FROM</span> (
+      <span class="pl-k">SELECT</span> init_date, user_id,
+        cast((groupArray(date_time), groupArray(amount)) <span class="pl-k">AS</span> Map(Datetime, Float64)) <span class="pl-k">AS</span> date_amounts_map,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> if(x <span class="pl-k">==</span> <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) <span class="pl-k">AS</span> r,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> multiIf(x <span class="pl-k">==</span> <span class="pl-c1">1</span>, <span class="pl-c1">0</span>, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], <span class="pl-c1">0</span>), date_interval_nums_enumerate) <span class="pl-k">AS</span> a
+        <span class="pl-k">FROM</span> (
+          <span class="pl-k">SELECT</span> init_date, user_id, date_trunc(<span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>, coalesce(<span class="pl-c1">t2</span>.<span class="pl-c1">time</span>, toDateTime(<span class="pl-c1">0</span>))) <span class="pl-k">AS</span> date_time, toFloat64(coalesce(<span class="pl-c1">SUM</span>(<span class="pl-c1">t2</span>.<span class="pl-c1">value</span>), <span class="pl-c1">0</span>))  <span class="pl-k">AS</span> amount
+            <span class="pl-k">FROM</span> (
+            <span class="pl-k">SELECT DISTINCT</span> <span class="pl-k">ON</span> (user_id) <span class="pl-k">time</span> <span class="pl-k">AS</span> init_date, user_id, <span class="pl-k">time</span>
+              <span class="pl-k">FROM</span> ltv_test
+            <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>
+            <span class="pl-k">ORDER BY</span> <span class="pl-k">time</span>
+          ) <span class="pl-k">AS</span> t1 GLOBAL <span class="pl-k">LEFT JOIN</span> (
+            <span class="pl-k">SELECT</span> user_id, <span class="pl-k">time</span>, amount <span class="pl-k">AS</span> value
+              <span class="pl-k">FROM</span> ltv_test
+              <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>
+          ) <span class="pl-k">AS</span> t2 <span class="pl-k">ON</span> <span class="pl-c1">t1</span>.<span class="pl-c1">user_id</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">user_id</span> <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">time</span> <span class="pl-k">&lt;</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> <span class="pl-k">OR</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> IS <span class="pl-k">NULL</span>
+          <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>
         )
-        GROUP BY 1, 2
+        <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>
     )
-    GROUP BY 1
+    <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>
   )
-  ORDER BY 1 SETTINGS join_use_nulls=1;
+  <span class="pl-k">ORDER BY</span> <span class="pl-c1">1</span> SETTINGS join_use_nulls<span class="pl-k">=</span><span class="pl-c1">1</span>;
 
 ┌───────────init_date─┬─ltv_data──────────┬─ltv_amount─────────┬─total_ltv_amount───┐
-│ 2024-08-01 00:00:00 │ [3,0,2,0,0,1,0,0] │ [0,0,3,0,0,12,0,0] │ [0,0,3,0,0,12,0,0] │
-│ 2024-08-02 00:00:00 │ [1,0,1,0,0,1,0,0] │ [0,0,1,0,0,2,0,0]  │ [0,0,1,0,0,2,0,0]  │
-└─────────────────────┴───────────────────┴────────────────────┴────────────────────┘
-</code></pre>
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">01</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">12</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">12</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">02</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>]  │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>]  │
+└─────────────────────┴───────────────────┴────────────────────┴────────────────────┘</pre></div>
 <hr>
 <h3>日营收人数</h3>
 <p>目的：用户营收参与度分析，观测在不同的时间节点上，用户群体的参与度和活跃度。<br>
@@ -296,47 +302,46 @@ SELECT init_date, ltv_data,
 <li>计算每个初始事件触发日期下的 N 天的日营收人数总和</li>
 </ol>
 <p>示例代码：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 日营收人数
-WITH range(-1, 7) AS date_interval_nums, arrayEnumerate(date_interval_nums) AS date_interval_nums_enumerate
-SELECT init_date, ltv_data,
-      base_ltv_amount AS ltv_amount,
-      base_ltv_amount AS total_ltv_amount
-  FROM (
-  SELECT init_date,
-        groupArray(r) AS ltv_data_list,
-        groupArray(a) AS base_ltv_amount_list,
-        arrayMap(i -&gt; arraySum(arrayMap(x -&gt; x[i], ltv_data_list)), range(1, length(ltv_data_list[1])+1)) AS ltv_data,
-        arrayMap(i -&gt; round(arraySum(arrayMap(x -&gt; x[i], base_ltv_amount_list)), 2), range(1, length(base_ltv_amount_list[1])+1)) AS base_ltv_amount
-    FROM (
-      SELECT init_date, user_id,
-        cast((groupArray(date_time), groupArray(amount)) AS Map(Datetime, Float64)) AS date_amounts_map,
-        arrayMap(x -&gt; if(x == -1, 1, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) AS r,
-        arrayMap(x -&gt; multiIf(x == 1, 0, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], 0), date_interval_nums_enumerate) AS a
-        FROM (
-          SELECT init_date, user_id, date_trunc('day', coalesce(t2.time, toDateTime(0))) AS date_time, toFloat64(coalesce(any(1), 0)) AS amount
-            FROM (
-            SELECT DISTINCT ON (user_id) time AS init_date, user_id, time
-              FROM ltv_test
-            WHERE event = 'user_create'
-            ORDER BY time
-          ) AS t1 GLOBAL LEFT JOIN (
-            SELECT user_id, time, 1 AS value
-              FROM ltv_test
-              WHERE event = 'user_login'
-          ) AS t2 ON t1.user_id = t2.user_id WHERE t1.time &lt; t2.time OR t2.time IS NULL
-          GROUP BY 1, 2, 3
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 日营收人数</span>
+WITH range(<span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">7</span>) <span class="pl-k">AS</span> date_interval_nums, arrayEnumerate(date_interval_nums) <span class="pl-k">AS</span> date_interval_nums_enumerate
+<span class="pl-k">SELECT</span> init_date, ltv_data,
+      base_ltv_amount <span class="pl-k">AS</span> ltv_amount,
+      base_ltv_amount <span class="pl-k">AS</span> total_ltv_amount
+  <span class="pl-k">FROM</span> (
+  <span class="pl-k">SELECT</span> init_date,
+        groupArray(r) <span class="pl-k">AS</span> ltv_data_list,
+        groupArray(a) <span class="pl-k">AS</span> base_ltv_amount_list,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], ltv_data_list)), range(<span class="pl-c1">1</span>, length(ltv_data_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> ltv_data,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> round(arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], base_ltv_amount_list)), <span class="pl-c1">2</span>), range(<span class="pl-c1">1</span>, length(base_ltv_amount_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> base_ltv_amount
+    <span class="pl-k">FROM</span> (
+      <span class="pl-k">SELECT</span> init_date, user_id,
+        cast((groupArray(date_time), groupArray(amount)) <span class="pl-k">AS</span> Map(Datetime, Float64)) <span class="pl-k">AS</span> date_amounts_map,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> if(x <span class="pl-k">==</span> <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) <span class="pl-k">AS</span> r,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> multiIf(x <span class="pl-k">==</span> <span class="pl-c1">1</span>, <span class="pl-c1">0</span>, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], <span class="pl-c1">0</span>), date_interval_nums_enumerate) <span class="pl-k">AS</span> a
+        <span class="pl-k">FROM</span> (
+          <span class="pl-k">SELECT</span> init_date, user_id, date_trunc(<span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>, coalesce(<span class="pl-c1">t2</span>.<span class="pl-c1">time</span>, toDateTime(<span class="pl-c1">0</span>))) <span class="pl-k">AS</span> date_time, toFloat64(coalesce(any(<span class="pl-c1">1</span>), <span class="pl-c1">0</span>)) <span class="pl-k">AS</span> amount
+            <span class="pl-k">FROM</span> (
+            <span class="pl-k">SELECT DISTINCT</span> <span class="pl-k">ON</span> (user_id) <span class="pl-k">time</span> <span class="pl-k">AS</span> init_date, user_id, <span class="pl-k">time</span>
+              <span class="pl-k">FROM</span> ltv_test
+            <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>
+            <span class="pl-k">ORDER BY</span> <span class="pl-k">time</span>
+          ) <span class="pl-k">AS</span> t1 GLOBAL <span class="pl-k">LEFT JOIN</span> (
+            <span class="pl-k">SELECT</span> user_id, <span class="pl-k">time</span>, <span class="pl-c1">1</span> <span class="pl-k">AS</span> value
+              <span class="pl-k">FROM</span> ltv_test
+              <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>
+          ) <span class="pl-k">AS</span> t2 <span class="pl-k">ON</span> <span class="pl-c1">t1</span>.<span class="pl-c1">user_id</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">user_id</span> <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">time</span> <span class="pl-k">&lt;</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> <span class="pl-k">OR</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> IS <span class="pl-k">NULL</span>
+          <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>
         )
-        GROUP BY 1, 2
+        <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>
     )
-    GROUP BY 1
+    <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>
   )
-  ORDER BY 1 SETTINGS join_use_nulls=1;
+  <span class="pl-k">ORDER BY</span> <span class="pl-c1">1</span> SETTINGS join_use_nulls<span class="pl-k">=</span><span class="pl-c1">1</span>;
 
 ┌───────────init_date─┬─ltv_data──────────┬─ltv_amount────────┬─total_ltv_amount──┐
-│ 2024-08-01 00:00:00 │ [3,0,2,0,0,1,0,0] │ [0,0,2,0,0,1,0,0] │ [0,0,2,0,0,1,0,0] │
-│ 2024-08-02 00:00:00 │ [1,0,1,0,0,1,0,0] │ [0,0,1,0,0,1,0,0] │ [0,0,1,0,0,1,0,0] │
-└─────────────────────┴───────────────────┴───────────────────┴───────────────────┘
-</code></pre>
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">01</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">02</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │
+└─────────────────────┴───────────────────┴───────────────────┴───────────────────┘</pre></div>
 <hr>
 <h3>ARPPU (阶段人均营收贡献)</h3>
 <p>目的：用户平均营收贡献分析，反映付费用户的平均消费水平。<br>
@@ -351,48 +356,47 @@ SELECT init_date, ltv_data,
 <li>计算每个初始事件触发日期下的 N 天阶段累计总和除以营收人数的阶段累计总和</li>
 </ol>
 <p>示例代码：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- ARPPU (阶段人均营收贡献)
-WITH range(-1, 7) AS date_interval_nums, arrayEnumerate(date_interval_nums) AS date_interval_nums_enumerate
-SELECT init_date, ltv_data,
-      base_ltv_amount AS ltv_amount,
-      base_ltv_amount AS total_ltv_amount
-  FROM (
-  SELECT init_date,
-        groupArray(r) AS r_list,
-        groupArray(a) AS a_list,
-        arrayMap(x -&gt; arrayMap((i, y) -&gt; multiIf(i == 1, 1, y &gt;= 1, 1, 0), date_interval_nums_enumerate, x), arrayMap(i -&gt; arrayCumSum(x -&gt; if(x == 1, 0, i[x]), date_interval_nums_enumerate), r_list)) AS r_list_cum_sum,
-        arrayMap(i -&gt; arraySum(arrayMap(x -&gt; x[i], r_list_cum_sum)), range(1, length(r_list[1])+1)) AS ltv_data_all,
-        arrayMap(i -&gt; round(arraySum(arrayMap(x -&gt; x[i], a_list)), 2), range(1, length(a_list[1])+1)) AS base_ltv_amount_all
-    FROM (
-      SELECT init_date, user_id,
-        cast((groupArray(date_time), groupArray(amount)) AS Map(Datetime, Float64)) AS date_amounts_map,
-        arrayMap(x -&gt; if(x == -1, 1, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) AS r,
-        arrayMap(x -&gt; multiIf(x == 1, 0, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], 0), date_interval_nums_enumerate) AS a
-        FROM (
-          SELECT init_date, user_id, date_trunc('day', coalesce(t2.time, toDateTime(0))) AS date_time, toFloat64(coalesce(SUM(t2.value), 0))  AS amount
-            FROM (
-            SELECT DISTINCT ON (user_id) time AS init_date, user_id, time
-              FROM ltv_test
-            WHERE event = 'user_create'
-            ORDER BY time
-          ) AS t1 GLOBAL LEFT JOIN (
-            SELECT user_id, time, amount AS value
-              FROM ltv_test
-              WHERE event = 'user_login'
-          ) AS t2 ON t1.user_id = t2.user_id WHERE t1.time &lt; t2.time OR t2.time IS NULL
-          GROUP BY 1, 2, 3
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> ARPPU (阶段人均营收贡献)</span>
+WITH range(<span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">7</span>) <span class="pl-k">AS</span> date_interval_nums, arrayEnumerate(date_interval_nums) <span class="pl-k">AS</span> date_interval_nums_enumerate
+<span class="pl-k">SELECT</span> init_date, ltv_data,
+      base_ltv_amount <span class="pl-k">AS</span> ltv_amount,
+      base_ltv_amount <span class="pl-k">AS</span> total_ltv_amount
+  <span class="pl-k">FROM</span> (
+  <span class="pl-k">SELECT</span> init_date,
+        groupArray(r) <span class="pl-k">AS</span> r_list,
+        groupArray(a) <span class="pl-k">AS</span> a_list,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> arrayMap((i, y) <span class="pl-k">-</span><span class="pl-k">&gt;</span> multiIf(i <span class="pl-k">==</span> <span class="pl-c1">1</span>, <span class="pl-c1">1</span>, y <span class="pl-k">&gt;=</span> <span class="pl-c1">1</span>, <span class="pl-c1">1</span>, <span class="pl-c1">0</span>), date_interval_nums_enumerate, x), arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> arrayCumSum(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> if(x <span class="pl-k">==</span> <span class="pl-c1">1</span>, <span class="pl-c1">0</span>, i[x]), date_interval_nums_enumerate), r_list)) <span class="pl-k">AS</span> r_list_cum_sum,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], r_list_cum_sum)), range(<span class="pl-c1">1</span>, length(r_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> ltv_data_all,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> round(arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], a_list)), <span class="pl-c1">2</span>), range(<span class="pl-c1">1</span>, length(a_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> base_ltv_amount_all
+    <span class="pl-k">FROM</span> (
+      <span class="pl-k">SELECT</span> init_date, user_id,
+        cast((groupArray(date_time), groupArray(amount)) <span class="pl-k">AS</span> Map(Datetime, Float64)) <span class="pl-k">AS</span> date_amounts_map,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> if(x <span class="pl-k">==</span> <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>, mapContains(date_amounts_map, date_add(DAY, x, init_date))), date_interval_nums) <span class="pl-k">AS</span> r,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> multiIf(x <span class="pl-k">==</span> <span class="pl-c1">1</span>, <span class="pl-c1">0</span>, r[x], date_amounts_map[date_add(DAY, date_interval_nums[x], init_date)], <span class="pl-c1">0</span>), date_interval_nums_enumerate) <span class="pl-k">AS</span> a
+        <span class="pl-k">FROM</span> (
+          <span class="pl-k">SELECT</span> init_date, user_id, date_trunc(<span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>, coalesce(<span class="pl-c1">t2</span>.<span class="pl-c1">time</span>, toDateTime(<span class="pl-c1">0</span>))) <span class="pl-k">AS</span> date_time, toFloat64(coalesce(<span class="pl-c1">SUM</span>(<span class="pl-c1">t2</span>.<span class="pl-c1">value</span>), <span class="pl-c1">0</span>))  <span class="pl-k">AS</span> amount
+            <span class="pl-k">FROM</span> (
+            <span class="pl-k">SELECT DISTINCT</span> <span class="pl-k">ON</span> (user_id) <span class="pl-k">time</span> <span class="pl-k">AS</span> init_date, user_id, <span class="pl-k">time</span>
+              <span class="pl-k">FROM</span> ltv_test
+            <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>
+            <span class="pl-k">ORDER BY</span> <span class="pl-k">time</span>
+          ) <span class="pl-k">AS</span> t1 GLOBAL <span class="pl-k">LEFT JOIN</span> (
+            <span class="pl-k">SELECT</span> user_id, <span class="pl-k">time</span>, amount <span class="pl-k">AS</span> value
+              <span class="pl-k">FROM</span> ltv_test
+              <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>
+          ) <span class="pl-k">AS</span> t2 <span class="pl-k">ON</span> <span class="pl-c1">t1</span>.<span class="pl-c1">user_id</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">user_id</span> <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">time</span> <span class="pl-k">&lt;</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> <span class="pl-k">OR</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> IS <span class="pl-k">NULL</span>
+          <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>
         )
-        GROUP BY 1, 2
+        <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>
     )
-    GROUP BY 1
+    <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>
   )
-  ORDER BY 1 SETTINGS join_use_nulls=1;
+  <span class="pl-k">ORDER BY</span> <span class="pl-c1">1</span> SETTINGS join_use_nulls<span class="pl-k">=</span><span class="pl-c1">1</span>;
 
 ┌───────────init_date─┬─ltv_data──────────┬─ltv_amount─────────┬─total_ltv_amount───┐
-│ 2024-08-01 00:00:00 │ [3,0,2,0,0,1,0,0] │ [0,0,3,0,0,12,0,0] │ [0,0,3,0,0,12,0,0] │
-│ 2024-08-02 00:00:00 │ [1,0,1,0,0,1,0,0] │ [0,0,1,0,0,2,0,0]  │ [0,0,1,0,0,2,0,0]  │
-└─────────────────────┴───────────────────┴────────────────────┴────────────────────┘
-</code></pre>
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">01</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">12</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">12</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">02</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>]  │ [<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>]  │
+└─────────────────────┴───────────────────┴────────────────────┴────────────────────┘</pre></div>
 <hr>
 <h3>日新增营收人数</h3>
 <p>目的：用户营收激活分析。<br>
@@ -405,47 +409,46 @@ SELECT init_date, ltv_data,
 <li>计算每个初始事件触发日期下的日新增营收人数</li>
 </ol>
 <p>示例代码：</p>
-<pre lang="sql" class="notranslate"><code class="notranslate">-- 日新增营收人数
-WITH range(-1, 7) AS date_interval_nums, arrayEnumerate(date_interval_nums) AS date_interval_nums_enumerate
-SELECT init_date, ltv_data,
-      base_ltv_amount AS ltv_amount,
-      base_ltv_amount AS total_ltv_amount
-  FROM (
-  SELECT init_date,
-        groupArray(r) AS ltv_data_list,
-        groupArray(a) AS base_ltv_amount_list,
-        arrayMap(i -&gt; arraySum(arrayMap(x -&gt; x[i], ltv_data_list)), range(1, length(ltv_data_list[1])+1)) AS ltv_data,
-        arrayMap(i -&gt; round(arraySum(arrayMap(x -&gt; x[i], base_ltv_amount_list)), 2), range(1, length(base_ltv_amount_list[1])+1)) AS base_ltv_amount
-    FROM (
-      SELECT init_date, user_id,
-        min(date_time) AS first_return_date,
-        coalesce(date_diff('day', init_date, first_return_date), 99999) AS diff_return_date_count,
-        arrayMap(x -&gt; multiIf(x == -1, 1, diff_return_date_count == x, 1, 0), date_interval_nums) AS r, r AS a
-        FROM (
-          SELECT init_date, user_id, date_trunc('day', coalesce(t2.time, toDateTime(0))) AS date_time, toFloat64(coalesce(any(1), 0)) AS amount
-            FROM (
-            SELECT DISTINCT ON (user_id) time AS init_date, user_id, time
-              FROM ltv_test
-            WHERE event = 'user_create'
-            ORDER BY time
-          ) AS t1 GLOBAL LEFT JOIN (
-            SELECT user_id, time, 1 AS value
-              FROM ltv_test
-              WHERE event = 'user_login'
-          ) AS t2 ON t1.user_id = t2.user_id WHERE t1.time &lt; t2.time OR t2.time IS NULL
-          GROUP BY 1, 2, 3
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 日新增营收人数</span>
+WITH range(<span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">7</span>) <span class="pl-k">AS</span> date_interval_nums, arrayEnumerate(date_interval_nums) <span class="pl-k">AS</span> date_interval_nums_enumerate
+<span class="pl-k">SELECT</span> init_date, ltv_data,
+      base_ltv_amount <span class="pl-k">AS</span> ltv_amount,
+      base_ltv_amount <span class="pl-k">AS</span> total_ltv_amount
+  <span class="pl-k">FROM</span> (
+  <span class="pl-k">SELECT</span> init_date,
+        groupArray(r) <span class="pl-k">AS</span> ltv_data_list,
+        groupArray(a) <span class="pl-k">AS</span> base_ltv_amount_list,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], ltv_data_list)), range(<span class="pl-c1">1</span>, length(ltv_data_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> ltv_data,
+        arrayMap(i <span class="pl-k">-</span><span class="pl-k">&gt;</span> round(arraySum(arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> x[i], base_ltv_amount_list)), <span class="pl-c1">2</span>), range(<span class="pl-c1">1</span>, length(base_ltv_amount_list[<span class="pl-c1">1</span>])<span class="pl-k">+</span><span class="pl-c1">1</span>)) <span class="pl-k">AS</span> base_ltv_amount
+    <span class="pl-k">FROM</span> (
+      <span class="pl-k">SELECT</span> init_date, user_id,
+        <span class="pl-c1">min</span>(date_time) <span class="pl-k">AS</span> first_return_date,
+        coalesce(date_diff(<span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>, init_date, first_return_date), <span class="pl-c1">99999</span>) <span class="pl-k">AS</span> diff_return_date_count,
+        arrayMap(x <span class="pl-k">-</span><span class="pl-k">&gt;</span> multiIf(x <span class="pl-k">==</span> <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>, diff_return_date_count <span class="pl-k">==</span> x, <span class="pl-c1">1</span>, <span class="pl-c1">0</span>), date_interval_nums) <span class="pl-k">AS</span> r, r <span class="pl-k">AS</span> a
+        <span class="pl-k">FROM</span> (
+          <span class="pl-k">SELECT</span> init_date, user_id, date_trunc(<span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>, coalesce(<span class="pl-c1">t2</span>.<span class="pl-c1">time</span>, toDateTime(<span class="pl-c1">0</span>))) <span class="pl-k">AS</span> date_time, toFloat64(coalesce(any(<span class="pl-c1">1</span>), <span class="pl-c1">0</span>)) <span class="pl-k">AS</span> amount
+            <span class="pl-k">FROM</span> (
+            <span class="pl-k">SELECT DISTINCT</span> <span class="pl-k">ON</span> (user_id) <span class="pl-k">time</span> <span class="pl-k">AS</span> init_date, user_id, <span class="pl-k">time</span>
+              <span class="pl-k">FROM</span> ltv_test
+            <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_create<span class="pl-pds">'</span></span>
+            <span class="pl-k">ORDER BY</span> <span class="pl-k">time</span>
+          ) <span class="pl-k">AS</span> t1 GLOBAL <span class="pl-k">LEFT JOIN</span> (
+            <span class="pl-k">SELECT</span> user_id, <span class="pl-k">time</span>, <span class="pl-c1">1</span> <span class="pl-k">AS</span> value
+              <span class="pl-k">FROM</span> ltv_test
+              <span class="pl-k">WHERE</span> event <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user_login<span class="pl-pds">'</span></span>
+          ) <span class="pl-k">AS</span> t2 <span class="pl-k">ON</span> <span class="pl-c1">t1</span>.<span class="pl-c1">user_id</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">user_id</span> <span class="pl-k">WHERE</span> <span class="pl-c1">t1</span>.<span class="pl-c1">time</span> <span class="pl-k">&lt;</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> <span class="pl-k">OR</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span> IS <span class="pl-k">NULL</span>
+          <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>
         )
-        GROUP BY 1, 2
+        <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>
     )
-    GROUP BY 1
+    <span class="pl-k">GROUP BY</span> <span class="pl-c1">1</span>
   )
-  ORDER BY 1 SETTINGS join_use_nulls=1;
+  <span class="pl-k">ORDER BY</span> <span class="pl-c1">1</span> SETTINGS join_use_nulls<span class="pl-k">=</span><span class="pl-c1">1</span>;
 
 ┌───────────init_date─┬─ltv_data──────────┬─ltv_amount────────┬─total_ltv_amount──┐
-│ 2024-08-01 00:00:00 │ [3,0,2,0,0,0,0,0] │ [3,0,2,0,0,0,0,0] │ [3,0,2,0,0,0,0,0] │
-│ 2024-08-02 00:00:00 │ [1,0,1,0,0,0,0,0] │ [1,0,1,0,0,0,0,0] │ [1,0,1,0,0,0,0,0] │
-└─────────────────────┴───────────────────┴───────────────────┴───────────────────┘
-</code></pre></div>
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">01</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">3</span>,<span class="pl-c1">0</span>,<span class="pl-c1">2</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │
+│ <span class="pl-c1">2024</span><span class="pl-k">-</span><span class="pl-c1">08</span><span class="pl-k">-</span><span class="pl-c1">02</span> <span class="pl-c1">00</span>:<span class="pl-c1">00</span>:<span class="pl-c1">00</span> │ [<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │ [<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>,<span class="pl-c1">0</span>] │
+└─────────────────────┴───────────────────┴───────────────────┴───────────────────┘</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -470,7 +473,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -543,7 +546,70 @@ function iFrameLoading(){
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
 
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
 
 </script>
 
