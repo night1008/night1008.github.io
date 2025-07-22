@@ -138,7 +138,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-c1">Data</span> datatypes.<span class="pl-smi">JSON</span> <span class="pl-s">`gorm:"type:jsonb;column:data"`</span>  <span class="pl-c">// Explicit column name</span>
     
     <span class="pl-c">// Generated column with explicit column name</span>
-   <span class="pl-c1">TrackPayAmount</span>    <span class="pl-c1">*</span><span class="pl-smi">float64</span> <span class="pl-s">`json:"track_pay_amount" gorm:"-&gt;;-:migration;column:track_pay_amount"`</span>
+    <span class="pl-c1">TrackPayAmount</span>    <span class="pl-c1">*</span><span class="pl-smi">float64</span> <span class="pl-s">`json:"track_pay_amount" gorm:"-&gt;;-:migration;column:track_pay_amount"`</span>
 }
 
 <span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Exec</span>(

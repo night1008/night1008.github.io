@@ -25,7 +25,7 @@ type AdPlatformEventTrackReport struct {
     Data datatypes.JSON `gorm:"type:jsonb;column:data"`  // Explicit column name
     
     // Generated column with explicit column name
-   TrackPayAmount    *float64 `json:"track_pay_amount" gorm:"->;-:migration;column:track_pay_amount"`
+    TrackPayAmount    *float64 `json:"track_pay_amount" gorm:"->;-:migration;column:track_pay_amount"`
 }
 
 if err := db.Exec(
