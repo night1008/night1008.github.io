@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Wed, 13 Aug 2025 03:30:22 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>使用阿里云函数计算实现异步任务</title><link>https://night1008.github.io/post/shi-yong-a-li-yun-han-shu-ji-suan-shi-xian-yi-bu-ren-wu.html</link><description>最近在业务上希望独立出一个任务服务，且在服务重启过程中，不中断任务执行，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Wed, 13 Aug 2025 03:42:39 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>使用阿里云函数计算实现异步任务</title><link>https://night1008.github.io/post/shi-yong-a-li-yun-han-shu-ji-suan-shi-xian-yi-bu-ren-wu.html</link><description>最近在业务上希望独立出一个任务服务，且在服务重启过程中，不中断任务执行，
 看了一下，感觉阿里云函数挺符合场景的，有如下优势，
 
 1. 通过 HTTP 触发器触发任务
@@ -7,6 +7,13 @@
 3. 可以指定函数配额
 4. 错误有重试机制
 5. 未执行的任务会使用最新代码执行
+
+任务流程如下，
+&lt;img width='300' height='300' alt='Image' src='https://github.com/user-attachments/assets/ffd36e46-77d6-4420-95a0-6372391bb343' /&gt;
+
+1. 通过定时轮询规则表
+2. 创建任务到数据库
+3. 发送任务到阿里云函数，记录请求ID到任务中
 
 测试代码如下
 
