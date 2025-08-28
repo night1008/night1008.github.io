@@ -1,5 +1,36 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Wed, 13 Aug 2025 08:25:37 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>使用阿里云函数计算实现异步任务</title><link>https://night1008.github.io/post/shi-yong-a-li-yun-han-shu-ji-suan-shi-xian-yi-bu-ren-wu.html</link><description>最近在业务上希望独立出一个任务服务，且在服务重启过程中，不中断任务执行，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 28 Aug 2025 06:46:26 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>如何基于定时规则生成任务</title><link>https://night1008.github.io/post/ru-he-ji-yu-ding-shi-gui-ze-sheng-cheng-ren-wu.html</link><description>### 数据结构
+```go
+// 规则
+type ScheduleRule struct {
+  ID             int64         // 规则ID
+  Title          string        // 规则标题
+  Payload        string        // 规则内容
+  Enabled        bool          // 规则开关
+  StartTime      time.Time     // 开始时间
+  EndTime        time.Time     // 结束时间
+  NextCheckTime  sql.NullTime  // 下次检查时间
+  CheckFrequency string        // 检查频率
+}
+
+// 任务
+type RuleTask struct {
+  ID             int64         // 任务ID
+  RuleID         int64         // 规则ID
+  RunTime        time.Time     // 开始时间
+  Payload        string        // 规则内容
+  Status         string        // 任务状态
+  Result         string        // 任务结果
+}
+```
+
+### 注意事项
+1. 改开始时间，不能早于当前时间，重新计算 next_check_time
+2. 改结束时间，不能早于当前时间，直接修改
+3. 改检查频率，重新计算 next_check_time
+4. 改规则开关，如果开启，重新计算 next_check_time
+5. next_check_time 为距离当前时间最近的下一次执行时间
+6. 生成任务和编辑规则时均需要锁定规则，防止并发。</description><guid isPermaLink="true">https://night1008.github.io/post/ru-he-ji-yu-ding-shi-gui-ze-sheng-cheng-ren-wu.html</guid><pubDate>Thu, 28 Aug 2025 06:45:56 +0000</pubDate></item><item><title>使用阿里云函数计算实现异步任务</title><link>https://night1008.github.io/post/shi-yong-a-li-yun-han-shu-ji-suan-shi-xian-yi-bu-ren-wu.html</link><description>最近在业务上希望独立出一个任务服务，且在服务重启过程中，不中断任务执行，
 看了一下，感觉阿里云函数挺符合场景的，有如下优势，
 
 1. 通过 HTTP 触发器触发任务
