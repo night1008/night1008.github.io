@@ -1,5 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 28 Aug 2025 06:46:26 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>如何基于定时规则生成任务</title><link>https://night1008.github.io/post/ru-he-ji-yu-ding-shi-gui-ze-sheng-cheng-ren-wu.html</link><description>### 数据结构
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sun, 31 Aug 2025 11:17:54 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>开发工具汇总</title><link>https://night1008.github.io/post/kai-fa-gong-ju-hui-zong.html</link><description>Go 导入自动补全
+&gt; vscode, cursor 等编辑器上
+
+```sh
+go install -v golang.org/x/tools/gopls@latest
+
+go install -v golang.org/x/tools/cmd/goimports@latest
+```。</description><guid isPermaLink="true">https://night1008.github.io/post/kai-fa-gong-ju-hui-zong.html</guid><pubDate>Sun, 31 Aug 2025 11:17:18 +0000</pubDate></item><item><title>如何基于定时规则生成任务</title><link>https://night1008.github.io/post/ru-he-ji-yu-ding-shi-gui-ze-sheng-cheng-ren-wu.html</link><description>### 数据结构
 ```go
 // 规则
 type ScheduleRule struct {
