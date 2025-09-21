@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Mon, 15 Sep 2025 14:26:59 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Mac 使用小技巧</title><link>https://night1008.github.io/post/Mac%20-shi-yong-xiao-ji-qiao.html</link><description>### caffeinate
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sun, 21 Sep 2025 02:47:01 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Mac 使用小技巧</title><link>https://night1008.github.io/post/Mac%20-shi-yong-xiao-ji-qiao.html</link><description>### caffeinate
 ```sh
 caffeinate -d # 防止显示器关闭
 caffeinate -i  # 保持系统不休眠
@@ -983,7 +983,8 @@ func RunJob(ctx context.Context) error {&#13;
 - [射雕英雄传：侠之大者](https://m.douban.com/movie/subject/36289423/) (不行)
 - [哪吒之魔童闹海](https://movie.douban.com/subject/34780991/)(还不错)
 - [唐探1900](https://movie.douban.com/subject/36282639/) (前面有点无聊)
-- [戏台](https://movie.douban.com/subject/35483395/) (还不错)。</description><guid isPermaLink="true">https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</guid><pubDate>Sat, 06 Jul 2024 14:59:53 +0000</pubDate></item><item><title>Go recover from panic</title><link>https://night1008.github.io/post/Go%20recover%20from%20panic.html</link><description>```go&#13;
+- [戏台](https://movie.douban.com/subject/35483395/) (还不错)
+- [大空头](https://movie.douban.com/subject/26303622/) (还行)。</description><guid isPermaLink="true">https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</guid><pubDate>Sat, 06 Jul 2024 14:59:53 +0000</pubDate></item><item><title>Go recover from panic</title><link>https://night1008.github.io/post/Go%20recover%20from%20panic.html</link><description>```go&#13;
 package main&#13;
 &#13;
 import (&#13;
