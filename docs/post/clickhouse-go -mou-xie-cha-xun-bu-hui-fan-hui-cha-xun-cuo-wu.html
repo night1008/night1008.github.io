@@ -201,7 +201,7 @@ func Test1268(t *testing.T) {
 <meta property="og:url" content="https://night1008.github.io/post/clickhouse-go%20-mou-xie-cha-xun-bu-hui-fan-hui-cha-xun-cuo-wu.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>clickhouse-go 某些查询不会返回查询错误</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -273,45 +273,46 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>非法查询，比如 sleep(300)</li>
 </ol>
 <p>下面给示例，</p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">package</span> main
+<pre lang="go" class="notranslate"><code class="notranslate">package main
 
-<span class="pl-k">import</span> (
-	<span class="pl-s">"context"</span>
-	<span class="pl-s">"fmt"</span>
-	<span class="pl-s">"log"</span>
+import (
+	"context"
+	"fmt"
+	"log"
 
-	<span class="pl-s">"github.com/ClickHouse/clickhouse-go/v2"</span>
+	"github.com/ClickHouse/clickhouse-go/v2"
 )
 
-<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
-	<span class="pl-s1">db</span> <span class="pl-c1">:=</span> <span class="pl-s1">clickhouse</span>.<span class="pl-c1">OpenDB</span>(<span class="pl-c1">&amp;</span>clickhouse.<span class="pl-smi">Options</span>{
-		<span class="pl-s1">Addr</span>: []<span class="pl-smi">string</span>{<span class="pl-s">"127.0.0.1:9000"</span>},
-		<span class="pl-s1">Auth</span>: clickhouse.<span class="pl-smi">Auth</span>{
-			<span class="pl-s1">Database</span>: <span class="pl-s">"default"</span>,
-			<span class="pl-s1">Username</span>: <span class="pl-s">"default"</span>,
-			<span class="pl-s1">Password</span>: <span class="pl-s">""</span>,
+func main() {
+	db := clickhouse.OpenDB(&amp;clickhouse.Options{
+		Addr: []string{"127.0.0.1:9000"},
+		Auth: clickhouse.Auth{
+			Database: "default",
+			Username: "default",
+			Password: "",
 		},
-		<span class="pl-s1">Settings</span>: clickhouse.<span class="pl-smi">Settings</span>{
-			<span class="pl-s">"join_use_nulls"</span>: <span class="pl-c1">1</span>,
+		Settings: clickhouse.Settings{
+			"join_use_nulls": 1,
 		},
 	})
 
-	<span class="pl-s1">ctx</span> <span class="pl-c1">:=</span> <span class="pl-s1">context</span>.<span class="pl-c1">Background</span>()
-	<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Conn</span>(<span class="pl-s1">ctx</span>)
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
+	ctx := context.Background()
+	conn, err := db.Conn(ctx)
+	if err != nil {
+		log.Fatal(err)
 	}
-	<span class="pl-k">defer</span> <span class="pl-s1">conn</span>.<span class="pl-c1">Close</span>()
+	defer conn.Close()
 
-	<span class="pl-s1">sql</span> <span class="pl-c1">:=</span> <span class="pl-s">"select sleep(300)"</span>
-	<span class="pl-s1">rows</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">conn</span>.<span class="pl-c1">QueryContext</span>(<span class="pl-s1">ctx</span>, <span class="pl-s1">sql</span>)
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
+	sql := "select sleep(300)"
+	rows, err := conn.QueryContext(ctx, sql)
+	if err != nil {
+		log.Fatal(err)
 	}
-	<span class="pl-k">defer</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Close</span>()
+	defer rows.Close()
 
-	<span class="pl-s1">fmt</span>.<span class="pl-c1">Println</span>(<span class="pl-s1">rows</span>.<span class="pl-c1">Columns</span>())
-}</pre></div>
+	fmt.Println(rows.Columns())
+}
+</code></pre>
 <p>期望结果是，</p>
 <pre class="notranslate"><code class="notranslate">code: 160, message: The maximum sleep time is 3000000 microseconds. Requested: 300: while executing 'FUNCTION sleep(300 :: 0) -&gt; sleep(300) UInt8 : 1'
 </code></pre>
@@ -322,33 +323,34 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>问了官方，说是，<br>
 Since the error is not thrown in ClickHouse at the time of query retrieval but later with the data packet, the client has to process data received from the server explicitly using rows.Next().</p>
 <p>See code snippet:</p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">package</span> issues
+<pre lang="go" class="notranslate"><code class="notranslate">package issues
 
-<span class="pl-k">import</span> (
-	<span class="pl-s">"context"</span>
-	<span class="pl-s">"testing"</span>
+import (
+	"context"
+	"testing"
 
-	clickhouse_tests <span class="pl-s">"github.com/ClickHouse/clickhouse-go/v2/tests"</span>
-	<span class="pl-s">"github.com/stretchr/testify/assert"</span>
-	<span class="pl-s">"github.com/stretchr/testify/require"</span>
+	clickhouse_tests "github.com/ClickHouse/clickhouse-go/v2/tests"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-<span class="pl-k">func</span> <span class="pl-s1">Test1268</span>(<span class="pl-s1">t</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">T</span>) {
-	<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">clickhouse_tests</span>.<span class="pl-c1">GetDatabaseSQLConnection</span>(<span class="pl-s">"issues"</span>, <span class="pl-c1">nil</span>, <span class="pl-c1">nil</span>, <span class="pl-c1">nil</span>)
-	<span class="pl-s1">require</span>.<span class="pl-c1">NoError</span>(<span class="pl-s1">t</span>, <span class="pl-s1">err</span>)
+func Test1268(t *testing.T) {
+	conn, err := clickhouse_tests.GetDatabaseSQLConnection("issues", nil, nil, nil)
+	require.NoError(t, err)
 
-	<span class="pl-s1">rows</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">conn</span>.<span class="pl-c1">QueryContext</span>(<span class="pl-s1">context</span>.<span class="pl-c1">Background</span>(), <span class="pl-s">"select sleep(300)"</span>)
-	<span class="pl-s1">require</span>.<span class="pl-c1">NoError</span>(<span class="pl-s1">t</span>, <span class="pl-s1">err</span>)
-	<span class="pl-k">defer</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Close</span>()
+	rows, err := conn.QueryContext(context.Background(), "select sleep(300)")
+	require.NoError(t, err)
+	defer rows.Close()
 
-	<span class="pl-k">for</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Next</span>() {
-		<span class="pl-k">if</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Err</span>() <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-k">break</span>
+	for rows.Next() {
+		if rows.Err() != nil {
+			break
 		}
 	}
 
-	<span class="pl-s1">assert</span>.<span class="pl-c1">ErrorContains</span>(<span class="pl-s1">t</span>, <span class="pl-s1">rows</span>.<span class="pl-c1">Err</span>(), <span class="pl-s">"code: 160, message: The maximum sleep time is 3000000 microseconds."</span>)
-}</pre></div></div>
+	assert.ErrorContains(t, rows.Err(), "code: 160, message: The maximum sleep time is 3000000 microseconds.")
+}
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
