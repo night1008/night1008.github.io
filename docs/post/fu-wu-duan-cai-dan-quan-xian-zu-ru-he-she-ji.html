@@ -10,7 +10,59 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="1. 直接返回给前端树形结构，方便使用
+<meta name="description" content="### 背景
+目前系统的权限体系存储了权限，权限组，角色之间的关联关系，如下图所示，
+
+<img width='1213' height='438' alt='Image' src='https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0' />
+
+目前的数据结构如下，
+```go
+type PermissionGroup struct {
+  ID       uint64 `gorm:'primarykey'`           // 数据库ID
+  AppID    uint64 `gorm:'uniqueIndex:idx_permission_groups_name'`
+  Name     string `gorm:'not null;uniqueIndex:idx_permission_groups_name' yaml:'name'`
+  Title    string `yaml:'title'`
+  ParentID uint64 // 父权限ID
+
+  PermissionGroupPermission []*PermissionGroupPermission `gorm:'foreignKey:GroupName;references:Name'`
+}
+
+type PermissionGroupPermission struct {
+  ID            uint64 `gorm:'primarykey'`           // 数据库ID
+  AppID         uint64 `gorm:'uniqueIndex:idx_group_permissions'`
+  GroupName     string `gorm:'uniqueIndex:idx_group_permissions'`
+  PermissionKey string `gorm:'uniqueIndex:idx_group_permissions'`
+
+  PermissionGroup *PermissionGroup `gorm:'foreignkey:Name;references:GroupName'`
+  Permission      *Permission      `gorm:'foreignkey:UniqueKey;references:PermissionKey'`
+}
+
+type Permission struct {
+  ID        uint64 `gorm:'primarykey'`           // 数据库ID
+  Name      string `gorm:'not null;uniqueIndex:idx_permissions_name' yaml:'name'`
+  Action    string `gorm:'uniqueIndex:idx_permissions_name' yaml:'action'`
+  UniqueKey string `gorm:'uniqueIndex:idx_unique_key' yaml:'unique_key'`
+  Title     string `yaml:'title'`
+}
+```
+其实存在了一些问题，
+1. 没有必要存储 permissions, permission_group_permissions, permission_groups
+2. 无法调整菜单顺序
+3. 无法指定菜单依赖
+
+---
+
+### 方案
+1. 减少对于 permissions, permission_group_permissions, permission_groups 的数据存储
+2. 整份权限元数据以配置的方式进行加载
+3. 权限组增加依赖字段
+
+如下图所示，
+
+<img width='751' height='434' alt='Image' src='https://github.com/user-attachments/assets/1fc11b63-62ba-4db4-8e86-6e4d18d2ab11' />
+
+ 效果如下，
+1. 直接返回给前端树形结构，方便使用
 2. 权限组 key 自行保证唯一
 3. 服务端只需要保存权限组 key
 4. 权限组层级可以统一配置公共路由
@@ -53,7 +105,59 @@ type PermissionGroup struct {
               path: edit-overview
 ```。">
 <meta property="og:title" content="服务端菜单权限组如何设计">
-<meta property="og:description" content="1. 直接返回给前端树形结构，方便使用
+<meta property="og:description" content="### 背景
+目前系统的权限体系存储了权限，权限组，角色之间的关联关系，如下图所示，
+
+<img width='1213' height='438' alt='Image' src='https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0' />
+
+目前的数据结构如下，
+```go
+type PermissionGroup struct {
+  ID       uint64 `gorm:'primarykey'`           // 数据库ID
+  AppID    uint64 `gorm:'uniqueIndex:idx_permission_groups_name'`
+  Name     string `gorm:'not null;uniqueIndex:idx_permission_groups_name' yaml:'name'`
+  Title    string `yaml:'title'`
+  ParentID uint64 // 父权限ID
+
+  PermissionGroupPermission []*PermissionGroupPermission `gorm:'foreignKey:GroupName;references:Name'`
+}
+
+type PermissionGroupPermission struct {
+  ID            uint64 `gorm:'primarykey'`           // 数据库ID
+  AppID         uint64 `gorm:'uniqueIndex:idx_group_permissions'`
+  GroupName     string `gorm:'uniqueIndex:idx_group_permissions'`
+  PermissionKey string `gorm:'uniqueIndex:idx_group_permissions'`
+
+  PermissionGroup *PermissionGroup `gorm:'foreignkey:Name;references:GroupName'`
+  Permission      *Permission      `gorm:'foreignkey:UniqueKey;references:PermissionKey'`
+}
+
+type Permission struct {
+  ID        uint64 `gorm:'primarykey'`           // 数据库ID
+  Name      string `gorm:'not null;uniqueIndex:idx_permissions_name' yaml:'name'`
+  Action    string `gorm:'uniqueIndex:idx_permissions_name' yaml:'action'`
+  UniqueKey string `gorm:'uniqueIndex:idx_unique_key' yaml:'unique_key'`
+  Title     string `yaml:'title'`
+}
+```
+其实存在了一些问题，
+1. 没有必要存储 permissions, permission_group_permissions, permission_groups
+2. 无法调整菜单顺序
+3. 无法指定菜单依赖
+
+---
+
+### 方案
+1. 减少对于 permissions, permission_group_permissions, permission_groups 的数据存储
+2. 整份权限元数据以配置的方式进行加载
+3. 权限组增加依赖字段
+
+如下图所示，
+
+<img width='751' height='434' alt='Image' src='https://github.com/user-attachments/assets/1fc11b63-62ba-4db4-8e86-6e4d18d2ab11' />
+
+ 效果如下，
+1. 直接返回给前端树形结构，方便使用
 2. 权限组 key 自行保证唯一
 3. 服务端只需要保存权限组 key
 4. 权限组层级可以统一配置公共路由
@@ -165,7 +269,54 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><ol>
+<div class="markdown-body" id="postBody"><h3>背景</h3>
+<p>目前系统的权限体系存储了权限，权限组，角色之间的关联关系，如下图所示，</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0"><img width="1213" height="438" alt="Image" src="https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0" style="max-width: 100%; height: auto; max-height: 438px;"></a></p>
+<p>目前的数据结构如下，</p>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">type</span> <span class="pl-smi">PermissionGroup</span> <span class="pl-k">struct</span> {
+  <span class="pl-c1">ID</span>       <span class="pl-smi">uint64</span> <span class="pl-s">`gorm:"primarykey"`</span>           <span class="pl-c">// 数据库ID</span>
+  <span class="pl-c1">AppID</span>    <span class="pl-smi">uint64</span> <span class="pl-s">`gorm:"uniqueIndex:idx_permission_groups_name"`</span>
+  <span class="pl-c1">Name</span>     <span class="pl-smi">string</span> <span class="pl-s">`gorm:"not null;uniqueIndex:idx_permission_groups_name" yaml:"name"`</span>
+  <span class="pl-c1">Title</span>    <span class="pl-smi">string</span> <span class="pl-s">`yaml:"title"`</span>
+  <span class="pl-c1">ParentID</span> <span class="pl-smi">uint64</span> <span class="pl-c">// 父权限ID</span>
+
+  <span class="pl-c1">PermissionGroupPermission</span> []<span class="pl-c1">*</span><span class="pl-smi">PermissionGroupPermission</span> <span class="pl-s">`gorm:"foreignKey:GroupName;references:Name"`</span>
+}
+
+<span class="pl-k">type</span> <span class="pl-smi">PermissionGroupPermission</span> <span class="pl-k">struct</span> {
+  <span class="pl-c1">ID</span>            <span class="pl-smi">uint64</span> <span class="pl-s">`gorm:"primarykey"`</span>           <span class="pl-c">// 数据库ID</span>
+  <span class="pl-c1">AppID</span>         <span class="pl-smi">uint64</span> <span class="pl-s">`gorm:"uniqueIndex:idx_group_permissions"`</span>
+  <span class="pl-c1">GroupName</span>     <span class="pl-smi">string</span> <span class="pl-s">`gorm:"uniqueIndex:idx_group_permissions"`</span>
+  <span class="pl-c1">PermissionKey</span> <span class="pl-smi">string</span> <span class="pl-s">`gorm:"uniqueIndex:idx_group_permissions"`</span>
+
+  <span class="pl-c1">PermissionGroup</span> <span class="pl-c1">*</span><span class="pl-smi">PermissionGroup</span> <span class="pl-s">`gorm:"foreignkey:Name;references:GroupName"`</span>
+  <span class="pl-c1">Permission</span>      <span class="pl-c1">*</span><span class="pl-smi">Permission</span>      <span class="pl-s">`gorm:"foreignkey:UniqueKey;references:PermissionKey"`</span>
+}
+
+<span class="pl-k">type</span> <span class="pl-smi">Permission</span> <span class="pl-k">struct</span> {
+  <span class="pl-c1">ID</span>        <span class="pl-smi">uint64</span> <span class="pl-s">`gorm:"primarykey"`</span>           <span class="pl-c">// 数据库ID</span>
+  <span class="pl-c1">Name</span>      <span class="pl-smi">string</span> <span class="pl-s">`gorm:"not null;uniqueIndex:idx_permissions_name" yaml:"name"`</span>
+  <span class="pl-c1">Action</span>    <span class="pl-smi">string</span> <span class="pl-s">`gorm:"uniqueIndex:idx_permissions_name" yaml:"action"`</span>
+  <span class="pl-c1">UniqueKey</span> <span class="pl-smi">string</span> <span class="pl-s">`gorm:"uniqueIndex:idx_unique_key" yaml:"unique_key"`</span>
+  <span class="pl-c1">Title</span>     <span class="pl-smi">string</span> <span class="pl-s">`yaml:"title"`</span>
+}</pre></div>
+<p>其实存在了一些问题，</p>
+<ol>
+<li>没有必要存储 permissions, permission_group_permissions, permission_groups</li>
+<li>无法调整菜单顺序</li>
+<li>无法指定菜单依赖</li>
+</ol>
+<hr>
+<h3>方案</h3>
+<ol>
+<li>减少对于 permissions, permission_group_permissions, permission_groups 的数据存储</li>
+<li>整份权限元数据以配置的方式进行加载</li>
+<li>权限组增加依赖字段</li>
+</ol>
+<p>如下图所示，</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1fc11b63-62ba-4db4-8e86-6e4d18d2ab11"><img width="751" height="434" alt="Image" src="https://github.com/user-attachments/assets/1fc11b63-62ba-4db4-8e86-6e4d18d2ab11" style="max-width: 100%; height: auto; max-height: 434px;"></a></p>
+<p>效果如下，</p>
+<ol>
 <li>直接返回给前端树形结构，方便使用</li>
 <li>权限组 key 自行保证唯一</li>
 <li>服务端只需要保存权限组 key</li>

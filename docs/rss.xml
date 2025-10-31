@@ -1,5 +1,57 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 30 Oct 2025 06:04:46 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>服务端菜单权限组如何设计</title><link>https://night1008.github.io/post/fu-wu-duan-cai-dan-quan-xian-zu-ru-he-she-ji.html</link><description>1. 直接返回给前端树形结构，方便使用
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 31 Oct 2025 02:25:04 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>服务端菜单权限组如何设计</title><link>https://night1008.github.io/post/fu-wu-duan-cai-dan-quan-xian-zu-ru-he-she-ji.html</link><description>### 背景
+目前系统的权限体系存储了权限，权限组，角色之间的关联关系，如下图所示，
+
+&lt;img width='1213' height='438' alt='Image' src='https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0' /&gt;
+
+目前的数据结构如下，
+```go
+type PermissionGroup struct {
+  ID       uint64 `gorm:'primarykey'`           // 数据库ID
+  AppID    uint64 `gorm:'uniqueIndex:idx_permission_groups_name'`
+  Name     string `gorm:'not null;uniqueIndex:idx_permission_groups_name' yaml:'name'`
+  Title    string `yaml:'title'`
+  ParentID uint64 // 父权限ID
+
+  PermissionGroupPermission []*PermissionGroupPermission `gorm:'foreignKey:GroupName;references:Name'`
+}
+
+type PermissionGroupPermission struct {
+  ID            uint64 `gorm:'primarykey'`           // 数据库ID
+  AppID         uint64 `gorm:'uniqueIndex:idx_group_permissions'`
+  GroupName     string `gorm:'uniqueIndex:idx_group_permissions'`
+  PermissionKey string `gorm:'uniqueIndex:idx_group_permissions'`
+
+  PermissionGroup *PermissionGroup `gorm:'foreignkey:Name;references:GroupName'`
+  Permission      *Permission      `gorm:'foreignkey:UniqueKey;references:PermissionKey'`
+}
+
+type Permission struct {
+  ID        uint64 `gorm:'primarykey'`           // 数据库ID
+  Name      string `gorm:'not null;uniqueIndex:idx_permissions_name' yaml:'name'`
+  Action    string `gorm:'uniqueIndex:idx_permissions_name' yaml:'action'`
+  UniqueKey string `gorm:'uniqueIndex:idx_unique_key' yaml:'unique_key'`
+  Title     string `yaml:'title'`
+}
+```
+其实存在了一些问题，
+1. 没有必要存储 permissions, permission_group_permissions, permission_groups
+2. 无法调整菜单顺序
+3. 无法指定菜单依赖
+
+---
+
+### 方案
+1. 减少对于 permissions, permission_group_permissions, permission_groups 的数据存储
+2. 整份权限元数据以配置的方式进行加载
+3. 权限组增加依赖字段
+
+如下图所示，
+
+&lt;img width='751' height='434' alt='Image' src='https://github.com/user-attachments/assets/1fc11b63-62ba-4db4-8e86-6e4d18d2ab11' /&gt;
+
+ 效果如下，
+1. 直接返回给前端树形结构，方便使用
 2. 权限组 key 自行保证唯一
 3. 服务端只需要保存权限组 key
 4. 权限组层级可以统一配置公共路由
