@@ -51,9 +51,9 @@ func main() {
 	ckSTDDB := std_ck.OpenDB(&std_ck.Options{
 		Addr: []string{"127.0.0.1:9000"},
 		Auth: std_ck.Auth{
-			Database: "funnyads",
-			Username: "funnyads_admin",
-			Password: "QmmfTZN25QCUA44F",
+			Database: "ad_reports",
+			Username: "admin",
+			Password: "secret",
 		},
 		Settings: std_ck.Settings{
 			"max_execution_time": 3600,
