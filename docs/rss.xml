@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 20 Nov 2025 06:12:17 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Gorm clickhouse CreateInBatches Unexpected packet Query received from client</title><link>https://night1008.github.io/post/Gorm%20clickhouse%20CreateInBatches%20Unexpected%20packet%20Query%20received%20from%20client.html</link><description>通过 [gorm clickhouse](https://github.com/go-gorm/clickhouse) 进行批量数据插入时，如果超过批大小，就会报以下错误，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 20 Nov 2025 06:53:43 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Gorm clickhouse CreateInBatches 执行报错</title><link>https://night1008.github.io/post/Gorm%20clickhouse%20CreateInBatches%20-zhi-xing-bao-cuo.html</link><description>通过 [gorm clickhouse](https://github.com/go-gorm/clickhouse) 进行批量数据插入时，如果超过批大小，就会报以下错误，
 
 ```
 [clickhouse][conn=1][127.0.0.1:9000][exception] code: 101, message: Unexpected packet Query received from client
@@ -94,7 +94,7 @@ func main() {
 		panic(err)
 	}
 }
-```。</description><guid isPermaLink="true">https://night1008.github.io/post/Gorm%20clickhouse%20CreateInBatches%20Unexpected%20packet%20Query%20received%20from%20client.html</guid><pubDate>Thu, 20 Nov 2025 06:11:44 +0000</pubDate></item><item><title>服务端菜单权限组如何设计</title><link>https://night1008.github.io/post/fu-wu-duan-cai-dan-quan-xian-zu-ru-he-she-ji.html</link><description>### 背景
+```。</description><guid isPermaLink="true">https://night1008.github.io/post/Gorm%20clickhouse%20CreateInBatches%20-zhi-xing-bao-cuo.html</guid><pubDate>Thu, 20 Nov 2025 06:11:44 +0000</pubDate></item><item><title>服务端菜单权限组如何设计</title><link>https://night1008.github.io/post/fu-wu-duan-cai-dan-quan-xian-zu-ru-he-she-ji.html</link><description>### 背景
 目前系统的权限体系存储了权限，权限组，角色之间的关联关系，如下图所示，
 
 &lt;img width='1213' height='438' alt='Image' src='https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0' /&gt;
