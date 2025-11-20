@@ -94,3 +94,10 @@ func main() {
 	}
 }
 ```
+
+解决方式，直接使用，
+```go
+if err := ckDB.Create(reports).Error; err != nil {
+	panic(err)
+}
+```

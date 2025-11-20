@@ -105,6 +105,13 @@ func main() {
 		panic(err)
 	}
 }
+```
+
+解决方式，直接使用，
+```go
+if err := ckDB.Create(reports).Error; err != nil {
+	panic(err)
+}
 ```。">
 <meta property="og:title" content="Gorm clickhouse CreateInBatches 执行报错">
 <meta property="og:description" content="通过 [gorm clickhouse](https://github.com/go-gorm/clickhouse) 进行批量数据插入时，如果超过批大小，就会报以下错误，
@@ -201,6 +208,13 @@ func main() {
 	if err := ckDB.CreateInBatches(reports, 100).Error; err != nil {
 		panic(err)
 	}
+}
+```
+
+解决方式，直接使用，
+```go
+if err := ckDB.Create(reports).Error; err != nil {
+	panic(err)
 }
 ```。">
 <meta property="og:type" content="article">
@@ -362,6 +376,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ckDB</span>.<span class="pl-c1">CreateInBatches</span>(<span class="pl-s1">reports</span>, <span class="pl-c1">100</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 	}
+}</pre></div>
+<p>解决方式，直接使用，</p>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ckDB</span>.<span class="pl-c1">Create</span>(<span class="pl-s1">reports</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+	<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 }</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
