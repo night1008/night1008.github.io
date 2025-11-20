@@ -73,6 +73,17 @@ FORMAT CSVWithNames;
 ```sql
 select `_part`, `#dt`, `#event`, `#log_id`, count(1), groupArray(hostname()) from events where `#dt` = '2024-07-28' group by 1, 2, 3, 4 order by 5 desc limit 100;
 ```
+
+---
+
+### 查询表大小
+```sql
+SELECT database,  table, formatReadableSize(sum(bytes_on_disk)) AS size_on_disk
+FROM system.parts
+WHERE active
+GROUP BY database, table
+ORDER BY sum(bytes_on_disk) DESC;
+```
 。">
 <meta property="og:title" content="Clickhouse 业务使用手册">
 <meta property="og:description" content="### 指定周任意起始日
@@ -137,6 +148,17 @@ FORMAT CSVWithNames;
 ### 数据去重验证
 ```sql
 select `_part`, `#dt`, `#event`, `#log_id`, count(1), groupArray(hostname()) from events where `#dt` = '2024-07-28' group by 1, 2, 3, 4 order by 5 desc limit 100;
+```
+
+---
+
+### 查询表大小
+```sql
+SELECT database,  table, formatReadableSize(sum(bytes_on_disk)) AS size_on_disk
+FROM system.parts
+WHERE active
+GROUP BY database, table
+ORDER BY sum(bytes_on_disk) DESC;
 ```
 。">
 <meta property="og:type" content="article">
@@ -246,7 +268,14 @@ INTO OUTFILE <span class="pl-s"><span class="pl-pds">'</span>新玩家首日首�
 FORMAT CSVWithNames;</pre></div>
 <hr>
 <h3>数据去重验证</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">`</span>_part<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#event<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#log_id<span class="pl-pds">`</span></span>, <span class="pl-c1">count</span>(<span class="pl-c1">1</span>), groupArray(hostname()) <span class="pl-k">from</span> events <span class="pl-k">where</span> <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>2024-07-28<span class="pl-pds">'</span></span> <span class="pl-k">group by</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span> <span class="pl-k">order by</span> <span class="pl-c1">5</span> <span class="pl-k">desc</span> <span class="pl-k">limit</span> <span class="pl-c1">100</span>;</pre></div></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> <span class="pl-s"><span class="pl-pds">`</span>_part<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#event<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#log_id<span class="pl-pds">`</span></span>, <span class="pl-c1">count</span>(<span class="pl-c1">1</span>), groupArray(hostname()) <span class="pl-k">from</span> events <span class="pl-k">where</span> <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>2024-07-28<span class="pl-pds">'</span></span> <span class="pl-k">group by</span> <span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span> <span class="pl-k">order by</span> <span class="pl-c1">5</span> <span class="pl-k">desc</span> <span class="pl-k">limit</span> <span class="pl-c1">100</span>;</pre></div>
+<hr>
+<h3>查询表大小</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> database,  table, formatReadableSize(<span class="pl-c1">sum</span>(bytes_on_disk)) <span class="pl-k">AS</span> size_on_disk
+<span class="pl-k">FROM</span> <span class="pl-c1">system</span>.<span class="pl-c1">parts</span>
+<span class="pl-k">WHERE</span> active
+<span class="pl-k">GROUP BY</span> database, table
+<span class="pl-k">ORDER BY</span> <span class="pl-c1">sum</span>(bytes_on_disk) <span class="pl-k">DESC</span>;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

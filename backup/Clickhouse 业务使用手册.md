@@ -61,3 +61,14 @@ FORMAT CSVWithNames;
 ```sql
 select `_part`, `#dt`, `#event`, `#log_id`, count(1), groupArray(hostname()) from events where `#dt` = '2024-07-28' group by 1, 2, 3, 4 order by 5 desc limit 100;
 ```
+
+---
+
+### 查询表大小
+```sql
+SELECT database,  table, formatReadableSize(sum(bytes_on_disk)) AS size_on_disk
+FROM system.parts
+WHERE active
+GROUP BY database, table
+ORDER BY sum(bytes_on_disk) DESC;
+```

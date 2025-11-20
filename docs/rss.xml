@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 31 Oct 2025 10:22:15 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>服务端菜单权限组如何设计</title><link>https://night1008.github.io/post/fu-wu-duan-cai-dan-quan-xian-zu-ru-he-she-ji.html</link><description>### 背景
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 20 Nov 2025 02:12:20 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>服务端菜单权限组如何设计</title><link>https://night1008.github.io/post/fu-wu-duan-cai-dan-quan-xian-zu-ru-he-she-ji.html</link><description>### 背景
 目前系统的权限体系存储了权限，权限组，角色之间的关联关系，如下图所示，
 
 &lt;img width='1213' height='438' alt='Image' src='https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0' /&gt;
@@ -736,6 +736,17 @@ FORMAT CSVWithNames;
 ### 数据去重验证
 ```sql
 select `_part`, `#dt`, `#event`, `#log_id`, count(1), groupArray(hostname()) from events where `#dt` = '2024-07-28' group by 1, 2, 3, 4 order by 5 desc limit 100;
+```
+
+---
+
+### 查询表大小
+```sql
+SELECT database,  table, formatReadableSize(sum(bytes_on_disk)) AS size_on_disk
+FROM system.parts
+WHERE active
+GROUP BY database, table
+ORDER BY sum(bytes_on_disk) DESC;
 ```
 。</description><guid isPermaLink="true">https://night1008.github.io/post/Clickhouse%20-ye-wu-shi-yong-shou-ce.html</guid><pubDate>Mon, 13 Jan 2025 06:43:46 +0000</pubDate></item><item><title>分布分析中如何划分区间</title><link>https://night1008.github.io/post/fen-bu-fen-xi-zhong-ru-he-hua-fen-qu-jian.html</link><description>### 问题&#13;
 分布分析中需要根据某一步长对一组值进行区间划分，且其包含正负数。</description><guid isPermaLink="true">https://night1008.github.io/post/fen-bu-fen-xi-zhong-ru-he-hua-fen-qu-jian.html</guid><pubDate>Fri, 10 Jan 2025 06:30:43 +0000</pubDate></item><item><title>Clickhouse Golang 从缓存中读取时间类型字段丢失时区的问题</title><link>https://night1008.github.io/post/Clickhouse%20Golang%20-cong-huan-cun-zhong-du-qu-shi-jian-lei-xing-zi-duan-diu-shi-shi-qu-de-wen-ti.html</link><description>### 背景&#13;
