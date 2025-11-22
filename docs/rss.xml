@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sat, 22 Nov 2025 00:14:01 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Gorm clickhouse CreateInBatches 执行报错</title><link>https://night1008.github.io/post/Gorm%20clickhouse%20CreateInBatches%20-zhi-xing-bao-cuo.html</link><description>通过 [gorm clickhouse](https://github.com/go-gorm/clickhouse) 进行批量数据插入时，如果超过批大小，就会报以下错误，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sat, 22 Nov 2025 00:30:50 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Gorm clickhouse CreateInBatches 执行报错</title><link>https://night1008.github.io/post/Gorm%20clickhouse%20CreateInBatches%20-zhi-xing-bao-cuo.html</link><description>通过 [gorm clickhouse](https://github.com/go-gorm/clickhouse) 进行批量数据插入时，如果超过批大小，就会报以下错误，
 
 ```
 [clickhouse][conn=1][127.0.0.1:9000][exception] code: 101, message: Unexpected packet Query received from client
@@ -347,6 +347,12 @@ ERROR: syntax error at or near 'GENERATED' (SQLSTATE 42601)
 git reset HEAD~
 
 git push origin branchName -f
+```
+---
+
+### 使用 git-token 下载仓库
+```
+git clone https://&lt;user-name&gt;:&lt;git-token&gt;@&lt;github-path.git&gt;
 ```。</description><guid isPermaLink="true">https://night1008.github.io/post/Git%20-shi-yong-ji-lu.html</guid><pubDate>Sat, 19 Jul 2025 09:49:35 +0000</pubDate></item><item><title>MySQL 业务使用手册</title><link>https://night1008.github.io/post/MySQL%20-ye-wu-shi-yong-shou-ce.html</link><description>### 查询数据库大小
 ```sql
 SELECT 
