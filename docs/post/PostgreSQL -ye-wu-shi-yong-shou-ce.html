@@ -373,7 +373,12 @@ ALTER DEFAULT PRIVILEGES <span class="pl-k">IN</span> SCHEMA public <span class=
     quantity <span class="pl-k">INTEGER</span>,
     total_price <span class="pl-k">DECIMAL</span>(<span class="pl-c1">10</span>,<span class="pl-c1">2</span>) GENERATED ALWAYS <span class="pl-k">AS</span> (price <span class="pl-k">*</span> quantity) STORED
 );</pre></div>
-<p>STORED 表示值会被实际存储（物化），而不是每次查询时计算。</p></div>
+<p>STORED 表示值会被实际存储（物化），而不是每次查询时计算。</p>
+<hr>
+<h3>查询含有某个字段的表</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> table_schema, table_name
+<span class="pl-k">FROM</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">columns</span>
+<span class="pl-k">WHERE</span> column_name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>xxx<span class="pl-pds">'</span></span>;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

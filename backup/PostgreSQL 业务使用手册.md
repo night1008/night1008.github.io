@@ -109,3 +109,12 @@ CREATE TABLE products (
 );
 ```
 STORED 表示值会被实际存储（物化），而不是每次查询时计算。
+
+---
+
+### 查询含有某个字段的表
+```sql
+SELECT table_schema, table_name
+FROM information_schema.columns
+WHERE column_name = 'xxx';
+```
