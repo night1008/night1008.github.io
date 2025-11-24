@@ -1,5 +1,40 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sun, 23 Nov 2025 15:30:10 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Gorm clickhouse CreateInBatches 执行报错</title><link>https://night1008.github.io/post/Gorm%20clickhouse%20CreateInBatches%20-zhi-xing-bao-cuo.html</link><description>通过 [gorm clickhouse](https://github.com/go-gorm/clickhouse) 进行批量数据插入时，如果超过批大小，就会报以下错误，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Mon, 24 Nov 2025 10:07:25 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Go 多类型 case 的公共类型是 interface{}</title><link>https://night1008.github.io/post/Go%20-duo-lei-xing-%20case%20-de-gong-gong-lei-xing-shi-%20interface%7B%7D.html</link><description>写了一个去除 `map` 中的零数值的方法，如下所示，  
+发现当有些值为 `int64` 类型时，即使为零数值也不会去除，
+
+```go
+func RemoveMapZeroNumValue(m map[string]interface{}, excludeKeysMap map[string]struct{}) map[string]interface{} {
+	for k, v := range m {
+		if _, ok := excludeKeysMap[k]; ok {
+			continue
+		}
+		switch val := v.(type) {
+		case int, int8, int16, int32, int64,
+			uint, uint8, uint16, uint32, uint64,
+			float32, float64:
+			if val == 0 || val == 0.0 {
+				delete(m, k)
+			}
+		}
+	}
+	return m
+}
+```
+
+原来Go 的多类型 case 不会把 val 的类型统一，它只保证你进入了这个 case，
+Go 的 type switch 规则：
+- val 的静态类型为所有 case 的「公共类型」
+- 多个类型的公共类型就是 interface{}
+- 所以 val 的静态类型是 interface{}
+
+写法 | val 的实际类型 | 比较结果
+-- | -- | --
+case int: | int | val == 0 正常
+case int, float64: | interface{} | val == 0 永远 false
+
+解决方法：
+1. 使用 `reflect.ValueOf(val).IsZero()` 判断
+2. 拆分所有 case 。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-duo-lei-xing-%20case%20-de-gong-gong-lei-xing-shi-%20interface%7B%7D.html</guid><pubDate>Mon, 24 Nov 2025 10:06:52 +0000</pubDate></item><item><title>Gorm clickhouse CreateInBatches 执行报错</title><link>https://night1008.github.io/post/Gorm%20clickhouse%20CreateInBatches%20-zhi-xing-bao-cuo.html</link><description>通过 [gorm clickhouse](https://github.com/go-gorm/clickhouse) 进行批量数据插入时，如果超过批大小，就会报以下错误，
 
 ```
 [clickhouse][conn=1][127.0.0.1:9000][exception] code: 101, message: Unexpected packet Query received from client
