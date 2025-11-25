@@ -72,3 +72,10 @@ WHERE active
 GROUP BY database, table
 ORDER BY sum(bytes_on_disk) DESC;
 ```
+
+---
+
+### 删除分区数据
+```sql
+DELETE FROM table WHERE date = '2025-10-01';
+```
