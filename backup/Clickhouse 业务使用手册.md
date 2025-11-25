@@ -75,7 +75,7 @@ ORDER BY sum(bytes_on_disk) DESC;
 
 ---
 
-### 删除分区数据
+### 删除分区数据(本地表)
 ```sql
-DELETE FROM table WHERE date = '2025-10-01';
+DELETE FROM table_local WHERE date = '2025-10-01';
 ```

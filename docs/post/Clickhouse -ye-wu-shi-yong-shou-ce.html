@@ -87,9 +87,9 @@ ORDER BY sum(bytes_on_disk) DESC;
 
 ---
 
-### 删除分区数据
+### 删除分区数据(本地表)
 ```sql
-DELETE FROM table WHERE date = '2025-10-01';
+DELETE FROM table_local WHERE date = '2025-10-01';
 ```
 。">
 <meta property="og:title" content="Clickhouse 业务使用手册">
@@ -170,9 +170,9 @@ ORDER BY sum(bytes_on_disk) DESC;
 
 ---
 
-### 删除分区数据
+### 删除分区数据(本地表)
 ```sql
-DELETE FROM table WHERE date = '2025-10-01';
+DELETE FROM table_local WHERE date = '2025-10-01';
 ```
 。">
 <meta property="og:type" content="article">
@@ -291,8 +291,8 @@ FORMAT CSVWithNames;</pre></div>
 <span class="pl-k">GROUP BY</span> database, table
 <span class="pl-k">ORDER BY</span> <span class="pl-c1">sum</span>(bytes_on_disk) <span class="pl-k">DESC</span>;</pre></div>
 <hr>
-<h3>删除分区数据</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">DELETE</span> <span class="pl-k">FROM</span> table <span class="pl-k">WHERE</span> <span class="pl-k">date</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>2025-10-01<span class="pl-pds">'</span></span>;</pre></div></div>
+<h3>删除分区数据(本地表)</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">DELETE</span> <span class="pl-k">FROM</span> table_local <span class="pl-k">WHERE</span> <span class="pl-k">date</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>2025-10-01<span class="pl-pds">'</span></span>;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
