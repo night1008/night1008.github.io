@@ -12,30 +12,14 @@
     </script>
 <meta name="description" content="### 查询数据库大小
 ```sql
-SELECT 
-  table_schema,
-  ROUND(SUM(data_length) / 1024 / 1024, 2) AS data_size,
-  ROUND(SUM(index_length) / 1024 / 1024, 2) AS index_size
-FROM 
-  information_schema.TABLES
-GROUP BY 
-  table_schema
-ORDER BY 
-  2 DESC;
+SELECT table_schema AS 'Database', SUM(data_length + index_length) / 1024 / 1024 / 1024 AS 'Size (GB)' 
+FROM information_schema.TABLES GROUP BY table_schema;
 ```。">
 <meta property="og:title" content="MySQL 业务使用手册">
 <meta property="og:description" content="### 查询数据库大小
 ```sql
-SELECT 
-  table_schema,
-  ROUND(SUM(data_length) / 1024 / 1024, 2) AS data_size,
-  ROUND(SUM(index_length) / 1024 / 1024, 2) AS index_size
-FROM 
-  information_schema.TABLES
-GROUP BY 
-  table_schema
-ORDER BY 
-  2 DESC;
+SELECT table_schema AS 'Database', SUM(data_length + index_length) / 1024 / 1024 / 1024 AS 'Size (GB)' 
+FROM information_schema.TABLES GROUP BY table_schema;
 ```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/MySQL%20-ye-wu-shi-yong-shou-ce.html">
@@ -108,16 +92,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h3>查询数据库大小</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> 
-  table_schema,
-  ROUND(<span class="pl-c1">SUM</span>(data_length) <span class="pl-k">/</span> <span class="pl-c1">1024</span> <span class="pl-k">/</span> <span class="pl-c1">1024</span>, <span class="pl-c1">2</span>) <span class="pl-k">AS</span> data_size,
-  ROUND(<span class="pl-c1">SUM</span>(index_length) <span class="pl-k">/</span> <span class="pl-c1">1024</span> <span class="pl-k">/</span> <span class="pl-c1">1024</span>, <span class="pl-c1">2</span>) <span class="pl-k">AS</span> index_size
-<span class="pl-k">FROM</span> 
-  <span class="pl-c1">information_schema</span>.<span class="pl-c1">TABLES</span>
-<span class="pl-k">GROUP BY</span> 
-  table_schema
-<span class="pl-k">ORDER BY</span> 
-  <span class="pl-c1">2</span> <span class="pl-k">DESC</span>;</pre></div></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> table_schema <span class="pl-k">AS</span> <span class="pl-s"><span class="pl-pds">"</span>Database<span class="pl-pds">"</span></span>, <span class="pl-c1">SUM</span>(data_length <span class="pl-k">+</span> index_length) <span class="pl-k">/</span> <span class="pl-c1">1024</span> <span class="pl-k">/</span> <span class="pl-c1">1024</span> <span class="pl-k">/</span> <span class="pl-c1">1024</span> <span class="pl-k">AS</span> <span class="pl-s"><span class="pl-pds">"</span>Size (GB)<span class="pl-pds">"</span></span> 
+<span class="pl-k">FROM</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">TABLES</span> <span class="pl-k">GROUP BY</span> table_schema;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
