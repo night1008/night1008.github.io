@@ -378,7 +378,16 @@ ALTER DEFAULT PRIVILEGES <span class="pl-k">IN</span> SCHEMA public <span class=
 <h3>查询含有某个字段的表</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> table_schema, table_name
 <span class="pl-k">FROM</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">columns</span>
-<span class="pl-k">WHERE</span> column_name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>xxx<span class="pl-pds">'</span></span>;</pre></div></div>
+<span class="pl-k">WHERE</span> column_name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>xxx<span class="pl-pds">'</span></span>;</pre></div>
+<hr>
+<h3>values 伪造表</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> (<span class="pl-k">VALUES</span> (<span class="pl-c1">1</span>, <span class="pl-s"><span class="pl-pds">'</span>one<span class="pl-pds">'</span></span>), (<span class="pl-c1">2</span>, <span class="pl-s"><span class="pl-pds">'</span>two<span class="pl-pds">'</span></span>), (<span class="pl-c1">3</span>, <span class="pl-s"><span class="pl-pds">'</span>three<span class="pl-pds">'</span></span>)) <span class="pl-k">AS</span> t (num,letter);</pre></div>
+<hr>
+<h3>联表更新</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">UPDATE</span> users
+<span class="pl-k">SET</span> sso_user_id <span class="pl-k">=</span> <span class="pl-c1">sso_users</span>.<span class="pl-c1">id</span>
+<span class="pl-k">FROM</span> sso_users
+<span class="pl-k">WHERE</span> <span class="pl-c1">users</span>.<span class="pl-c1">email</span> <span class="pl-k">=</span> <span class="pl-c1">sso_users</span>.<span class="pl-c1">login_name</span> <span class="pl-k">and</span> <span class="pl-c1">sso_users</span>.<span class="pl-c1">id</span> <span class="pl-k">is not null</span>;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

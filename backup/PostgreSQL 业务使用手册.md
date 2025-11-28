@@ -118,3 +118,20 @@ SELECT table_schema, table_name
 FROM information_schema.columns
 WHERE column_name = 'xxx';
 ```
+
+---
+
+### values 伪造表
+```sql
+SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
+```
+
+---
+
+### 联表更新
+```sql
+UPDATE users
+SET sso_user_id = sso_users.id
+FROM sso_users
+WHERE users.email = sso_users.login_name and sso_users.id is not null;
+```
