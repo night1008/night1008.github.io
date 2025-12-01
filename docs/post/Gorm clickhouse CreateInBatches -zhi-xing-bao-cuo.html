@@ -112,6 +112,21 @@ func main() {
 if err := ckDB.Create(reports).Error; err != nil {
 	panic(err)
 }
+```
+
+### 注意事项
+在同一个事务中多次提交也会触发这个错误，比如
+```go
+if err := ckDB.Transaction(func(tx *gorm.DB) error {
+	for _, _reports := range reports {
+		if err := tx.Create(_reports).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}); err != nil {
+	panic(err)
+}
 ```。">
 <meta property="og:title" content="Gorm clickhouse CreateInBatches 执行报错">
 <meta property="og:description" content="通过 [gorm clickhouse](https://github.com/go-gorm/clickhouse) 进行批量数据插入时，如果超过批大小，就会报以下错误，
@@ -214,6 +229,21 @@ func main() {
 解决方式，直接使用，
 ```go
 if err := ckDB.Create(reports).Error; err != nil {
+	panic(err)
+}
+```
+
+### 注意事项
+在同一个事务中多次提交也会触发这个错误，比如
+```go
+if err := ckDB.Transaction(func(tx *gorm.DB) error {
+	for _, _reports := range reports {
+		if err := tx.Create(_reports).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}); err != nil {
 	panic(err)
 }
 ```。">
@@ -379,6 +409,18 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 }</pre></div>
 <p>解决方式，直接使用，</p>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ckDB</span>.<span class="pl-c1">Create</span>(<span class="pl-s1">reports</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+	<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
+}</pre></div>
+<h3>注意事项</h3>
+<p>在同一个事务中多次提交也会触发这个错误，比如</p>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ckDB</span>.<span class="pl-c1">Transaction</span>(<span class="pl-k">func</span>(<span class="pl-s1">tx</span> <span class="pl-c1">*</span>gorm.<span class="pl-smi">DB</span>) <span class="pl-smi">error</span> {
+	<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">_reports</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">reports</span> {
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">tx</span>.<span class="pl-c1">Create</span>(<span class="pl-s1">_reports</span>).<span class="pl-c1">Error</span>; <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-k">return</span> <span class="pl-s1">err</span>
+		}
+	}
+	<span class="pl-k">return</span> <span class="pl-c1">nil</span>
+}); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 	<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 }</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>

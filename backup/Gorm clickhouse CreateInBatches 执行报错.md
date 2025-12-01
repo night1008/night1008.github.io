@@ -101,3 +101,18 @@ if err := ckDB.Create(reports).Error; err != nil {
 	panic(err)
 }
 ```
+
+### 注意事项
+在同一个事务中多次提交也会触发这个错误，比如
+```go
+if err := ckDB.Transaction(func(tx *gorm.DB) error {
+	for _, _reports := range reports {
+		if err := tx.Create(_reports).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}); err != nil {
+	panic(err)
+}
+```

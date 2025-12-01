@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 28 Nov 2025 07:57:29 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>老罗的十字路口</title><link>https://night1008.github.io/post/lao-luo-de-shi-zi-lu-kou.html</link><description>- 李想     (有点意思)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Mon, 01 Dec 2025 08:53:13 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>老罗的十字路口</title><link>https://night1008.github.io/post/lao-luo-de-shi-zi-lu-kou.html</link><description>- 李想     (有点意思)
 - 何小鹏  (还行)
 - 宋方金 (收获颇丰)
 - 刘谦     (还行)
@@ -138,6 +138,21 @@ func main() {
 解决方式，直接使用，
 ```go
 if err := ckDB.Create(reports).Error; err != nil {
+	panic(err)
+}
+```
+
+### 注意事项
+在同一个事务中多次提交也会触发这个错误，比如
+```go
+if err := ckDB.Transaction(func(tx *gorm.DB) error {
+	for _, _reports := range reports {
+		if err := tx.Create(_reports).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}); err != nil {
 	panic(err)
 }
 ```。</description><guid isPermaLink="true">https://night1008.github.io/post/Gorm%20clickhouse%20CreateInBatches%20-zhi-xing-bao-cuo.html</guid><pubDate>Thu, 20 Nov 2025 06:11:44 +0000</pubDate></item><item><title>服务端菜单权限组如何设计</title><link>https://night1008.github.io/post/fu-wu-duan-cai-dan-quan-xian-zu-ru-he-she-ji.html</link><description>### 背景
