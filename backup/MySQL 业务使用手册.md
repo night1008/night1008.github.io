@@ -11,3 +11,13 @@ GROUP BY
 ORDER BY
   2 DESC;
 ```
+
+---
+
+### 导出导入数据库
+
+```sh
+mysqldump --no-tablespaces -h 127.0.0.1 -P 3306 -u root -p operations_system > operations_system.sql
+
+mysql -h 127.0.0.1 -P 3306 -u root -p operations_system < operations_system.sql
+```

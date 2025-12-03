@@ -22,6 +22,16 @@ GROUP BY
   table_schema
 ORDER BY
   2 DESC;
+```
+
+---
+
+### 导出导入数据库
+
+```sh
+mysqldump --no-tablespaces -h 127.0.0.1 -P 3306 -u root -p operations_system > operations_system.sql
+
+mysql -h 127.0.0.1 -P 3306 -u root -p operations_system < operations_system.sql
 ```。">
 <meta property="og:title" content="MySQL 业务使用手册">
 <meta property="og:description" content="### 查询数据库大小
@@ -36,6 +46,16 @@ GROUP BY
   table_schema
 ORDER BY
   2 DESC;
+```
+
+---
+
+### 导出导入数据库
+
+```sh
+mysqldump --no-tablespaces -h 127.0.0.1 -P 3306 -u root -p operations_system > operations_system.sql
+
+mysql -h 127.0.0.1 -P 3306 -u root -p operations_system < operations_system.sql
 ```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/MySQL%20-ye-wu-shi-yong-shou-ce.html">
@@ -117,7 +137,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-k">GROUP BY</span>
   table_schema
 <span class="pl-k">ORDER BY</span>
-  <span class="pl-c1">2</span> <span class="pl-k">DESC</span>;</pre></div></div>
+  <span class="pl-c1">2</span> <span class="pl-k">DESC</span>;</pre></div>
+<hr>
+<h3>导出导入数据库</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mysqldump --no-tablespaces -h 127.0.0.1 -P 3306 -u root -p operations_system <span class="pl-k">&gt;</span> operations_system.sql
+
+mysql -h 127.0.0.1 -P 3306 -u root -p operations_system <span class="pl-k">&lt;</span> operations_system.sql</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
