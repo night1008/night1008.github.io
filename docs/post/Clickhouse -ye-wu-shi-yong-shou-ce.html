@@ -10,7 +10,14 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="### 指定周任意起始日
+<meta name="description" content="### 数据写入流程
+```
+1. 写入本地表
+2. 查询分布式表
+```
+---
+
+### 指定周任意起始日
 ```sql
 select arrayJoin([0,1,2,3,4,5,6]) as start_day, 
   toDateTime('2025-04-10') as t,
@@ -93,7 +100,14 @@ DELETE FROM table_local WHERE date = '2025-10-01';
 ```
 。">
 <meta property="og:title" content="Clickhouse 业务使用手册">
-<meta property="og:description" content="### 指定周任意起始日
+<meta property="og:description" content="### 数据写入流程
+```
+1. 写入本地表
+2. 查询分布式表
+```
+---
+
+### 指定周任意起始日
 ```sql
 select arrayJoin([0,1,2,3,4,5,6]) as start_day, 
   toDateTime('2025-04-10') as t,
@@ -245,7 +259,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h3>指定周任意起始日</h3>
+<div class="markdown-body" id="postBody"><h3>数据写入流程</h3>
+<pre class="notranslate"><code class="notranslate">1. 写入本地表
+2. 查询分布式表
+</code></pre>
+<hr>
+<h3>指定周任意起始日</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> arrayJoin([<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>]) <span class="pl-k">as</span> start_day, 
   toDateTime(<span class="pl-s"><span class="pl-pds">'</span>2025-04-10<span class="pl-pds">'</span></span>) <span class="pl-k">as</span> t,
   toDayOfWeek(t),

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Wed, 03 Dec 2025 03:10:26 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>老罗的十字路口</title><link>https://night1008.github.io/post/lao-luo-de-shi-zi-lu-kou.html</link><description>- 李想     (有点意思)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 11 Dec 2025 03:01:58 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>老罗的十字路口</title><link>https://night1008.github.io/post/lao-luo-de-shi-zi-lu-kou.html</link><description>- 李想     (有点意思)
 - 何小鹏  (还行)
 - 宋方金 (收获颇丰)
 - 刘谦     (还行)
@@ -852,7 +852,14 @@ select *, arrayJoin(range(1, length(if(empty(a), [null], a)) + 1)) AS b_item_ind
 &gt; 比如为了区分系统预置和用户自定义，可以对预置属性增加 pre_ 的前缀
 
 3. 避免特殊字符
-&gt; 尽量不要使用如 #, $, _ 的前缀，以免出现通过字段名称构建路径的问题。</description><guid isPermaLink="true">https://night1008.github.io/post/tong-yong-ye-wu-shi-yong-shou-ce.html</guid><pubDate>Thu, 16 Jan 2025 07:35:10 +0000</pubDate></item><item><title>Clickhouse 业务使用手册</title><link>https://night1008.github.io/post/Clickhouse%20-ye-wu-shi-yong-shou-ce.html</link><description>### 指定周任意起始日
+&gt; 尽量不要使用如 #, $, _ 的前缀，以免出现通过字段名称构建路径的问题。</description><guid isPermaLink="true">https://night1008.github.io/post/tong-yong-ye-wu-shi-yong-shou-ce.html</guid><pubDate>Thu, 16 Jan 2025 07:35:10 +0000</pubDate></item><item><title>Clickhouse 业务使用手册</title><link>https://night1008.github.io/post/Clickhouse%20-ye-wu-shi-yong-shou-ce.html</link><description>### 数据写入流程
+```
+1. 写入本地表
+2. 查询分布式表
+```
+---
+
+### 指定周任意起始日
 ```sql
 select arrayJoin([0,1,2,3,4,5,6]) as start_day, 
   toDateTime('2025-04-10') as t,
