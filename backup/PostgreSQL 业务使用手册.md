@@ -135,3 +135,31 @@ SET sso_user_id = sso_users.id
 FROM sso_users
 WHERE users.email = sso_users.login_name and sso_users.id is not null;
 ```
+
+---
+
+### 查看当前所有查询进程
+```sql
+SELECT
+    pid,
+    usename,
+    datname,
+    client_addr,
+    state,
+    query_start,
+    now() - query_start AS runtime,
+    query
+FROM
+    pg_stat_activity
+WHERE
+    state <> 'idle'
+ORDER BY
+    query_start;
+```
+
+---
+
+### 仅取消查询（连接还在）
+```sql
+SELECT pg_cancel_backend(pid);
+```

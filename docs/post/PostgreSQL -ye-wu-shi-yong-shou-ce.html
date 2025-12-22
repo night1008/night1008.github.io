@@ -387,7 +387,27 @@ ALTER DEFAULT PRIVILEGES <span class="pl-k">IN</span> SCHEMA public <span class=
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">UPDATE</span> users
 <span class="pl-k">SET</span> sso_user_id <span class="pl-k">=</span> <span class="pl-c1">sso_users</span>.<span class="pl-c1">id</span>
 <span class="pl-k">FROM</span> sso_users
-<span class="pl-k">WHERE</span> <span class="pl-c1">users</span>.<span class="pl-c1">email</span> <span class="pl-k">=</span> <span class="pl-c1">sso_users</span>.<span class="pl-c1">login_name</span> <span class="pl-k">and</span> <span class="pl-c1">sso_users</span>.<span class="pl-c1">id</span> <span class="pl-k">is not null</span>;</pre></div></div>
+<span class="pl-k">WHERE</span> <span class="pl-c1">users</span>.<span class="pl-c1">email</span> <span class="pl-k">=</span> <span class="pl-c1">sso_users</span>.<span class="pl-c1">login_name</span> <span class="pl-k">and</span> <span class="pl-c1">sso_users</span>.<span class="pl-c1">id</span> <span class="pl-k">is not null</span>;</pre></div>
+<hr>
+<h3>查看当前所有查询进程</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span>
+    pid,
+    usename,
+    datname,
+    client_addr,
+    state,
+    query_start,
+    now() <span class="pl-k">-</span> query_start <span class="pl-k">AS</span> runtime,
+    query
+<span class="pl-k">FROM</span>
+    pg_stat_activity
+<span class="pl-k">WHERE</span>
+    state <span class="pl-k">&lt;&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>idle<span class="pl-pds">'</span></span>
+<span class="pl-k">ORDER BY</span>
+    query_start;</pre></div>
+<hr>
+<h3>仅取消查询（连接还在）</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> pg_cancel_backend(pid);</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
