@@ -5,6 +5,13 @@
 ```
 ---
 
+### 插入 JSON 文件内容
+> 文件路径：/var/lib/clickhouse/user_files/data.json
+```sql
+INSERT INTO your_table_local SELECT * FROM file('data.json', 'JSONEachRow');
+```
+---
+
 ### 指定周任意起始日
 ```sql
 select arrayJoin([0,1,2,3,4,5,6]) as start_day, 
