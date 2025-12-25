@@ -93,3 +93,21 @@ ORDER BY sum(bytes_on_disk) DESC;
 ```sql
 DELETE FROM table_local WHERE date = '2025-10-01';
 ```
+
+---
+
+### 慢查询日志定位
+```sql
+SELECT
+    event_time,
+    query_duration_ms,
+    memory_usage,
+    read_rows,
+    read_bytes,
+    query
+FROM system.query_log
+WHERE
+    type = 'QueryFinish'
+    AND event_time >= now() - INTERVAL 1 DAY
+ORDER BY query_duration_ms DESC LIMIT 100;
+```

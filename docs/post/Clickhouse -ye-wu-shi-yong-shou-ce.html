@@ -105,6 +105,24 @@ ORDER BY sum(bytes_on_disk) DESC;
 ```sql
 DELETE FROM table_local WHERE date = '2025-10-01';
 ```
+
+---
+
+### 慢查询日志定位
+```sql
+SELECT
+    event_time,
+    query_duration_ms,
+    memory_usage,
+    read_rows,
+    read_bytes,
+    query
+FROM system.query_log
+WHERE
+    type = 'QueryFinish'
+    AND event_time >= now() - INTERVAL 1 DAY
+ORDER BY query_duration_ms DESC LIMIT 100;
+```
 。">
 <meta property="og:title" content="Clickhouse 业务使用手册">
 <meta property="og:description" content="### 数据写入流程
@@ -201,6 +219,24 @@ ORDER BY sum(bytes_on_disk) DESC;
 ### 删除分区数据(本地表)
 ```sql
 DELETE FROM table_local WHERE date = '2025-10-01';
+```
+
+---
+
+### 慢查询日志定位
+```sql
+SELECT
+    event_time,
+    query_duration_ms,
+    memory_usage,
+    read_rows,
+    read_bytes,
+    query
+FROM system.query_log
+WHERE
+    type = 'QueryFinish'
+    AND event_time >= now() - INTERVAL 1 DAY
+ORDER BY query_duration_ms DESC LIMIT 100;
 ```
 。">
 <meta property="og:type" content="article">
@@ -331,7 +367,21 @@ FORMAT CSVWithNames;</pre></div>
 <span class="pl-k">ORDER BY</span> <span class="pl-c1">sum</span>(bytes_on_disk) <span class="pl-k">DESC</span>;</pre></div>
 <hr>
 <h3>删除分区数据(本地表)</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">DELETE</span> <span class="pl-k">FROM</span> table_local <span class="pl-k">WHERE</span> <span class="pl-k">date</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>2025-10-01<span class="pl-pds">'</span></span>;</pre></div></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">DELETE</span> <span class="pl-k">FROM</span> table_local <span class="pl-k">WHERE</span> <span class="pl-k">date</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>2025-10-01<span class="pl-pds">'</span></span>;</pre></div>
+<hr>
+<h3>慢查询日志定位</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span>
+    event_time,
+    query_duration_ms,
+    memory_usage,
+    read_rows,
+    read_bytes,
+    query
+<span class="pl-k">FROM</span> <span class="pl-c1">system</span>.<span class="pl-c1">query_log</span>
+<span class="pl-k">WHERE</span>
+    type <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>QueryFinish<span class="pl-pds">'</span></span>
+    <span class="pl-k">AND</span> event_time <span class="pl-k">&gt;=</span> now() <span class="pl-k">-</span> INTERVAL <span class="pl-c1">1</span> DAY
+<span class="pl-k">ORDER BY</span> query_duration_ms <span class="pl-k">DESC</span> <span class="pl-k">LIMIT</span> <span class="pl-c1">100</span>;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
