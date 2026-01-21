@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://night1008.github.io/post/you-xi-zhang-hao-ru-he-pi-pei-duo-ci-guang-gao-qu-dao-gui-yin-xia-de-chong-zhi-shu-ju.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>游戏账号如何匹配多次广告渠道归因下的充值数据</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -96,21 +96,22 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </code></pre>
 <p>再用 clickhouse asof join 字段按时间匹配充值事件。</p>
 <p>查询示例如下所示，</p>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> <span class="pl-k">*</span> <span class="pl-k">from</span> (
-  <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> <span class="pl-k">VALUES</span> (
-      <span class="pl-s"><span class="pl-pds">'</span>time Date, account String, amount Int64<span class="pl-pds">'</span></span>,
-      (<span class="pl-s"><span class="pl-pds">'</span>2025-05-10<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span>, <span class="pl-c1">10</span>),
-      (<span class="pl-s"><span class="pl-pds">'</span>2025-06-10<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span>, <span class="pl-c1">20</span>),
-      (<span class="pl-s"><span class="pl-pds">'</span>2025-07-10<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span>, <span class="pl-c1">30</span>)
+<pre lang="sql" class="notranslate"><code class="notranslate">select * from (
+  SELECT * FROM VALUES (
+      'time Date, account String, amount Int64',
+      ('2025-05-10', '1', 10),
+      ('2025-06-10', '1', 20),
+      ('2025-07-10', '1', 30)
   )
-) <span class="pl-k">as</span> t1 global asof <span class="pl-k">join</span> (
-  <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> <span class="pl-k">VALUES</span> (
-      <span class="pl-s"><span class="pl-pds">'</span>time Date, account String, channel_name String<span class="pl-pds">'</span></span>,
-      (<span class="pl-s"><span class="pl-pds">'</span>2025-05-01<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>tencent<span class="pl-pds">'</span></span>),
-      (<span class="pl-s"><span class="pl-pds">'</span>2025-06-01<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>bytedance<span class="pl-pds">'</span></span>),
-      (<span class="pl-s"><span class="pl-pds">'</span>2025-07-01<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>tencent<span class="pl-pds">'</span></span>)
+) as t1 global asof join (
+  SELECT * FROM VALUES (
+      'time Date, account String, channel_name String',
+      ('2025-05-01', '1', 'tencent'),
+      ('2025-06-01', '1', 'bytedance'),
+      ('2025-07-01', '1', 'tencent')
   )
-) <span class="pl-k">as</span> t2 <span class="pl-k">on</span> <span class="pl-c1">t1</span>.<span class="pl-c1">account</span> <span class="pl-k">=</span> <span class="pl-c1">t2</span>.<span class="pl-c1">account</span> <span class="pl-k">and</span> <span class="pl-c1">t1</span>.<span class="pl-c1">time</span> <span class="pl-k">&gt;</span> <span class="pl-c1">t2</span>.<span class="pl-c1">time</span>;</pre></div>
+) as t2 on t1.account = t2.account and t1.time &gt; t2.time;
+</code></pre>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c181a696-e2c8-43bf-873b-20eccd6f3827"><img width="634" height="176" alt="Image" src="https://github.com/user-attachments/assets/c181a696-e2c8-43bf-873b-20eccd6f3827" style="max-width: 100%; height: auto; max-height: 176px;"></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
