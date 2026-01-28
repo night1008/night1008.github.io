@@ -123,6 +123,17 @@ WHERE
     AND event_time >= now() - INTERVAL 1 DAY
 ORDER BY query_duration_ms DESC LIMIT 100;
 ```
+
+---
+
+### 先删后加字段
+```sql
+SET alter_sync = 2, allow_experimental_database_replicated = 1;
+ALTER TABLE demo.events DROP COLUMN IF EXISTS `name`;
+ALTER TABLE demo.events_local DROP COLUMN IF EXISTS `name`;
+ALTER TABLE demo.events_local ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
+ALTER TABLE demo.events ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
+```
 。">
 <meta property="og:title" content="Clickhouse 业务使用手册">
 <meta property="og:description" content="### 数据写入流程
@@ -237,6 +248,17 @@ WHERE
     type = 'QueryFinish'
     AND event_time >= now() - INTERVAL 1 DAY
 ORDER BY query_duration_ms DESC LIMIT 100;
+```
+
+---
+
+### 先删后加字段
+```sql
+SET alter_sync = 2, allow_experimental_database_replicated = 1;
+ALTER TABLE demo.events DROP COLUMN IF EXISTS `name`;
+ALTER TABLE demo.events_local DROP COLUMN IF EXISTS `name`;
+ALTER TABLE demo.events_local ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
+ALTER TABLE demo.events ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
 ```
 。">
 <meta property="og:type" content="article">
@@ -381,7 +403,14 @@ FORMAT CSVWithNames;</pre></div>
 <span class="pl-k">WHERE</span>
     type <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>QueryFinish<span class="pl-pds">'</span></span>
     <span class="pl-k">AND</span> event_time <span class="pl-k">&gt;=</span> now() <span class="pl-k">-</span> INTERVAL <span class="pl-c1">1</span> DAY
-<span class="pl-k">ORDER BY</span> query_duration_ms <span class="pl-k">DESC</span> <span class="pl-k">LIMIT</span> <span class="pl-c1">100</span>;</pre></div></div>
+<span class="pl-k">ORDER BY</span> query_duration_ms <span class="pl-k">DESC</span> <span class="pl-k">LIMIT</span> <span class="pl-c1">100</span>;</pre></div>
+<hr>
+<h3>先删后加字段</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SET</span> alter_sync <span class="pl-k">=</span> <span class="pl-c1">2</span>, allow_experimental_database_replicated <span class="pl-k">=</span> <span class="pl-c1">1</span>;
+<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events</span> DROP COLUMN IF EXISTS <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span>;
+<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events_local</span> DROP COLUMN IF EXISTS <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span>;
+<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events_local</span> ADD COLUMN IF NOT  EXISTS <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> Nullable(String) COMMENT <span class="pl-s"><span class="pl-pds">'</span>名称<span class="pl-pds">'</span></span>;
+<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events</span> ADD COLUMN IF NOT  EXISTS <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> Nullable(String) COMMENT <span class="pl-s"><span class="pl-pds">'</span>名称<span class="pl-pds">'</span></span>;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

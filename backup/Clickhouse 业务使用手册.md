@@ -111,3 +111,14 @@ WHERE
     AND event_time >= now() - INTERVAL 1 DAY
 ORDER BY query_duration_ms DESC LIMIT 100;
 ```
+
+---
+
+### 先删后加字段
+```sql
+SET alter_sync = 2, allow_experimental_database_replicated = 1;
+ALTER TABLE demo.events DROP COLUMN IF EXISTS `name`;
+ALTER TABLE demo.events_local DROP COLUMN IF EXISTS `name`;
+ALTER TABLE demo.events_local ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
+ALTER TABLE demo.events ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
+```
