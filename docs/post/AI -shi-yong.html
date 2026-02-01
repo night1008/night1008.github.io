@@ -85,6 +85,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="content">
 <div class="markdown-body" id="postBody"><p>AI 时代已经来临。</p>
 <hr>
+<h2>使用技巧</h2>
 <h3>提示技巧</h3>
 <ul>
 <li>提供上下文</li>
@@ -94,7 +95,30 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>期望使用的框架</li>
 <li>反复迭代</li>
 </ul>
+<h3>编写有效提示的诀窍</h3>
+<ul>
+<li>具体明确：详细说明目标任务、所需技术及预期输出格式。</li>
+<li>添加上下文：使用#提及功能引用文件、符号或上下文变量，如#codebase、#changes或#problems。</li>
+<li>迭代优化：从简单提示开始，根据响应逐步完善。通过追问提升结果质量。</li>
+<li>分解复杂任务：避免一次性提出所有要求，将大型任务拆解为可控的小步骤。</li>
+</ul>
+<h3>上下文工程</h3>
+<ul>
+<li>生成一个描述项目整体架构的 ARCHITECTURE.md 文件（最多2页）</li>
+<li>生成一个描述项目产品功能的 PRODUCT.md 文件（最多2页）</li>
+<li>生成一个描述开发者指南和项目贡献最佳实践的 CONTRIBUTING.md 文件（最多1页）</li>
+<li>创建 .github/copilot-instructions.md 文件，内容如下：</li>
+</ul>
+<pre class="notranslate"><code class="notranslate"># [Project Name] Guidelines
+
+* [Product Vision and Goals](../PRODUCT.md): Understand the high-level vision and objectives of the product to ensure alignment with business goals.
+* [System Architecture and Design Principles](../ARCHITECTURE.md): Overall system architecture, design patterns, and design principles that guide the development process.
+* [Contributing Guidelines](../CONTRIBUTING.md): Overview of the project's contributing guidelines and collaboration practices.
+
+Suggest to update these documents if you find any incomplete or conflicting information during your work.
+</code></pre>
 <hr>
+<h2>相关概念</h2>
 <h3>Agent</h3>
 <h3>Agent Skills</h3>
 <ul>
@@ -166,14 +190,6 @@ When reviewing code, structure your feedback with clear headings and specific ex
 - Focus on explaining what should be changed and why
 - DO NOT write or suggest specific code changes directly
 </code></pre>
-<hr>
-<h3>编写有效提示的诀窍</h3>
-<ul>
-<li>具体明确：详细说明目标任务、所需技术及预期输出格式。</li>
-<li>添加上下文：使用#提及功能引用文件、符号或上下文变量，如#codebase、#changes或#problems。</li>
-<li>迭代优化：从简单提示开始，根据响应逐步完善。通过追问提升结果质量。</li>
-<li>分解复杂任务：避免一次性提出所有要求，将大型任务拆解为可控的小步骤。</li>
-</ul>
 <hr>
 <p>参考<br>
 <a href="https://code.visualstudio.com/docs/copilot/getting-started" rel="nofollow">Get started with GitHub Copilot in VS Code</a><br>

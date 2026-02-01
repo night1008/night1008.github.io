@@ -2,6 +2,8 @@ AI 时代已经来临。
 
 ---
 
+## 使用技巧
+
 ### 提示技巧
 
 - 提供上下文
@@ -11,7 +13,30 @@ AI 时代已经来临。
 - 期望使用的框架
 - 反复迭代
 
+### 编写有效提示的诀窍
+- 具体明确：详细说明目标任务、所需技术及预期输出格式。
+- 添加上下文：使用#提及功能引用文件、符号或上下文变量，如#codebase、#changes或#problems。
+- 迭代优化：从简单提示开始，根据响应逐步完善。通过追问提升结果质量。
+- 分解复杂任务：避免一次性提出所有要求，将大型任务拆解为可控的小步骤。
+
+### 上下文工程
+- 生成一个描述项目整体架构的 ARCHITECTURE.md 文件（最多2页）
+- 生成一个描述项目产品功能的 PRODUCT.md 文件（最多2页）
+- 生成一个描述开发者指南和项目贡献最佳实践的 CONTRIBUTING.md 文件（最多1页）
+- 创建 .github/copilot-instructions.md 文件，内容如下：
+```
+# [Project Name] Guidelines
+
+* [Product Vision and Goals](../PRODUCT.md): Understand the high-level vision and objectives of the product to ensure alignment with business goals.
+* [System Architecture and Design Principles](../ARCHITECTURE.md): Overall system architecture, design patterns, and design principles that guide the development process.
+* [Contributing Guidelines](../CONTRIBUTING.md): Overview of the project's contributing guidelines and collaboration practices.
+
+Suggest to update these documents if you find any incomplete or conflicting information during your work.
+```
+
 ---
+
+## 相关概念
 
 ### Agent
 
@@ -73,14 +98,6 @@ When reviewing code, structure your feedback with clear headings and specific ex
 - Focus on explaining what should be changed and why
 - DO NOT write or suggest specific code changes directly
 ```
-
----
-
-### 编写有效提示的诀窍
-- 具体明确：详细说明目标任务、所需技术及预期输出格式。
-- 添加上下文：使用#提及功能引用文件、符号或上下文变量，如#codebase、#changes或#problems。
-- 迭代优化：从简单提示开始，根据响应逐步完善。通过追问提升结果质量。
-- 分解复杂任务：避免一次性提出所有要求，将大型任务拆解为可控的小步骤。
 
 
 ---
