@@ -77,7 +77,7 @@ git tag api/v0.1.0
 <meta property="og:url" content="https://night1008.github.io/post/Go%20-dan-ge-cang-ku-ru-he-ti-gong-duo-ge-zhi-ding-ban-ben-de-%20sdk%20-bao.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>Go 单个仓库如何提供多个指定版本的 sdk 包</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -154,21 +154,18 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
      go.mod
 </code></pre>
 <p>在 <code class="notranslate">client</code> 使用时，直接下载的包版本是 <code class="notranslate">v0.0.0-20250628093558-4e219645ad46</code> 这种格式的，</p>
-<pre lang="sh" class="notranslate"><code class="notranslate">go get github.com/night1008/go-sdk-test/api
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">go get github.com/night1008/go-sdk-test/api</pre></div>
 <blockquote>
 <p>go: downloading github.com/night1008/go-sdk-test/api v0.0.0-20250628093558-4e219645ad46<br>
 go: added github.com/night1008/go-sdk-test/api v0.0.0-20250628093558-4e219645ad46</p>
 </blockquote>
 <p>即使给仓库打上 <code class="notranslate">v0.1.0</code> 仍然无法指定到具体版本，如下所示</p>
-<pre lang="sh" class="notranslate"><code class="notranslate">go get github.com/night1008/go-sdk-test/api@v0.1.0
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">go get github.com/night1008/go-sdk-test/api@v0.1.0</pre></div>
 <blockquote>
 <p>go: module github.com/night1008/go-sdk-test@v0.1.0 found, but does not contain package github.com/night1008/go-sdk-test/api</p>
 </blockquote>
 <p>原来打标签的时候还要多指定下子包路径才可以正常下载</p>
-<pre lang="sh" class="notranslate"><code class="notranslate">git tag api/v0.1.0
-</code></pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git tag api/v0.1.0</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
