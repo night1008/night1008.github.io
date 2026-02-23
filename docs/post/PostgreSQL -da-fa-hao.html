@@ -305,7 +305,7 @@ WHERE id = $1 AND expires_at > NOW();
 <meta property="og:url" content="https://night1008.github.io/post/PostgreSQL%20-da-fa-hao.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>PostgreSQL 大法好</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -329,17 +329,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-.copy-feedback {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 50px;
-    color: var(--color-fg-on-emphasis);
-    background-color: var(--color-fg-muted);
-    border-radius: 3px;
-    padding: 5px 8px;
-    font-size: 12px;
-}
+
 </style>
 
 
@@ -372,132 +362,137 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h3>缓存</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> create table</span>
+<pre lang="sql" class="notranslate"><code class="notranslate">-- create table
 CREATE UNLOGGED TABLE cache (
-  key <span class="pl-k">TEXT</span> <span class="pl-k">PRIMARY KEY</span>,
-  value JSONB <span class="pl-k">NOT NULL</span>,
-  expires_at <span class="pl-k">TIMESTAMPTZ</span> <span class="pl-k">NOT NULL</span>
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL
 );
 
-<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_cache_expires</span> <span class="pl-k">ON</span> cache(expires_at);
+CREATE INDEX idx_cache_expires ON cache(expires_at);
 
-<span class="pl-c"><span class="pl-c">--</span> insert</span>
-<span class="pl-k">INSERT INTO</span> cache (key, value, expires_at)
-<span class="pl-k">VALUES</span> ($<span class="pl-c1">1</span>, $<span class="pl-c1">2</span>, NOW() <span class="pl-k">+</span> INTERVAL <span class="pl-s"><span class="pl-pds">'</span>1 hour<span class="pl-pds">'</span></span>)
-<span class="pl-k">ON</span> CONFLICT (key) DO <span class="pl-k">UPDATE</span>
-  <span class="pl-k">SET</span> value <span class="pl-k">=</span> <span class="pl-c1">EXCLUDED</span>.<span class="pl-c1">value</span>,
-      expires_at <span class="pl-k">=</span> <span class="pl-c1">EXCLUDED</span>.<span class="pl-c1">expires_at</span>;
+-- insert
+INSERT INTO cache (key, value, expires_at)
+VALUES ($1, $2, NOW() + INTERVAL '1 hour')
+ON CONFLICT (key) DO UPDATE
+  SET value = EXCLUDED.value,
+      expires_at = EXCLUDED.expires_at;
 
-<span class="pl-c"><span class="pl-c">--</span> read</span>
-<span class="pl-k">SELECT</span> value <span class="pl-k">FROM</span> cache
-<span class="pl-k">WHERE</span> key <span class="pl-k">=</span> $<span class="pl-c1">1</span> <span class="pl-k">AND</span> expires_at <span class="pl-k">&gt;</span> NOW();
+-- read
+SELECT value FROM cache
+WHERE key = $1 AND expires_at &gt; NOW();
 
-<span class="pl-c"><span class="pl-c">--</span> cleanup</span>
-<span class="pl-k">DELETE</span> <span class="pl-k">FROM</span> cache <span class="pl-k">WHERE</span> expires_at <span class="pl-k">&lt;</span> NOW();</pre></div>
+-- cleanup
+DELETE FROM cache WHERE expires_at &lt; NOW();
+</code></pre>
 <h3>订阅</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate">NOTIFY notifications, <span class="pl-s"><span class="pl-pds">'</span>{"userId": 123, "msg": "Hello"}<span class="pl-pds">'</span></span>;
+<pre lang="sql" class="notranslate"><code class="notranslate">NOTIFY notifications, '{"userId": 123, "msg": "Hello"}';
 
-LISTEN notifications;</pre></div>
+LISTEN notifications;
+</code></pre>
 <h3>任务队列</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> create table</span>
-<span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">jobs</span> (
-  id <span class="pl-k">BIGSERIAL</span> <span class="pl-k">PRIMARY KEY</span>,
-  queue <span class="pl-k">TEXT</span> <span class="pl-k">NOT NULL</span>,
-  payload JSONB <span class="pl-k">NOT NULL</span>,
-  attempts <span class="pl-k">INT</span> DEFAULT <span class="pl-c1">0</span>,
-  max_attempts <span class="pl-k">INT</span> DEFAULT <span class="pl-c1">3</span>,
-  scheduled_at <span class="pl-k">TIMESTAMPTZ</span> DEFAULT NOW(),
-  created_at <span class="pl-k">TIMESTAMPTZ</span> DEFAULT NOW()
+<pre lang="sql" class="notranslate"><code class="notranslate">-- create table
+CREATE TABLE jobs (
+  id BIGSERIAL PRIMARY KEY,
+  queue TEXT NOT NULL,
+  payload JSONB NOT NULL,
+  attempts INT DEFAULT 0,
+  max_attempts INT DEFAULT 3,
+  scheduled_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_jobs_queue</span> <span class="pl-k">ON</span> jobs(queue, scheduled_at) 
-<span class="pl-k">WHERE</span> attempts <span class="pl-k">&lt;</span> max_attempts;
+CREATE INDEX idx_jobs_queue ON jobs(queue, scheduled_at) 
+WHERE attempts &lt; max_attempts;
 
-<span class="pl-c"><span class="pl-c">--</span> insert </span>
-<span class="pl-k">INSERT INTO</span> jobs (queue, payload)
-<span class="pl-k">VALUES</span> (<span class="pl-s"><span class="pl-pds">'</span>send-email<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>{"to": "user@example.com", "subject": "Hi"}<span class="pl-pds">'</span></span>);
+-- insert 
+INSERT INTO jobs (queue, payload)
+VALUES ('send-email', '{"to": "user@example.com", "subject": "Hi"}');
 
-<span class="pl-c"><span class="pl-c">--</span> select</span>
-WITH next_job <span class="pl-k">AS</span> (
-  <span class="pl-k">SELECT</span> id <span class="pl-k">FROM</span> jobs
-  <span class="pl-k">WHERE</span> queue <span class="pl-k">=</span> $<span class="pl-c1">1</span>
-    <span class="pl-k">AND</span> attempts <span class="pl-k">&lt;</span> max_attempts
-    <span class="pl-k">AND</span> scheduled_at <span class="pl-k">&lt;=</span> NOW()
-  <span class="pl-k">ORDER BY</span> scheduled_at
-  <span class="pl-k">LIMIT</span> <span class="pl-c1">1</span>
-  FOR <span class="pl-k">UPDATE</span> SKIP LOCKED
+-- select
+WITH next_job AS (
+  SELECT id FROM jobs
+  WHERE queue = $1
+    AND attempts &lt; max_attempts
+    AND scheduled_at &lt;= NOW()
+  ORDER BY scheduled_at
+  LIMIT 1
+  FOR UPDATE SKIP LOCKED
 )
-<span class="pl-k">UPDATE</span> jobs
-<span class="pl-k">SET</span> attempts <span class="pl-k">=</span> attempts <span class="pl-k">+</span> <span class="pl-c1">1</span>
-<span class="pl-k">FROM</span> next_job
-<span class="pl-k">WHERE</span> <span class="pl-c1">jobs</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span> <span class="pl-c1">next_job</span>.<span class="pl-c1">id</span>
-RETURNING <span class="pl-k">*</span>;</pre></div>
+UPDATE jobs
+SET attempts = attempts + 1
+FROM next_job
+WHERE jobs.id = next_job.id
+RETURNING *;
+</code></pre>
 <h3>速率限制</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">rate_limits</span> (
-  user_id <span class="pl-k">INT</span> <span class="pl-k">PRIMARY KEY</span>,
-  request_count <span class="pl-k">INT</span> DEFAULT <span class="pl-c1">0</span>,
-  window_start <span class="pl-k">TIMESTAMPTZ</span> DEFAULT NOW()
+<pre lang="sql" class="notranslate"><code class="notranslate">CREATE TABLE rate_limits (
+  user_id INT PRIMARY KEY,
+  request_count INT DEFAULT 0,
+  window_start TIMESTAMPTZ DEFAULT NOW()
 );
 
-<span class="pl-c"><span class="pl-c">--</span> Check and increment</span>
-WITH current <span class="pl-k">AS</span> (
-  <span class="pl-k">SELECT</span> 
+-- Check and increment
+WITH current AS (
+  SELECT 
     request_count,
     CASE 
-      WHEN window_start <span class="pl-k">&lt;</span> NOW() <span class="pl-k">-</span> INTERVAL <span class="pl-s"><span class="pl-pds">'</span>1 minute<span class="pl-pds">'</span></span>
-      THEN <span class="pl-c1">1</span>  <span class="pl-c"><span class="pl-c">--</span> Reset counter</span>
-      ELSE request_count <span class="pl-k">+</span> <span class="pl-c1">1</span>
-    END <span class="pl-k">AS</span> new_count
-  <span class="pl-k">FROM</span> rate_limits
-  <span class="pl-k">WHERE</span> user_id <span class="pl-k">=</span> $<span class="pl-c1">1</span>
-  FOR <span class="pl-k">UPDATE</span>
+      WHEN window_start &lt; NOW() - INTERVAL '1 minute'
+      THEN 1  -- Reset counter
+      ELSE request_count + 1
+    END AS new_count
+  FROM rate_limits
+  WHERE user_id = $1
+  FOR UPDATE
 )
-<span class="pl-k">UPDATE</span> rate_limits
-<span class="pl-k">SET</span> 
-  request_count <span class="pl-k">=</span> (<span class="pl-k">SELECT</span> new_count <span class="pl-k">FROM</span> current),
-  window_start <span class="pl-k">=</span> CASE
-    WHEN window_start <span class="pl-k">&lt;</span> NOW() <span class="pl-k">-</span> INTERVAL <span class="pl-s"><span class="pl-pds">'</span>1 minute<span class="pl-pds">'</span></span>
+UPDATE rate_limits
+SET 
+  request_count = (SELECT new_count FROM current),
+  window_start = CASE
+    WHEN window_start &lt; NOW() - INTERVAL '1 minute'
     THEN NOW()
     ELSE window_start
   END
-<span class="pl-k">WHERE</span> user_id <span class="pl-k">=</span> $<span class="pl-c1">1</span>
+WHERE user_id = $1
 RETURNING request_count;
 
-<span class="pl-c"><span class="pl-c">--</span> window function</span>
-<span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">api_requests</span> (
-  user_id <span class="pl-k">INT</span> <span class="pl-k">NOT NULL</span>,
-  created_at <span class="pl-k">TIMESTAMPTZ</span> DEFAULT NOW()
+-- window function
+CREATE TABLE api_requests (
+  user_id INT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-<span class="pl-c"><span class="pl-c">--</span> Check rate limit</span>
-<span class="pl-k">SELECT</span> <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">FROM</span> api_requests
-<span class="pl-k">WHERE</span> user_id <span class="pl-k">=</span> $<span class="pl-c1">1</span>
-  <span class="pl-k">AND</span> created_at <span class="pl-k">&gt;</span> NOW() <span class="pl-k">-</span> INTERVAL <span class="pl-s"><span class="pl-pds">'</span>1 minute<span class="pl-pds">'</span></span>;
+-- Check rate limit
+SELECT COUNT(*) FROM api_requests
+WHERE user_id = $1
+  AND created_at &gt; NOW() - INTERVAL '1 minute';
 
-<span class="pl-c"><span class="pl-c">--</span> If under limit, insert</span>
-<span class="pl-k">INSERT INTO</span> api_requests (user_id) <span class="pl-k">VALUES</span> ($<span class="pl-c1">1</span>);
+-- If under limit, insert
+INSERT INTO api_requests (user_id) VALUES ($1);
 
-<span class="pl-c"><span class="pl-c">--</span> Cleanup old requests periodically</span>
-<span class="pl-k">DELETE</span> <span class="pl-k">FROM</span> api_requests <span class="pl-k">WHERE</span> created_at <span class="pl-k">&lt;</span> NOW() <span class="pl-k">-</span> INTERVAL <span class="pl-s"><span class="pl-pds">'</span>5 minutes<span class="pl-pds">'</span></span>;</pre></div>
+-- Cleanup old requests periodically
+DELETE FROM api_requests WHERE created_at &lt; NOW() - INTERVAL '5 minutes';
+</code></pre>
 <h3>用户会话</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">CREATE</span> <span class="pl-k">TABLE</span> <span class="pl-en">sessions</span> (
-  id <span class="pl-k">TEXT</span> <span class="pl-k">PRIMARY KEY</span>,
-  data JSONB <span class="pl-k">NOT NULL</span>,
-  expires_at <span class="pl-k">TIMESTAMPTZ</span> <span class="pl-k">NOT NULL</span>
+<pre lang="sql" class="notranslate"><code class="notranslate">CREATE TABLE sessions (
+  id TEXT PRIMARY KEY,
+  data JSONB NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL
 );
 
-<span class="pl-k">CREATE</span> <span class="pl-k">INDEX</span> <span class="pl-en">idx_sessions_expires</span> <span class="pl-k">ON</span> sessions(expires_at);
+CREATE INDEX idx_sessions_expires ON sessions(expires_at);
 
-<span class="pl-c"><span class="pl-c">--</span> Insert/Update</span>
-<span class="pl-k">INSERT INTO</span> sessions (id, data, expires_at)
-<span class="pl-k">VALUES</span> ($<span class="pl-c1">1</span>, $<span class="pl-c1">2</span>, NOW() <span class="pl-k">+</span> INTERVAL <span class="pl-s"><span class="pl-pds">'</span>24 hours<span class="pl-pds">'</span></span>)
-<span class="pl-k">ON</span> CONFLICT (id) DO <span class="pl-k">UPDATE</span>
-  <span class="pl-k">SET</span> data <span class="pl-k">=</span> <span class="pl-c1">EXCLUDED</span>.<span class="pl-c1">data</span>,
-      expires_at <span class="pl-k">=</span> <span class="pl-c1">EXCLUDED</span>.<span class="pl-c1">expires_at</span>;
+-- Insert/Update
+INSERT INTO sessions (id, data, expires_at)
+VALUES ($1, $2, NOW() + INTERVAL '24 hours')
+ON CONFLICT (id) DO UPDATE
+  SET data = EXCLUDED.data,
+      expires_at = EXCLUDED.expires_at;
 
-<span class="pl-c"><span class="pl-c">--</span> Read</span>
-<span class="pl-k">SELECT</span> data <span class="pl-k">FROM</span> sessions
-<span class="pl-k">WHERE</span> id <span class="pl-k">=</span> $<span class="pl-c1">1</span> <span class="pl-k">AND</span> expires_at <span class="pl-k">&gt;</span> NOW();</pre></div>
+-- Read
+SELECT data FROM sessions
+WHERE id = $1 AND expires_at &gt; NOW();
+</code></pre>
 <p>来源<br>
 <a href="https://dev.to/polliog/i-replaced-redis-with-postgresql-and-its-faster-4942" rel="nofollow">I Replaced Redis with PostgreSQL (And It's Faster)</a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
@@ -524,7 +519,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -598,70 +593,7 @@ function iFrameLoading(){
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const createClipboardHTML = (codeContent, additionalClasses = '') => `
-        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
-        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
-            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
-                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
-                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
-            </clipboard-copy>
-            <div class="copy-feedback">Copied!</div>
-        </div>
-    `;
 
-    const handleCodeElements = (selector = '') => {
-        document.querySelectorAll(selector).forEach(codeElement => {
-            const codeContent = codeElement.innerHTML;
-            const newStructure = document.createElement('div');
-            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
-            newStructure.innerHTML = createClipboardHTML(codeContent);
-
-            const parentElement = codeElement.parentElement;
-            if (selector.includes('highlight')) {
-                parentElement.insertBefore(newStructure, codeElement.nextSibling);
-                parentElement.removeChild(codeElement);
-            } else {
-                parentElement.parentElement.replaceChild(newStructure, parentElement);
-            }
-        });
-    };
-
-    handleCodeElements('pre.notranslate > code.notranslate');
-    handleCodeElements('div.highlight > pre.notranslate');
-
-    let currentFeedback = null;
-    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
-        copyButton.addEventListener('click', () => {
-            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = codeContent;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextArea);
-
-            const copyIcon = copyButton.querySelector('.octicon-copy');
-            const checkIcon = copyButton.querySelector('.octicon-check');
-            const copyFeedback = copyButton.nextElementSibling;
-
-            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
-            currentFeedback = copyFeedback;
-
-            copyIcon.classList.add('d-none');
-            checkIcon.classList.remove('d-none');
-            copyFeedback.style.display = 'block';
-            copyButton.style.borderColor = 'var(--color-success-fg)';
-
-            setTimeout(() => {
-                copyIcon.classList.remove('d-none');
-                checkIcon.classList.add('d-none');
-                copyFeedback.style.display = 'none';
-                copyButton.style.borderColor = '';
-            }, 2000);
-        });
-    });
-});
 
 </script>
 
