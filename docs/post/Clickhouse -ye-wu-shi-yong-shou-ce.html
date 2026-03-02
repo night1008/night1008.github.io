@@ -75,6 +75,7 @@ select * from cluster('all-sharded', 'system', 'query_log') where query_id  = '4
 ---
 
 ### 数据导出成CSV
+> https://clickhouse.com/docs/interfaces/formats
 ```sql
 SELECT * FROM events
 SETTINGS join_use_nulls=1, allow_experimental_analyzer=0
@@ -201,6 +202,7 @@ select * from cluster('all-sharded', 'system', 'query_log') where query_id  = '4
 ---
 
 ### 数据导出成CSV
+> https://clickhouse.com/docs/interfaces/formats
 ```sql
 SELECT * FROM events
 SETTINGS join_use_nulls=1, allow_experimental_analyzer=0
@@ -373,6 +375,9 @@ truncate table <span class="pl-c1">demo_global</span>.<span class="pl-c1">device
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> <span class="pl-k">*</span> <span class="pl-k">from</span> cluster(<span class="pl-s"><span class="pl-pds">'</span>all-sharded<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>system<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>query_log<span class="pl-pds">'</span></span>) <span class="pl-k">where</span> query_id  <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>4efbbb9b-b853-44ca-84b2-95ff066895af<span class="pl-pds">'</span></span>;</pre></div>
 <hr>
 <h3>数据导出成CSV</h3>
+<blockquote>
+<p><a href="https://clickhouse.com/docs/interfaces/formats" rel="nofollow">https://clickhouse.com/docs/interfaces/formats</a></p>
+</blockquote>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> events
 SETTINGS join_use_nulls<span class="pl-k">=</span><span class="pl-c1">1</span>, allow_experimental_analyzer<span class="pl-k">=</span><span class="pl-c1">0</span>
 INTO OUTFILE <span class="pl-s"><span class="pl-pds">'</span>新玩家首日首场战场数据.csv.gz<span class="pl-pds">'</span></span> TRUNCATE
