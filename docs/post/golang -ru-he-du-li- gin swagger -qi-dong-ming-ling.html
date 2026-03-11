@@ -21,7 +21,7 @@
 <meta property="og:url" content="https://night1008.github.io/post/golang%20-ru-he-du-li-%20gin%20swagger%20-qi-dong-ming-ling.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>golang 如何独立 gin swagger 启动命令</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -103,49 +103,50 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
   main.go
 </code></pre>
 <p>示例代码如下，</p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">package</span> main
+<pre lang="go" class="notranslate"><code class="notranslate">package main
 
-<span class="pl-k">import</span> (
-	<span class="pl-s">"flag"</span>
-	<span class="pl-s">"fmt"</span>
-	<span class="pl-s">"log"</span>
-	<span class="pl-s">"os/exec"</span>
+import (
+	"flag"
+	"fmt"
+	"log"
+	"os/exec"
 
-	<span class="pl-s">"github.com/gin-gonic/gin"</span>
-	swaggerFiles <span class="pl-s">"github.com/swaggo/files"</span>
-	ginSwagger <span class="pl-s">"github.com/swaggo/gin-swagger"</span>
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-<span class="pl-k">var</span> <span class="pl-s1">port</span> <span class="pl-smi">string</span>
+var port string
 
-<span class="pl-k">func</span> <span class="pl-s1">init</span>() {
-	<span class="pl-s1">flag</span>.<span class="pl-c1">StringVar</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">port</span>, <span class="pl-s">"port"</span>, <span class="pl-s">"8080"</span>, <span class="pl-s">"gin swagger http port"</span>)
+func init() {
+	flag.StringVar(&amp;port, "port", "8080", "gin swagger http port")
 }
 
-<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
-	<span class="pl-s1">flag</span>.<span class="pl-c1">Parse</span>()
+func main() {
+	flag.Parse()
 
-	<span class="pl-s1">startSwaggerServer</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Sprintf</span>(<span class="pl-s">":%s"</span>, <span class="pl-s1">port</span>))
+	startSwaggerServer(fmt.Sprintf(":%s", port))
 }
 
-<span class="pl-k">func</span> <span class="pl-s1">startSwaggerServer</span>(<span class="pl-s1">addr</span> <span class="pl-smi">string</span>) {
-	<span class="pl-s1">cmd</span> <span class="pl-c1">:=</span> <span class="pl-s1">exec</span>.<span class="pl-c1">Command</span>(<span class="pl-s">"swag"</span>, <span class="pl-s">"init"</span>, <span class="pl-s">"--parseDependency"</span>, <span class="pl-s">"--parseInternal"</span>, <span class="pl-s">"-o"</span>, <span class="pl-s">"./swagger"</span>)
-	<span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">cmd</span>.<span class="pl-c1">Run</span>()
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-c1">Fatalf</span>(<span class="pl-s">"make swagger failed with %s<span class="pl-cce">\n</span>"</span>, <span class="pl-s1">err</span>)
+func startSwaggerServer(addr string) {
+	cmd := exec.Command("swag", "init", "--parseDependency", "--parseInternal", "-o", "./swagger")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("make swagger failed with %s\n", err)
 	}
 
-	<span class="pl-s1">r</span> <span class="pl-c1">:=</span> <span class="pl-s1">gin</span>.<span class="pl-c1">Default</span>()
+	r := gin.Default()
 
-	<span class="pl-s1">r</span>.<span class="pl-c1">Static</span>(<span class="pl-s">"/docs"</span>, <span class="pl-s">"./swagger"</span>)
-	<span class="pl-s1">r</span>.<span class="pl-c1">GET</span>(<span class="pl-s">"/swagger/*any"</span>, <span class="pl-s1">ginSwagger</span>.<span class="pl-c1">WrapHandler</span>(
-		<span class="pl-s1">swaggerFiles</span>.<span class="pl-c1">Handler</span>,
-		<span class="pl-s1">ginSwagger</span>.<span class="pl-c1">URL</span>(<span class="pl-s">"/docs/swagger.json"</span>),
-		<span class="pl-s1">ginSwagger</span>.<span class="pl-c1">DefaultModelsExpandDepth</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>),
+	r.Static("/docs", "./swagger")
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(
+		swaggerFiles.Handler,
+		ginSwagger.URL("/docs/swagger.json"),
+		ginSwagger.DefaultModelsExpandDepth(-1),
 	))
 
-	<span class="pl-s1">r</span>.<span class="pl-c1">Run</span>(<span class="pl-s1">addr</span>)
-}</pre></div></div>
+	r.Run(addr)
+}
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
