@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://night1008.github.io/post/Go%20-yu-yan-xia-ru-he-ti-jiao-bao-han-fan-yin-hao-de-duo-xing-zi-fu-chuan-biao-dan.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>Go 语言下如何提交包含反引号的多行字符串表单</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -86,9 +86,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="markdown-body" id="postBody"><p>感觉 Go 语言对于多行字符串的支持不是很友好。<br>
 虽然可以通过以下写法完成多行字符串，但是当字符串本身也有包含反引号时，<br>
 就只能通过拼接的方式，十分麻烦。</p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-s">`line 1</span>
-<span class="pl-s">line 2</span>
-<span class="pl-s">line 3`</span></pre></div>
+<pre lang="go" class="notranslate"><code class="notranslate">`line 1
+line 2
+line 3`
+</code></pre>
 <p>然而没找到一个比较好的方式，试了一下只能先通过以下方式完成包含反引号的多行字符串的表单提交，</p>
 <p>使用双引号，再通过换行符拼接成一行，</p>
 <pre class="notranslate"><code class="notranslate">"line 1 \n `line2` \n line3"
