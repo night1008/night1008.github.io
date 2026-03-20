@@ -57,7 +57,7 @@ https://github.com/blockloop/scan
 <meta property="og:url" content="https://night1008.github.io/post/Go%20-ru-he-shi-xian-%20Clickhouse%20-cha-xun-huan-cun.html">
 <meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>Go 如何实现 Clickhouse 查询缓存</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -142,149 +142,148 @@ https://github.com/blockloop/scan
 </blockquote>
 <p>好在 <code class="notranslate">go-sqlmock</code> 可以指定 <code class="notranslate">ValueConverterOption</code>，这样就可以把 <code class="notranslate">driver.Rows</code> 转换成 <code class="notranslate">*sql.Rows</code> 了。</p>
 <p>以下为测试代码</p>
-<pre lang="go" class="notranslate"><code class="notranslate">package main
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">package</span> main
 
-import (
-	"context"
-	"database/sql"
-	"database/sql/driver"
-	"fmt"
-	"io"
-	"log"
-        "regexp"
+<span class="pl-k">import</span> (
+	<span class="pl-s">"context"</span>
+	<span class="pl-s">"database/sql"</span>
+	<span class="pl-s">"database/sql/driver"</span>
+	<span class="pl-s">"fmt"</span>
+	<span class="pl-s">"io"</span>
+	<span class="pl-s">"log"</span>
+        <span class="pl-s">"regexp"</span>
 
-	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/prashanthpai/sqlcache"
-	"github.com/prashanthpai/sqlcache/cache"
+	<span class="pl-s">"github.com/DATA-DOG/go-sqlmock"</span>
+	<span class="pl-s">"github.com/prashanthpai/sqlcache"</span>
+	<span class="pl-s">"github.com/prashanthpai/sqlcache/cache"</span>
 
-	"github.com/dgraph-io/ristretto"
-	_ "github.com/ClickHouse/clickhouse-go/v2"
+	<span class="pl-s">"github.com/dgraph-io/ristretto"</span>
+	_ <span class="pl-s">"github.com/ClickHouse/clickhouse-go/v2"</span>
 )
 
-const (
-	defaultMaxRowsToCache = 100
+<span class="pl-k">const</span> (
+	<span class="pl-s1">defaultMaxRowsToCache</span> <span class="pl-c1">=</span> <span class="pl-c1">100</span>
 )
 
-func newRistrettoCache(maxRowsToCache int64) (cache.Cacher, error) {
-	c, err := ristretto.NewCache(&amp;ristretto.Config{
-		NumCounters: 10 * maxRowsToCache,
-		MaxCost:     maxRowsToCache,
-		BufferItems: 64,
+<span class="pl-k">func</span> <span class="pl-s1">newRistrettoCache</span>(<span class="pl-s1">maxRowsToCache</span> <span class="pl-smi">int64</span>) (cache.<span class="pl-smi">Cacher</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-s1">c</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ristretto</span>.<span class="pl-c1">NewCache</span>(<span class="pl-c1">&amp;</span>ristretto.<span class="pl-smi">Config</span>{
+		<span class="pl-s1">NumCounters</span>: <span class="pl-c1">10</span> <span class="pl-c1">*</span> <span class="pl-s1">maxRowsToCache</span>,
+		<span class="pl-s1">MaxCost</span>:     <span class="pl-s1">maxRowsToCache</span>,
+		<span class="pl-s1">BufferItems</span>: <span class="pl-c1">64</span>,
 	})
-	if err != nil {
-		return nil, err
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-k">return</span> <span class="pl-c1">nil</span>, <span class="pl-s1">err</span>
 	}
 
-	return sqlcache.NewRistretto(c), nil
+	<span class="pl-k">return</span> <span class="pl-s1">sqlcache</span>.<span class="pl-c1">NewRistretto</span>(<span class="pl-s1">c</span>), <span class="pl-c1">nil</span>
 }
 
-var querySQL string = `
-		-- @cache-ttl 60
-		-- @cache-max-rows 10
-		SELECT 1 AS id,
-		'aaa' AS name,
-		CAST((['Ready', 'Steady', 'Go'], [1, 2, 3]), 'Map(String, UInt8)') AS mapper;`
+<span class="pl-k">var</span> <span class="pl-s1">querySQL</span> <span class="pl-smi">string</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">		-- @cache-ttl 60</span>
+<span class="pl-s">		-- @cache-max-rows 10</span>
+<span class="pl-s">		SELECT 1 AS id,</span>
+<span class="pl-s">		'aaa' AS name,</span>
+<span class="pl-s">		CAST((['Ready', 'Steady', 'Go'], [1, 2, 3]), 'Map(String, UInt8)') AS mapper;`</span>
 
-type customConverter struct{}
+<span class="pl-k">type</span> <span class="pl-smi">customConverter</span> <span class="pl-k">struct</span>{}
 
-func (customConverter) ConvertValue(v any) (driver.Value, error) {
-	return v, nil
+<span class="pl-k">func</span> (<span class="pl-smi">customConverter</span>) <span class="pl-c1">ConvertValue</span>(<span class="pl-s1">v</span> <span class="pl-smi">any</span>) (driver.<span class="pl-smi">Value</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-k">return</span> <span class="pl-s1">v</span>, <span class="pl-c1">nil</span>
 }
 
-func main() {
-	cache, err := newRistrettoCache(defaultMaxRowsToCache)
-	if err != nil {
-		log.Fatalf("newRistrettoCache() failed: %v", err)
+<span class="pl-k">func</span> <span class="pl-s1">main</span>() {
+	<span class="pl-s1">cache</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">newRistrettoCache</span>(<span class="pl-s1">defaultMaxRowsToCache</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatalf</span>(<span class="pl-s">"newRistrettoCache() failed: %v"</span>, <span class="pl-s1">err</span>)
 	}
 
-	interceptor, err := sqlcache.NewInterceptor(&amp;sqlcache.Config{
-		Cache: cache, // pick a Cacher interface implementation of your choice (redis or ristretto)
+	<span class="pl-s1">interceptor</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">sqlcache</span>.<span class="pl-c1">NewInterceptor</span>(<span class="pl-c1">&amp;</span>sqlcache.<span class="pl-smi">Config</span>{
+		<span class="pl-s1">Cache</span>: <span class="pl-s1">cache</span>, <span class="pl-c">// pick a Cacher interface implementation of your choice (redis or ristretto)</span>
 	})
-	if err != nil {
-		log.Fatalf("sqlcache.NewInterceptor() failed: %v", err)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatalf</span>(<span class="pl-s">"sqlcache.NewInterceptor() failed: %v"</span>, <span class="pl-s1">err</span>)
 	}
 
-	defer func() {
-		fmt.Printf("\nInterceptor metrics: %+v\n", interceptor.Stats())
+	<span class="pl-k">defer</span> <span class="pl-k">func</span>() {
+		<span class="pl-s1">fmt</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"<span class="pl-cce">\n</span>Interceptor metrics: %+v<span class="pl-cce">\n</span>"</span>, <span class="pl-s1">interceptor</span>.<span class="pl-c1">Stats</span>())
 	}()
 
-	dsn := "clickhouse://localhost:9000"
+	<span class="pl-s1">dsn</span> <span class="pl-c1">:=</span> <span class="pl-s">"clickhouse://localhost:9000"</span>
 
-	conn, err := sql.Open("clickhouse", dsn)
-	if err != nil {
-		log.Fatal(err)
+	<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">sql</span>.<span class="pl-c1">Open</span>(<span class="pl-s">"clickhouse"</span>, <span class="pl-s1">dsn</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
-	// install the wrapper which wraps pgx driver
-	sql.Register("clickhouse-sqlcache", interceptor.Driver(conn.Driver()))
+	<span class="pl-c">// install the wrapper which wraps pgx driver</span>
+	<span class="pl-s1">sql</span>.<span class="pl-c1">Register</span>(<span class="pl-s">"clickhouse-sqlcache"</span>, <span class="pl-s1">interceptor</span>.<span class="pl-c1">Driver</span>(<span class="pl-s1">conn</span>.<span class="pl-c1">Driver</span>()))
 
-	db, err := sql.Open("clickhouse-sqlcache", dsn)
-	if err != nil {
-		log.Fatal(err)
+	<span class="pl-s1">db</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">sql</span>.<span class="pl-c1">Open</span>(<span class="pl-s">"clickhouse-sqlcache"</span>, <span class="pl-s1">dsn</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
-	defer db.Close()
+	<span class="pl-k">defer</span> <span class="pl-s1">db</span>.<span class="pl-c1">Close</span>()
 
-	if err = db.PingContext(context.TODO()); err != nil {
-		log.Fatal(fmt.Errorf("db.PingContext() failed: %w", err))
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">db</span>.<span class="pl-c1">PingContext</span>(<span class="pl-s1">context</span>.<span class="pl-c1">TODO</span>()); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Errorf</span>(<span class="pl-s">"db.PingContext() failed: %w"</span>, <span class="pl-s1">err</span>))
 	}
 
-	rows, err := db.QueryContext(context.TODO(), querySQL)
-	if err != nil {
-		log.Fatal(fmt.Errorf("db.QueryContext() failed: %w", err))
+	<span class="pl-s1">rows</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">QueryContext</span>(<span class="pl-s1">context</span>.<span class="pl-c1">TODO</span>(), <span class="pl-s1">querySQL</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Errorf</span>(<span class="pl-s">"db.QueryContext() failed: %w"</span>, <span class="pl-s1">err</span>))
 	}
-	defer rows.Close()
+	<span class="pl-k">defer</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Close</span>()
 
-	for rows.Next() {
-		var id int
-		var name string
-		var mapper interface{} //map[string]uint64
-		if err := rows.Scan(&amp;id, &amp;name, &amp;mapper); err != nil {
-			log.Fatal(fmt.Errorf("rows.Scan() failed: %w", err))
+	<span class="pl-k">for</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Next</span>() {
+		<span class="pl-k">var</span> <span class="pl-s1">id</span> <span class="pl-smi">int</span>
+		<span class="pl-k">var</span> <span class="pl-s1">name</span> <span class="pl-smi">string</span>
+		<span class="pl-k">var</span> <span class="pl-s1">mapper</span> <span class="pl-k">interface</span>{} <span class="pl-c">//map[string]uint64</span>
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Scan</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">id</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">name</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">mapper</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Errorf</span>(<span class="pl-s">"rows.Scan() failed: %w"</span>, <span class="pl-s1">err</span>))
 		}
-		fmt.Println("===&gt; ", id, name, mapper)
+		<span class="pl-s1">fmt</span>.<span class="pl-c1">Println</span>(<span class="pl-s">"===&gt; "</span>, <span class="pl-s1">id</span>, <span class="pl-s1">name</span>, <span class="pl-s1">mapper</span>)
 	}
 
-	db, mock, _ := sqlmock.New(sqlmock.ValueConverterOption(customConverter{}))
-	cacheRows := interceptor.CheckCache(context.Background(), querySQL, nil)
-	if cacheRows != nil {
-		var dests [][]driver.Value
-		for {
-			dest := make([]driver.Value, len(cacheRows.Columns()))
-			if err := cacheRows.Next(dest); err == nil {
-				dests = append(dests, dest)
-			} else if err == io.EOF {
-				break
-			} else {
-				log.Fatal(err)
+	<span class="pl-s1">db</span>, <span class="pl-s1">mock</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">sqlmock</span>.<span class="pl-c1">New</span>(<span class="pl-s1">sqlmock</span>.<span class="pl-c1">ValueConverterOption</span>(<span class="pl-smi">customConverter</span>{}))
+	<span class="pl-s1">cacheRows</span> <span class="pl-c1">:=</span> <span class="pl-s1">interceptor</span>.<span class="pl-c1">CheckCache</span>(<span class="pl-s1">context</span>.<span class="pl-c1">Background</span>(), <span class="pl-s1">querySQL</span>, <span class="pl-c1">nil</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">cacheRows</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-k">var</span> <span class="pl-s1">dests</span> [][]driver.<span class="pl-smi">Value</span>
+		<span class="pl-k">for</span> {
+			<span class="pl-s1">dest</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]driver.<span class="pl-smi">Value</span>, <span class="pl-s1">len</span>(<span class="pl-s1">cacheRows</span>.<span class="pl-c1">Columns</span>()))
+			<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">cacheRows</span>.<span class="pl-c1">Next</span>(<span class="pl-s1">dest</span>); <span class="pl-s1">err</span> <span class="pl-c1">==</span> <span class="pl-c1">nil</span> {
+				<span class="pl-s1">dests</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">dests</span>, <span class="pl-s1">dest</span>)
+			} <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">==</span> <span class="pl-s1">io</span>.<span class="pl-c1">EOF</span> {
+				<span class="pl-k">break</span>
+			} <span class="pl-k">else</span> {
+				<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 			}
 		}
-                cacheItem, ok := cacheRows.(*sqlcache.RowsCached)
-	        if !ok {
-		       log.Fatal(fmt.Errorf("cacheRows is not *sqlcache.RowsCached"))
+                <span class="pl-s1">cacheItem</span>, <span class="pl-s1">ok</span> <span class="pl-c1">:=</span> <span class="pl-s1">cacheRows</span>.(<span class="pl-c1">*</span>sqlcache.<span class="pl-smi">RowsCached</span>)
+	        <span class="pl-k">if</span> <span class="pl-c1">!</span><span class="pl-s1">ok</span> {
+		       <span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">fmt</span>.<span class="pl-c1">Errorf</span>(<span class="pl-s">"cacheRows is not *sqlcache.RowsCached"</span>))
 	        }
-	        mockColumns := make([]*sqlmock.Column, 0, len(cacheRows.Columns()))
-	        for i, column := range cacheRows.Columns() {
-		        mockColumns = append(mockColumns, sqlmock.NewColumn(column).OfType(cacheItem.DatabaseTypeNames[i], ""))
+	        <span class="pl-s1">mockColumns</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-c1">*</span>sqlmock.<span class="pl-smi">Column</span>, <span class="pl-c1">0</span>, <span class="pl-s1">len</span>(<span class="pl-s1">cacheRows</span>.<span class="pl-c1">Columns</span>()))
+	        <span class="pl-k">for</span> <span class="pl-s1">i</span>, <span class="pl-s1">column</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">cacheRows</span>.<span class="pl-c1">Columns</span>() {
+		        <span class="pl-s1">mockColumns</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">mockColumns</span>, <span class="pl-s1">sqlmock</span>.<span class="pl-c1">NewColumn</span>(<span class="pl-s1">column</span>).<span class="pl-c1">OfType</span>(<span class="pl-s1">cacheItem</span>.<span class="pl-c1">DatabaseTypeNames</span>[<span class="pl-s1">i</span>], <span class="pl-s">""</span>))
 	        }
-	        mockRows := mock.NewRowsWithColumnDefinition(mockColumns...).AddRows(dests...)
-		// mockRows := mock.NewRows(cacheRows.Columns()).AddRows(dests...)
-		mock.ExpectQuery(regexp.QuoteMeta(querySQL)).WillReturnRows(mockRows)
-		rows, _ := db.Query(querySQL)
-		fmt.Println(rows)
+	        <span class="pl-s1">mockRows</span> <span class="pl-c1">:=</span> <span class="pl-s1">mock</span>.<span class="pl-c1">NewRowsWithColumnDefinition</span>(<span class="pl-s1">mockColumns</span><span class="pl-c1">...</span>).<span class="pl-c1">AddRows</span>(<span class="pl-s1">dests</span><span class="pl-c1">...</span>)
+		<span class="pl-c">// mockRows := mock.NewRows(cacheRows.Columns()).AddRows(dests...)</span>
+		<span class="pl-s1">mock</span>.<span class="pl-c1">ExpectQuery</span>(<span class="pl-s1">regexp</span>.<span class="pl-c1">QuoteMeta</span>(<span class="pl-s1">querySQL</span>)).<span class="pl-c1">WillReturnRows</span>(<span class="pl-s1">mockRows</span>)
+		<span class="pl-s1">rows</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">Query</span>(<span class="pl-s1">querySQL</span>)
+		<span class="pl-s1">fmt</span>.<span class="pl-c1">Println</span>(<span class="pl-s1">rows</span>)
   
-                type Person struct {
-			ID   int    `db:"id"`
-			Name string `db:"name"`
-			// Mapper map[string]uint64 `db:"mapper"`
+                <span class="pl-k">type</span> <span class="pl-smi">Person</span> <span class="pl-k">struct</span> {
+			<span class="pl-c1">ID</span>   <span class="pl-smi">int</span>    <span class="pl-s">`db:"id"`</span>
+			<span class="pl-c1">Name</span> <span class="pl-smi">string</span> <span class="pl-s">`db:"name"`</span>
+			<span class="pl-c">// Mapper map[string]uint64 `db:"mapper"`</span>
 		}
-		var persons []Person
-		err := scan.Rows(&amp;persons, rows)
-		if err != nil {
-			log.Fatal(err)
+		<span class="pl-k">var</span> <span class="pl-s1">persons</span> []<span class="pl-smi">Person</span>
+		<span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">scan</span>.<span class="pl-c1">Rows</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">persons</span>, <span class="pl-s1">rows</span>)
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 		}
-		fmt.Printf("%#v\n", persons)
+		<span class="pl-s1">fmt</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"%#v<span class="pl-cce">\n</span>"</span>, <span class="pl-s1">persons</span>)
 	}
-}
-</code></pre></div>
+}</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
