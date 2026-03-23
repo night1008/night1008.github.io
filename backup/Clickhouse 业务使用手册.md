@@ -123,3 +123,12 @@ ALTER TABLE demo.events_local DROP COLUMN IF EXISTS `name`;
 ALTER TABLE demo.events_local ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
 ALTER TABLE demo.events ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
 ```
+
+---
+
+### 查看 shard 分片数量
+```sql
+select cluster,shard_num,replica_num
+from system.clusters 
+where name = 'demo';
+```

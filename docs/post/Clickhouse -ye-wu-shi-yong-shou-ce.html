@@ -135,6 +135,15 @@ ALTER TABLE demo.events_local DROP COLUMN IF EXISTS `name`;
 ALTER TABLE demo.events_local ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
 ALTER TABLE demo.events ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
 ```
+
+---
+
+### 查看 shard 分片数量
+```sql
+select cluster,shard_num,replica_num
+from system.clusters 
+where name = 'demo';
+```
 。">
 <meta property="og:title" content="Clickhouse 业务使用手册">
 <meta property="og:description" content="### 数据写入流程
@@ -261,6 +270,15 @@ ALTER TABLE demo.events DROP COLUMN IF EXISTS `name`;
 ALTER TABLE demo.events_local DROP COLUMN IF EXISTS `name`;
 ALTER TABLE demo.events_local ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
 ALTER TABLE demo.events ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMENT '名称';
+```
+
+---
+
+### 查看 shard 分片数量
+```sql
+select cluster,shard_num,replica_num
+from system.clusters 
+where name = 'demo';
 ```
 。">
 <meta property="og:type" content="article">
@@ -415,7 +433,12 @@ FORMAT CSVWithNames;</pre></div>
 <span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events</span> DROP COLUMN IF EXISTS <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span>;
 <span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events_local</span> DROP COLUMN IF EXISTS <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span>;
 <span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events_local</span> ADD COLUMN IF NOT  EXISTS <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> Nullable(String) COMMENT <span class="pl-s"><span class="pl-pds">'</span>名称<span class="pl-pds">'</span></span>;
-<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events</span> ADD COLUMN IF NOT  EXISTS <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> Nullable(String) COMMENT <span class="pl-s"><span class="pl-pds">'</span>名称<span class="pl-pds">'</span></span>;</pre></div></div>
+<span class="pl-k">ALTER</span> <span class="pl-k">TABLE</span> <span class="pl-c1">demo</span>.<span class="pl-c1">events</span> ADD COLUMN IF NOT  EXISTS <span class="pl-s"><span class="pl-pds">`</span>name<span class="pl-pds">`</span></span> Nullable(String) COMMENT <span class="pl-s"><span class="pl-pds">'</span>名称<span class="pl-pds">'</span></span>;</pre></div>
+<hr>
+<h3>查看 shard 分片数量</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> cluster,shard_num,replica_num
+<span class="pl-k">from</span> <span class="pl-c1">system</span>.<span class="pl-c1">clusters</span> 
+<span class="pl-k">where</span> name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>demo<span class="pl-pds">'</span></span>;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
