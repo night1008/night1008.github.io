@@ -144,6 +144,16 @@ select cluster,shard_num,replica_num
 from system.clusters 
 where name = 'demo';
 ```
+
+---
+
+### 整个表聚合查校验值
+```sql
+with  tbl as (select 1 as a, 2 as b,number from numbers(10) order by number desc)
+SELECT hex(groupBitXor(cityHash64(tuple(*)))) as cksum
+from tbl;
+-- B4B3E09AC69CEBE7
+```
 。">
 <meta property="og:title" content="Clickhouse 业务使用手册">
 <meta property="og:description" content="### 数据写入流程
@@ -279,6 +289,16 @@ ALTER TABLE demo.events ADD COLUMN IF NOT  EXISTS `name` Nullable(String) COMMEN
 select cluster,shard_num,replica_num
 from system.clusters 
 where name = 'demo';
+```
+
+---
+
+### 整个表聚合查校验值
+```sql
+with  tbl as (select 1 as a, 2 as b,number from numbers(10) order by number desc)
+SELECT hex(groupBitXor(cityHash64(tuple(*)))) as cksum
+from tbl;
+-- B4B3E09AC69CEBE7
 ```
 。">
 <meta property="og:type" content="article">
@@ -438,7 +458,13 @@ FORMAT CSVWithNames;</pre></div>
 <h3>查看 shard 分片数量</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> cluster,shard_num,replica_num
 <span class="pl-k">from</span> <span class="pl-c1">system</span>.<span class="pl-c1">clusters</span> 
-<span class="pl-k">where</span> name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>demo<span class="pl-pds">'</span></span>;</pre></div></div>
+<span class="pl-k">where</span> name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>demo<span class="pl-pds">'</span></span>;</pre></div>
+<hr>
+<h3>整个表聚合查校验值</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate">with  tbl <span class="pl-k">as</span> (<span class="pl-k">select</span> <span class="pl-c1">1</span> <span class="pl-k">as</span> a, <span class="pl-c1">2</span> <span class="pl-k">as</span> b,<span class="pl-k">number</span> <span class="pl-k">from</span> numbers(<span class="pl-c1">10</span>) <span class="pl-k">order by</span> <span class="pl-k">number</span> <span class="pl-k">desc</span>)
+<span class="pl-k">SELECT</span> hex(groupBitXor(cityHash64(tuple(<span class="pl-k">*</span>)))) <span class="pl-k">as</span> cksum
+<span class="pl-k">from</span> tbl;
+<span class="pl-c"><span class="pl-c">--</span> B4B3E09AC69CEBE7</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

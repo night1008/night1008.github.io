@@ -132,3 +132,13 @@ select cluster,shard_num,replica_num
 from system.clusters 
 where name = 'demo';
 ```
+
+---
+
+### 整个表聚合查校验值
+```sql
+with  tbl as (select 1 as a, 2 as b,number from numbers(10) order by number desc)
+SELECT hex(groupBitXor(cityHash64(tuple(*)))) as cksum
+from tbl;
+-- B4B3E09AC69CEBE7
+```
