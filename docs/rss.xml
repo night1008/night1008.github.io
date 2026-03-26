@@ -1,5 +1,28 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Wed, 25 Mar 2026 08:00:50 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Clickhouse 留存分析优化</title><link>https://night1008.github.io/post/Clickhouse%20-liu-cun-fen-xi-you-hua.html</link><description>某个项目下，以 `角色创建` 为初始事件，`角色登录` 为回访事件，同时展示回访用户的 `付费` 事件的 `阶段累计人均 充值金额`，且仅显示
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Thu, 26 Mar 2026 07:00:04 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>Clikchouse 不同配置下的查询结果一致性验证</title><link>https://night1008.github.io/post/Clikchouse%20-bu-tong-pei-zhi-xia-de-cha-xun-jie-guo-yi-zhi-xing-yan-zheng.html</link><description>随着升级 Clikchouse 版本，需要检查业务代码中的查询语句的结果是否一致
+
+比如发现下面的语句在不同设置下结果不一样
+```sql
+SELECT toDateTime(date_trunc('day', `vpc@timezone_#time`)) AS date_time, 'event_0' AS event_index, 'compare_0' AS compare_index, coalesce(formatDateTimeInJodaSyntax(toDateTime(date_trunc('day', `vpc@timezone_#time`)), 'yyyy-MM-dd'), 'null') AS group_0, round(toFloat64(coalesce(COUNT(1), 0)), 2) AS `$amount` FROM (SELECT * FROM (SELECT `#data_lifecycle`, `#dt`, `#event`, `#time`, `vpc@timezone_#time`, `#zone_offset` FROM (SELECT `#data_lifecycle`, `#dt`, `#event`, `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval 8 * 60 minute) AS `vpc@timezone_#time`, `#zone_offset` FROM events WHERE (`#event` IN ('#user_login')) AND ((`#dt` BETWEEN '2026-03-18' AND '2026-03-20'))) AS event) WHERE (`#data_lifecycle` = '0') AND (`#dt` BETWEEN '2026-03-18' AND '2026-03-20' AND `vpc@timezone_#time` BETWEEN '2026-03-19 00:00:00.000' AND '2026-03-19 23:59:59.999' ) AND (`#event` IN ('#user_login'))) GROUP BY GROUPING SETS((date_time, group_0),(group_0));
+```
+
+`set allow_experimental_analyzer=0;`
+&lt;img width='851' height='184' alt='Image' src='https://github.com/user-attachments/assets/afd33513-7308-4c8f-899b-ec263e3c4ab8' /&gt;
+
+`set allow_experimental_analyzer=1;`
+&lt;img width='856' height='192' alt='Image' src='https://github.com/user-attachments/assets/0a133a69-175f-4355-89e5-de894fe2e0c1' /&gt;
+
+
+原因是
+&lt;img width='864' height='705' alt='Image' src='https://github.com/user-attachments/assets/a6af1766-f18c-4f2e-93db-b9250c5870cb' /&gt;
+
+
+所以需要编写脚本对比不同配置下的查询结果，
+可以从用户的查询日志作为检查对象，
+需要注意以下问题，
+1. 浮点数 =&gt; 需要固定精度，比如使用 round 函数
+2. map 类型 =&gt; 可以使用 mapSort 函数固定顺序
+3. 时间范围包含当前时间 =&gt; 可以使用正则替换大于等于当前时间为过去时间。</description><guid isPermaLink="true">https://night1008.github.io/post/Clikchouse%20-bu-tong-pei-zhi-xia-de-cha-xun-jie-guo-yi-zhi-xing-yan-zheng.html</guid><pubDate>Thu, 26 Mar 2026 06:59:31 +0000</pubDate></item><item><title>Clickhouse 留存分析优化</title><link>https://night1008.github.io/post/Clickhouse%20-liu-cun-fen-xi-you-hua.html</link><description>某个项目下，以 `角色创建` 为初始事件，`角色登录` 为回访事件，同时展示回访用户的 `付费` 事件的 `阶段累计人均 充值金额`，且仅显示
 1日，2日，6日，13日，29日，59日，119日，179日，239日关键日期 的 SQL 查询示例
 
 旧查询
