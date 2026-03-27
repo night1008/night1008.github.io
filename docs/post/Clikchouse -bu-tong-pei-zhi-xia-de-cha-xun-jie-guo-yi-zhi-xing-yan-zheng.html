@@ -28,9 +28,25 @@ SELECT toDateTime(date_trunc('day', `vpc@timezone_#time`)) AS date_time, 'event_
 <img width='864' height='705' alt='Image' src='https://github.com/user-attachments/assets/a6af1766-f18c-4f2e-93db-b9250c5870cb' />
 
 
-所以需要编写脚本对比不同配置下的查询结果，
-可以从用户的查询日志作为检查对象，
-需要注意以下问题，
+所以需要编写脚本对比不同配置下的查询结果，可以从用户的查询日志作为检查对象，通过以下方式进行结果验证
+
+```sql
+SELECT hex(groupBitXor(cityHash64(tuple(*)))) AS cksum FROM (
+  SELECT * FROM (
+    SELECT *, row_number() over(partition by compare_index,event_index order by total_amount desc) as row_number FROM (
+      SELECT compare_index,event_index, total_amount, COUNT(1) over(partition by compare_index,event_index) as group_num,cast((groupArray(date_time), groupArray(`$amount`)) AS Map(Datetime, Float64)) AS data_map, toJSONString(data_map) AS data_map_str FROM (
+        SELECT date_time, compare_index,event_index, multiIf(`$amount` = inf, 0, `$amount` = -inf, 0, `$amount`) as `$amount`, SUM(`$amount`) over(partition by 1) as total_amount FROM (
+
+              SELECT toDateTime(date_trunc('day', `vpc@timezone_#time`)) AS date_time, 'event_0' AS event_index, 'compare_0' AS compare_index, round(toFloat64(coalesce(COUNT(1), 0)), 2) AS `$amount` FROM (SELECT * FROM (SELECT `#data_lifecycle`, `#dt`, `#event`, `#time`, `vpc@timezone_#time`, `#zone_offset` FROM (SELECT `#data_lifecycle`, `#dt`, `#event`, `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval 8 * 60 minute) AS `vpc@timezone_#time`, `#zone_offset` FROM events WHERE (`#event` IN ('#user_login')) AND ((`#dt` BETWEEN '2026-02-23' AND '2026-03-26'))) AS event) WHERE (`#data_lifecycle` = '0') AND (`#dt` BETWEEN '2026-02-23' AND '2026-03-27' AND `vpc@timezone_#time` BETWEEN '2026-02-24 00:00:00.000' AND '2026-03-26 23:59:59.999' ) AND (`#event` IN ('#user_login'))) GROUP BY GROUPING SETS((date_time),())
+
+        ) GROUP BY date_time, compare_index,event_index, `$amount`
+      ) GROUP BY compare_index,event_index, total_amount
+    )
+  ) WHERE row_number <= 1000 ORDER BY compare_index,event_index, row_number LIMIT 100000
+)
+```
+
+不过需要注意以下问题，
 1. 浮点数 => 需要固定精度，比如使用 round 函数
 2. map 类型 => 可以使用 mapSort 函数固定顺序
 3. 时间范围包含当前时间 => 可以使用正则替换大于等于当前时间为过去时间。">
@@ -53,9 +69,25 @@ SELECT toDateTime(date_trunc('day', `vpc@timezone_#time`)) AS date_time, 'event_
 <img width='864' height='705' alt='Image' src='https://github.com/user-attachments/assets/a6af1766-f18c-4f2e-93db-b9250c5870cb' />
 
 
-所以需要编写脚本对比不同配置下的查询结果，
-可以从用户的查询日志作为检查对象，
-需要注意以下问题，
+所以需要编写脚本对比不同配置下的查询结果，可以从用户的查询日志作为检查对象，通过以下方式进行结果验证
+
+```sql
+SELECT hex(groupBitXor(cityHash64(tuple(*)))) AS cksum FROM (
+  SELECT * FROM (
+    SELECT *, row_number() over(partition by compare_index,event_index order by total_amount desc) as row_number FROM (
+      SELECT compare_index,event_index, total_amount, COUNT(1) over(partition by compare_index,event_index) as group_num,cast((groupArray(date_time), groupArray(`$amount`)) AS Map(Datetime, Float64)) AS data_map, toJSONString(data_map) AS data_map_str FROM (
+        SELECT date_time, compare_index,event_index, multiIf(`$amount` = inf, 0, `$amount` = -inf, 0, `$amount`) as `$amount`, SUM(`$amount`) over(partition by 1) as total_amount FROM (
+
+              SELECT toDateTime(date_trunc('day', `vpc@timezone_#time`)) AS date_time, 'event_0' AS event_index, 'compare_0' AS compare_index, round(toFloat64(coalesce(COUNT(1), 0)), 2) AS `$amount` FROM (SELECT * FROM (SELECT `#data_lifecycle`, `#dt`, `#event`, `#time`, `vpc@timezone_#time`, `#zone_offset` FROM (SELECT `#data_lifecycle`, `#dt`, `#event`, `#time`, timestamp_add(fromUnixTimestamp64Milli(`#time`), interval 8 * 60 minute) AS `vpc@timezone_#time`, `#zone_offset` FROM events WHERE (`#event` IN ('#user_login')) AND ((`#dt` BETWEEN '2026-02-23' AND '2026-03-26'))) AS event) WHERE (`#data_lifecycle` = '0') AND (`#dt` BETWEEN '2026-02-23' AND '2026-03-27' AND `vpc@timezone_#time` BETWEEN '2026-02-24 00:00:00.000' AND '2026-03-26 23:59:59.999' ) AND (`#event` IN ('#user_login'))) GROUP BY GROUPING SETS((date_time),())
+
+        ) GROUP BY date_time, compare_index,event_index, `$amount`
+      ) GROUP BY compare_index,event_index, total_amount
+    )
+  ) WHERE row_number <= 1000 ORDER BY compare_index,event_index, row_number LIMIT 100000
+)
+```
+
+不过需要注意以下问题，
 1. 浮点数 => 需要固定精度，比如使用 round 函数
 2. map 类型 => 可以使用 mapSort 函数固定顺序
 3. 时间范围包含当前时间 => 可以使用正则替换大于等于当前时间为过去时间。">
@@ -138,9 +170,21 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0a133a69-175f-4355-89e5-de894fe2e0c1"><img width="856" height="192" alt="Image" src="https://github.com/user-attachments/assets/0a133a69-175f-4355-89e5-de894fe2e0c1" style="max-width: 100%; height: auto; max-height: 192px;"></a></p>
 <p>原因是<br>
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a6af1766-f18c-4f2e-93db-b9250c5870cb"><img width="864" height="705" alt="Image" src="https://github.com/user-attachments/assets/a6af1766-f18c-4f2e-93db-b9250c5870cb" style="max-width: 100%; height: auto; max-height: 705px;"></a></p>
-<p>所以需要编写脚本对比不同配置下的查询结果，<br>
-可以从用户的查询日志作为检查对象，<br>
-需要注意以下问题，</p>
+<p>所以需要编写脚本对比不同配置下的查询结果，可以从用户的查询日志作为检查对象，通过以下方式进行结果验证</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> hex(groupBitXor(cityHash64(tuple(<span class="pl-k">*</span>)))) <span class="pl-k">AS</span> cksum <span class="pl-k">FROM</span> (
+  <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> (
+    <span class="pl-k">SELECT</span> <span class="pl-k">*</span>, row_number() over(partition by compare_index,event_index <span class="pl-k">order by</span> total_amount <span class="pl-k">desc</span>) <span class="pl-k">as</span> row_number <span class="pl-k">FROM</span> (
+      <span class="pl-k">SELECT</span> compare_index,event_index, total_amount, <span class="pl-c1">COUNT</span>(<span class="pl-c1">1</span>) over(partition by compare_index,event_index) <span class="pl-k">as</span> group_num,cast((groupArray(date_time), groupArray(<span class="pl-s"><span class="pl-pds">`</span>$amount<span class="pl-pds">`</span></span>)) <span class="pl-k">AS</span> Map(Datetime, Float64)) <span class="pl-k">AS</span> data_map, toJSONString(data_map) <span class="pl-k">AS</span> data_map_str <span class="pl-k">FROM</span> (
+        <span class="pl-k">SELECT</span> date_time, compare_index,event_index, multiIf(<span class="pl-s"><span class="pl-pds">`</span>$amount<span class="pl-pds">`</span></span> <span class="pl-k">=</span> inf, <span class="pl-c1">0</span>, <span class="pl-s"><span class="pl-pds">`</span>$amount<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-k">-</span>inf, <span class="pl-c1">0</span>, <span class="pl-s"><span class="pl-pds">`</span>$amount<span class="pl-pds">`</span></span>) <span class="pl-k">as</span> <span class="pl-s"><span class="pl-pds">`</span>$amount<span class="pl-pds">`</span></span>, <span class="pl-c1">SUM</span>(<span class="pl-s"><span class="pl-pds">`</span>$amount<span class="pl-pds">`</span></span>) over(partition by <span class="pl-c1">1</span>) <span class="pl-k">as</span> total_amount <span class="pl-k">FROM</span> (
+
+              <span class="pl-k">SELECT</span> toDateTime(date_trunc(<span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">`</span>vpc@timezone_#time<span class="pl-pds">`</span></span>)) <span class="pl-k">AS</span> date_time, <span class="pl-s"><span class="pl-pds">'</span>event_0<span class="pl-pds">'</span></span> <span class="pl-k">AS</span> event_index, <span class="pl-s"><span class="pl-pds">'</span>compare_0<span class="pl-pds">'</span></span> <span class="pl-k">AS</span> compare_index, round(toFloat64(coalesce(<span class="pl-c1">COUNT</span>(<span class="pl-c1">1</span>), <span class="pl-c1">0</span>)), <span class="pl-c1">2</span>) <span class="pl-k">AS</span> <span class="pl-s"><span class="pl-pds">`</span>$amount<span class="pl-pds">`</span></span> <span class="pl-k">FROM</span> (<span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> (<span class="pl-k">SELECT</span> <span class="pl-s"><span class="pl-pds">`</span>#data_lifecycle<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#event<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#time<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>vpc@timezone_#time<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#zone_offset<span class="pl-pds">`</span></span> <span class="pl-k">FROM</span> (<span class="pl-k">SELECT</span> <span class="pl-s"><span class="pl-pds">`</span>#data_lifecycle<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#event<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#time<span class="pl-pds">`</span></span>, timestamp_add(fromUnixTimestamp64Milli(<span class="pl-s"><span class="pl-pds">`</span>#time<span class="pl-pds">`</span></span>), interval <span class="pl-c1">8</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> minute) <span class="pl-k">AS</span> <span class="pl-s"><span class="pl-pds">`</span>vpc@timezone_#time<span class="pl-pds">`</span></span>, <span class="pl-s"><span class="pl-pds">`</span>#zone_offset<span class="pl-pds">`</span></span> <span class="pl-k">FROM</span> events <span class="pl-k">WHERE</span> (<span class="pl-s"><span class="pl-pds">`</span>#event<span class="pl-pds">`</span></span> <span class="pl-k">IN</span> (<span class="pl-s"><span class="pl-pds">'</span>#user_login<span class="pl-pds">'</span></span>)) <span class="pl-k">AND</span> ((<span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span> BETWEEN <span class="pl-s"><span class="pl-pds">'</span>2026-02-23<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> <span class="pl-s"><span class="pl-pds">'</span>2026-03-26<span class="pl-pds">'</span></span>))) <span class="pl-k">AS</span> event) <span class="pl-k">WHERE</span> (<span class="pl-s"><span class="pl-pds">`</span>#data_lifecycle<span class="pl-pds">`</span></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>) <span class="pl-k">AND</span> (<span class="pl-s"><span class="pl-pds">`</span>#dt<span class="pl-pds">`</span></span> BETWEEN <span class="pl-s"><span class="pl-pds">'</span>2026-02-23<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> <span class="pl-s"><span class="pl-pds">'</span>2026-03-27<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> <span class="pl-s"><span class="pl-pds">`</span>vpc@timezone_#time<span class="pl-pds">`</span></span> BETWEEN <span class="pl-s"><span class="pl-pds">'</span>2026-02-24 00:00:00.000<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> <span class="pl-s"><span class="pl-pds">'</span>2026-03-26 23:59:59.999<span class="pl-pds">'</span></span> ) <span class="pl-k">AND</span> (<span class="pl-s"><span class="pl-pds">`</span>#event<span class="pl-pds">`</span></span> <span class="pl-k">IN</span> (<span class="pl-s"><span class="pl-pds">'</span>#user_login<span class="pl-pds">'</span></span>))) <span class="pl-k">GROUP BY</span> GROUPING SETS((date_time),())
+
+        ) <span class="pl-k">GROUP BY</span> date_time, compare_index,event_index, <span class="pl-s"><span class="pl-pds">`</span>$amount<span class="pl-pds">`</span></span>
+      ) <span class="pl-k">GROUP BY</span> compare_index,event_index, total_amount
+    )
+  ) <span class="pl-k">WHERE</span> row_number <span class="pl-k">&lt;=</span> <span class="pl-c1">1000</span> <span class="pl-k">ORDER BY</span> compare_index,event_index, row_number <span class="pl-k">LIMIT</span> <span class="pl-c1">100000</span>
+)</pre></div>
+<p>不过需要注意以下问题，</p>
 <ol>
 <li>浮点数 =&gt; 需要固定精度，比如使用 round 函数</li>
 <li>map 类型 =&gt; 可以使用 mapSort 函数固定顺序</li>
