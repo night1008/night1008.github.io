@@ -15,7 +15,7 @@
 
 如何使用
 ```
-1. 根据 @prompt.md，输出设计文档
+1. 根据 @prompt.md，输出设计文档到 design.md
 2. 根据 @design.md 中的评论，调整设计文档，格式为 <!-- review: 需要加分页参数 -->
 3. 根据 @design.md，开始实现代码
 ```
