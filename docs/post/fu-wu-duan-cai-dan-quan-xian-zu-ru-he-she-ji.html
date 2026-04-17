@@ -271,7 +271,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="content">
 <div class="markdown-body" id="postBody"><h3>背景</h3>
 <p>目前系统的权限体系存储了权限，权限组，角色之间的关联关系，如下图所示，</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0"><img width="1213" height="438" alt="Image" src="https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0" style="max-width: 100%; height: auto; max-height: 438px;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0"><img width="1213" height="438" alt="Image" src="https://github.com/user-attachments/assets/e12754df-d6ab-4b31-bf8c-53599d60b5e0" style="max-width: 100%; height: auto; max-height: 438px;; aspect-ratio: 1213 / 438; background-color: var(--bgColor-muted); border-radius: 6px; display: block" class="js-gh-image-fallback"></a></p>
 <p>目前的数据结构如下，</p>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">type</span> <span class="pl-smi">PermissionGroup</span> <span class="pl-k">struct</span> {
   <span class="pl-c1">ID</span>       <span class="pl-smi">uint64</span> <span class="pl-s">`gorm:"primarykey"`</span>           <span class="pl-c">// 数据库ID</span>
@@ -314,7 +314,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>权限组增加依赖字段</li>
 </ol>
 <p>如下图所示，</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8fff5852-8faa-4317-920d-5b3f3172ffe6"><img width="693" height="453" alt="Image" src="https://github.com/user-attachments/assets/8fff5852-8faa-4317-920d-5b3f3172ffe6" style="max-width: 100%; height: auto; max-height: 453px;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8fff5852-8faa-4317-920d-5b3f3172ffe6"><img width="693" height="453" alt="Image" src="https://github.com/user-attachments/assets/8fff5852-8faa-4317-920d-5b3f3172ffe6" style="max-width: 100%; height: auto; max-height: 453px;; aspect-ratio: 693 / 453; background-color: var(--bgColor-muted); border-radius: 6px; display: block" class="js-gh-image-fallback"></a></p>
 <p>效果如下，</p>
 <ol>
 <li>直接返回给前端树形结构，方便使用</li>

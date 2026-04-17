@@ -1127,12 +1127,12 @@ arrayEnumerate(date_interval_nums) <span class="pl-k">AS</span> date_interval_nu
 <span class="pl-k">LIMIT</span>
   <span class="pl-c1">100000</span>
 settings use_query_cache <span class="pl-k">=</span> <span class="pl-c1">0</span>, enable_writes_to_query_cache <span class="pl-k">=</span> <span class="pl-c1">0</span>;</pre></div>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/832ea9c2-35f6-422a-b564-f764c5df9bb5"><img width="1280" height="661" alt="Image" src="https://github.com/user-attachments/assets/832ea9c2-35f6-422a-b564-f764c5df9bb5" style="max-width: 100%; height: auto; max-height: 661px;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/832ea9c2-35f6-422a-b564-f764c5df9bb5"><img width="1280" height="661" alt="Image" src="https://github.com/user-attachments/assets/832ea9c2-35f6-422a-b564-f764c5df9bb5" style="max-width: 100%; height: auto; max-height: 661px;; aspect-ratio: 1280 / 661; background-color: var(--bgColor-muted); border-radius: 6px; display: block" class="js-gh-image-fallback"></a></p>
 <hr>
 <h3>慢的原因</h3>
 <p>聚合阶段使用了太多中间数组，导致处理很慢。<br>
 在最小改动的情况下，去掉中间层数组聚合处理，查询可以从 600 秒提升到 6 秒内。</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3c16df86-6fcf-43ce-a6fe-0eb379db88cf"><img width="806" height="386" alt="Image" src="https://github.com/user-attachments/assets/3c16df86-6fcf-43ce-a6fe-0eb379db88cf" style="max-width: 100%; height: auto; max-height: 386px;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3c16df86-6fcf-43ce-a6fe-0eb379db88cf"><img width="806" height="386" alt="Image" src="https://github.com/user-attachments/assets/3c16df86-6fcf-43ce-a6fe-0eb379db88cf" style="max-width: 100%; height: auto; max-height: 386px;; aspect-ratio: 806 / 386; background-color: var(--bgColor-muted); border-radius: 6px; display: block" class="js-gh-image-fallback"></a></p>
 <hr>
 <p>新查询</p>
 <div class="highlight highlight-source-sql"><pre class="notranslate">WITH range(<span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">239</span> <span class="pl-k">+</span> <span class="pl-c1">1</span>) <span class="pl-k">AS</span> date_interval_nums,
@@ -1436,7 +1436,7 @@ arrayEnumerate(date_interval_nums) <span class="pl-k">AS</span> date_interval_nu
   <span class="pl-c1">100000</span>
   format Vertical
 settings use_query_cache <span class="pl-k">=</span> <span class="pl-c1">0</span>, enable_writes_to_query_cache <span class="pl-k">=</span> <span class="pl-c1">0</span>;</pre></div>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/67455c87-17d2-4e9e-ae61-22235e1c1149"><img width="1280" height="693" alt="Image" src="https://github.com/user-attachments/assets/67455c87-17d2-4e9e-ae61-22235e1c1149" style="max-width: 100%; height: auto; max-height: 693px;"></a></p></div>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/67455c87-17d2-4e9e-ae61-22235e1c1149"><img width="1280" height="693" alt="Image" src="https://github.com/user-attachments/assets/67455c87-17d2-4e9e-ae61-22235e1c1149" style="max-width: 100%; height: auto; max-height: 693px;; aspect-ratio: 1280 / 693; background-color: var(--bgColor-muted); border-radius: 6px; display: block" class="js-gh-image-fallback"></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
