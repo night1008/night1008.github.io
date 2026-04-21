@@ -58,4 +58,8 @@ Run 'docker --help' for more information
 
 ```
 brew install docker-buildx
+
+colima stop
+
+colima start
 ```
