@@ -29,3 +29,16 @@ cloudflared tunnel route dns new-api api.yourdomain.com
 # 启动
 cloudflared tunnel run --url http://localhost:3000 new-api
 ```
+
+### 后台跑 Cloudflare Tunnel
+```sh
+cloudflared tunnel route dns new-api api.yourdomain.com
+
+# 安装系统服务
+cloudflared service install
+
+# 启动
+systemctl start cloudflared
+
+systemctl status cloudflared
+```

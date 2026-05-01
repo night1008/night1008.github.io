@@ -40,6 +40,19 @@ cloudflared tunnel route dns new-api api.yourdomain.com
 
 # 启动
 cloudflared tunnel run --url http://localhost:3000 new-api
+```
+
+### 后台跑 Cloudflare Tunnel
+```sh
+cloudflared tunnel route dns new-api api.yourdomain.com
+
+# 安装系统服务
+cloudflared service install
+
+# 启动
+systemctl start cloudflared
+
+systemctl status cloudflared
 ```。">
 <meta property="og:title" content="自建 AI 中转站">
 <meta property="og:description" content="### 使用 new-api
@@ -72,6 +85,19 @@ cloudflared tunnel route dns new-api api.yourdomain.com
 
 # 启动
 cloudflared tunnel run --url http://localhost:3000 new-api
+```
+
+### 后台跑 Cloudflare Tunnel
+```sh
+cloudflared tunnel route dns new-api api.yourdomain.com
+
+# 安装系统服务
+cloudflared service install
+
+# 启动
+systemctl start cloudflared
+
+systemctl status cloudflared
 ```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/zi-jian-%20AI%20-zhong-zhuan-zhan.html">
@@ -168,7 +194,17 @@ cloudflared tunnel route dns new-api api.yourdomain.com
 
 # 启动
 cloudflared tunnel run --url http://localhost:3000 new-api
-</code></pre></div>
+</code></pre>
+<h3>后台跑 Cloudflare Tunnel</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cloudflared tunnel route dns new-api api.yourdomain.com
+
+<span class="pl-c"><span class="pl-c">#</span> 安装系统服务</span>
+cloudflared service install
+
+<span class="pl-c"><span class="pl-c">#</span> 启动</span>
+systemctl start cloudflared
+
+systemctl status cloudflared</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
