@@ -72,6 +72,11 @@ curl https://aiproxy.example.com/v1/chat/completions \
   }'
 ```
 
+也就是流程需要变成
+```
+pi → new-api → CF workers → CF workers AI
+```
+
 ### 在 new-api 上配置 Cloudflare 渠道
 > 注意 API地址 要填 Cloudflare Worker 地址，如下图所示，
 <img width="585" height="538" alt="Image" src="https://github.com/user-attachments/assets/beb85af8-9379-49fc-8c28-723445ba9d02" />

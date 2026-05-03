@@ -158,6 +158,9 @@ messages content 是数组格式，CF AI 不支持，只支持字符串格式。
     ]
   }'
 </code></pre>
+<p>也就是流程需要变成</p>
+<pre class="notranslate"><code class="notranslate">pi → new-api → CF workers → CF workers AI
+</code></pre>
 <h3>在 new-api 上配置 Cloudflare 渠道</h3>
 <blockquote>
 <p>注意 API地址 要填 Cloudflare Worker 地址，如下图所示，</p>
