@@ -74,7 +74,7 @@ curl https://aiproxy.example.com/v1/chat/completions \
 
 也就是流程需要变成
 ```
-pi → new-api → CF workers → CF workers AI
+pi → new-api → Cloudflare Workers → Cloudflare Workers AI
 ```
 
 ### 在 new-api 上配置 Cloudflare 渠道
