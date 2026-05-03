@@ -78,6 +78,7 @@ curl https://aiproxy.example.com/v1/chat/completions \
 
 ### 在 pi 中加入 providers 配置
 >  编辑 .pi/agent/models.json
+>  路径上记得带 v1
 ```json
 {
     "providers": {
