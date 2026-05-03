@@ -1,4 +1,4 @@
-最好通过自建 AI 中转站，不然每个渠道的格式可能不一样。
+最好通过自建 AI 中转站，不然每个渠道的消息格式可能不一样。
 
 ### [Cloudfare Workers AI](https://developers.cloudflare.com/workers-ai/) 
 > 需要再经过自建中转站
