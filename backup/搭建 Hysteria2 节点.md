@@ -47,11 +47,11 @@ systemctl status hysteria-server
 字段 | 应该填写
 -- | --
 类型 | Hysteria2（不是 Hysteria）
-地址 | 47.251.91.90
+地址 | 47.251.901.901
 端口 | 443
 密码 | 和 config.yaml 完全一致
 SNI | bing.com
 跳过证书验证 | ✅ 必须开启
 
 
-测试下来在相同美国节点上速度会比 SS 快快一倍。
+测试下来在相同美国节点上速度会比 Shadowsocks 快快一倍。
