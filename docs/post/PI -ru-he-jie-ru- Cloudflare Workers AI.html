@@ -10,10 +10,10 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="前两天通过 [new-api](https://github.com/QuantumNous/new-api) 代建了中转站，同时看到 [cloudfare workers ai](https://developers.cloudflare.com/workers-ai/) 每天有一万的免费用量，
+<meta name="description" content="前两天通过 [new-api](https://github.com/QuantumNous/new-api) 自建了中转站，同时看到 [cloudfare workers ai](https://developers.cloudflare.com/workers-ai/) 每天有一万的免费用量，
 目前本地主要使用 [pi](https://github.com/badlogic/pi-mono) 进行 ai coding，于是尝试如何进行接入。">
 <meta property="og:title" content="PI 如何接入 Cloudflare Workers AI">
-<meta property="og:description" content="前两天通过 [new-api](https://github.com/QuantumNous/new-api) 代建了中转站，同时看到 [cloudfare workers ai](https://developers.cloudflare.com/workers-ai/) 每天有一万的免费用量，
+<meta property="og:description" content="前两天通过 [new-api](https://github.com/QuantumNous/new-api) 自建了中转站，同时看到 [cloudfare workers ai](https://developers.cloudflare.com/workers-ai/) 每天有一万的免费用量，
 目前本地主要使用 [pi](https://github.com/badlogic/pi-mono) 进行 ai coding，于是尝试如何进行接入。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/PI%20-ru-he-jie-ru-%20Cloudflare%20Workers%20AI.html">
@@ -85,7 +85,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>前两天通过 <a href="https://github.com/QuantumNous/new-api">new-api</a> 代建了中转站，同时看到 <a href="https://developers.cloudflare.com/workers-ai/" rel="nofollow">cloudfare workers ai</a> 每天有一万的免费用量，<br>
+<div class="markdown-body" id="postBody"><p>前两天通过 <a href="https://github.com/QuantumNous/new-api">new-api</a> 自建了中转站，同时看到 <a href="https://developers.cloudflare.com/workers-ai/" rel="nofollow">cloudfare workers ai</a> 每天有一万的免费用量，<br>
 目前本地主要使用 <a href="https://github.com/badlogic/pi-mono">pi</a> 进行 ai coding，于是尝试如何进行接入。</p>
 <h3>在 Cloudflare上创建 <a href="https://developers.cloudflare.com/workers/" rel="nofollow">workers</a></h3>
 <blockquote>
@@ -147,7 +147,7 @@ messages content 是数组格式，CF AI 不支持，只支持字符串格式。
 </ol>
 <p>因此需要 cloudfare workers 进行请求参数转换。<br>
 可以直接通过请求进行测试</p>
-<pre class="notranslate"><code class="notranslate">curl https://your-ai-proxy.example.com/v1/chat/completions \
+<pre class="notranslate"><code class="notranslate">curl https://aiproxy.example.com/v1/chat/completions \
   -H "Authorization: Bearer sk-xxx" \
   -H "Content-Type: application/json" \
   -d '{
@@ -170,7 +170,7 @@ messages content 是数组格式，CF AI 不支持，只支持字符串格式。
 <div class="highlight highlight-source-json"><pre class="notranslate">{
     <span class="pl-ent">"providers"</span>: {
         <span class="pl-ent">"myproxy"</span>: {
-            <span class="pl-ent">"baseUrl"</span>: <span class="pl-s"><span class="pl-pds">"</span>https://your-ai-proxy.example.com/v1<span class="pl-pds">"</span></span>,
+            <span class="pl-ent">"baseUrl"</span>: <span class="pl-s"><span class="pl-pds">"</span>https://aiproxy.example.com/v1<span class="pl-pds">"</span></span>,
             <span class="pl-ent">"apiKey"</span>: <span class="pl-s"><span class="pl-pds">"</span>sk-xxx<span class="pl-pds">"</span></span>,
             <span class="pl-ent">"api"</span>: <span class="pl-s"><span class="pl-pds">"</span>openai-completions<span class="pl-pds">"</span></span>,
             <span class="pl-ent">"models"</span>: [

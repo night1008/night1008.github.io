@@ -1,4 +1,4 @@
-前两天通过 [new-api](https://github.com/QuantumNous/new-api) 代建了中转站，同时看到 [cloudfare workers ai](https://developers.cloudflare.com/workers-ai/) 每天有一万的免费用量，
+前两天通过 [new-api](https://github.com/QuantumNous/new-api) 自建了中转站，同时看到 [cloudfare workers ai](https://developers.cloudflare.com/workers-ai/) 每天有一万的免费用量，
 目前本地主要使用 [pi](https://github.com/badlogic/pi-mono) 进行 ai coding，于是尝试如何进行接入。
 
 ### 在 Cloudflare上创建 [workers](https://developers.cloudflare.com/workers/)
@@ -60,7 +60,7 @@ messages content 是数组格式，CF AI 不支持，只支持字符串格式。
 因此需要 cloudfare workers 进行请求参数转换。
 可以直接通过请求进行测试
 ```
-curl https://your-ai-proxy.example.com/v1/chat/completions \
+curl https://aiproxy.example.com/v1/chat/completions \
   -H "Authorization: Bearer sk-xxx" \
   -H "Content-Type: application/json" \
   -d '{
@@ -82,7 +82,7 @@ curl https://your-ai-proxy.example.com/v1/chat/completions \
 {
     "providers": {
         "myproxy": {
-            "baseUrl": "https://your-ai-proxy.example.com/v1",
+            "baseUrl": "https://aiproxy.example.com/v1",
             "apiKey": "sk-xxx",
             "api": "openai-completions",
             "models": [
