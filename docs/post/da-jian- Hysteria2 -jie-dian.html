@@ -155,7 +155,34 @@ systemctl status hysteria-server
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<p>测试下来在相同美国节点上速度会比 Shadowsocks 快快一倍。</p></div>
+<p>测试下来在相同美国节点上速度会比 Shadowsocks 快快一倍。</p>
+<hr>
+<p>mac 上可以使用 <a href="https://github.com/mihomo-party-org/clash-party">clash-party</a> 进行连接，</p>
+<p>新建本地订阅，文件内容如下，</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">mixed-port</span>: <span class="pl-c1">7890</span>
+<span class="pl-ent">allow-lan</span>: <span class="pl-c1">false</span>
+<span class="pl-ent">mode</span>: <span class="pl-s">rule</span>
+<span class="pl-ent">log-level</span>: <span class="pl-s">info</span>
+
+<span class="pl-ent">proxies</span>:
+  - <span class="pl-ent">name</span>: <span class="pl-s"><span class="pl-pds">"</span>我的Hysteria2<span class="pl-pds">"</span></span>
+    <span class="pl-ent">type</span>: <span class="pl-s">hysteria2</span>
+    <span class="pl-ent">server</span>: <span class="pl-s">47.251.901.901    </span><span class="pl-c"><span class="pl-c">#</span> 你的服务器IP</span>
+    <span class="pl-ent">port</span>: <span class="pl-c1">443</span>
+    <span class="pl-ent">password</span>: <span class="pl-s">你的密码</span>
+    <span class="pl-ent">sni</span>: <span class="pl-s">bing.com</span>
+    <span class="pl-ent">skip-cert-verify</span>: <span class="pl-c1">true</span>
+
+<span class="pl-ent">proxy-groups</span>:
+  - <span class="pl-ent">name</span>: <span class="pl-s"><span class="pl-pds">"</span>节点选择<span class="pl-pds">"</span></span>
+    <span class="pl-ent">type</span>: <span class="pl-s">select</span>
+    <span class="pl-ent">proxies</span>:
+      - <span class="pl-s"><span class="pl-pds">"</span>我的Hysteria2<span class="pl-pds">"</span></span>
+      - <span class="pl-s">DIRECT</span>
+
+<span class="pl-ent">rules</span>:
+  - <span class="pl-s">GEOIP,CN,DIRECT</span>
+  - <span class="pl-s">MATCH,节点选择</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
