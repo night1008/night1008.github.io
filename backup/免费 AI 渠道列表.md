@@ -17,6 +17,7 @@
 ### [BAI](https://b.ai)
 > 需要再经过自建中转站
 > 注册即送 50w token
+> 支持的 [模型列表](https://docs.b.ai/zh-Hans/llmservice/quick-start/) 也都不错
 
 ### [OpenCode](https://opencode.ai/)
 > 不需要再经过自建中转站
