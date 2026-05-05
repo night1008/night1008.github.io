@@ -14,6 +14,10 @@
 > [Rate Limits](https://console.groq.com/docs/rate-limits)
 > 虽然能通，但几乎用不了，触发 TPM 或 max_completion_tokens 限制错误
 
+### [BAI](https://b.ai)
+> 需要再经过自建中转站
+> 注册即送 50w token
+
 ### [OpenCode](https://opencode.ai/)
 > 不需要再经过自建中转站
 > 每天有几个免费模型可以用
