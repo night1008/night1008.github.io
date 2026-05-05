@@ -14,6 +14,11 @@
 > [Rate Limits](https://console.groq.com/docs/rate-limits)
 > 虽然能通，但几乎用不了，触发 TPM 或 max_completion_tokens 限制错误
 
+### [OpenCode](https://opencode.ai/)
+> 不需要再经过自建中转站
+> 每天有几个免费模型可以用
+> 直接安装 `brew install anomalyco/tap/opencode` 即可使用
+
 ### [Anyrouter](https://anyrouter.top)
 > 不需要再经过自建中转站
 > 可以使用最新的 claude 模型，不过工作日服务经常不可用
