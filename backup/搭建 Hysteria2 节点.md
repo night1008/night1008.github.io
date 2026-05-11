@@ -1,8 +1,6 @@
 使用 [Hysteria2](https://github.com/apernet/hysteria) 搭建节点。
 
 ```sh
-sudo su
-
 bash <(curl -fsSL https://get.hy2.sh/)
 
 # 生成证书
