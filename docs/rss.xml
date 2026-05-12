@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Tue, 12 May 2026 10:52:50 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>使用 mitmproxy 终端抓包 Claude 请求</title><link>https://night1008.github.io/post/shi-yong-%20mitmproxy%20-zhong-duan-zhua-bao-%20Claude%20-qing-qiu.html</link><description>```sh
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Tue, 12 May 2026 10:57:14 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>使用 mitmproxy 终端抓包 Claude 请求</title><link>https://night1008.github.io/post/shi-yong-%20mitmproxy%20-zhong-duan-zhua-bao-%20Claude%20-qing-qiu.html</link><description>```sh
 brew install mitmproxy
 
 mitmproxy --listen-port 8080
-mitmproxy --listen-port 8080 --mode upstream:http://127.0.0.1:1087 (通过代理)
+mitmproxy --listen-port 8080 --mode upstream:http://0.0.0.0:1087 (通过代理)
 
 export HTTPS_PROXY=http://127.0.0.1:8080
 export HTTP_PROXY=http://127.0.0.1:8080

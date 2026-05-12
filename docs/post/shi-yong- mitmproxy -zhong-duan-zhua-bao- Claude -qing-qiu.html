@@ -14,7 +14,7 @@
 brew install mitmproxy
 
 mitmproxy --listen-port 8080
-mitmproxy --listen-port 8080 --mode upstream:http://127.0.0.1:1087 (通过代理)
+mitmproxy --listen-port 8080 --mode upstream:http://0.0.0.0:1087 (通过代理)
 
 export HTTPS_PROXY=http://127.0.0.1:8080
 export HTTP_PROXY=http://127.0.0.1:8080
@@ -25,7 +25,7 @@ claude 'hi'
 brew install mitmproxy
 
 mitmproxy --listen-port 8080
-mitmproxy --listen-port 8080 --mode upstream:http://127.0.0.1:1087 (通过代理)
+mitmproxy --listen-port 8080 --mode upstream:http://0.0.0.0:1087 (通过代理)
 
 export HTTPS_PROXY=http://127.0.0.1:8080
 export HTTP_PROXY=http://127.0.0.1:8080
@@ -104,7 +104,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="markdown-body" id="postBody"><div class="highlight highlight-source-shell"><pre class="notranslate">brew install mitmproxy
 
 mitmproxy --listen-port 8080
-mitmproxy --listen-port 8080 --mode upstream:http://127.0.0.1:1087 (通过代理)
+mitmproxy --listen-port 8080 --mode upstream:http://0.0.0.0:1087 (通过代理)
 
 <span class="pl-k">export</span> HTTPS_PROXY=http://127.0.0.1:8080
 <span class="pl-k">export</span> HTTP_PROXY=http://127.0.0.1:8080
