@@ -70,7 +70,8 @@ SNI | www.google.com
 Public Key | 你生成的PublicKey
 Short ID | 留空
 
-
+> 如果不使用 443 端口会有如下警告
+> [Warning] infra/conf: REALITY: Listening on non-443 ports may get your IP blocked by the GFW
 ---
 
 mac 上可以使用 [clash-party](https://github.com/mihomo-party-org/clash-party) 进行连接，
