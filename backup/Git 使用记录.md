@@ -11,3 +11,10 @@ git push origin branchName -f
 ```
 git clone https://<user-name>:<git-token>@<github-path.git>
 ```
+
+---
+
+### 对比文件
+```
+git diff --no-index file1 file2
+```
