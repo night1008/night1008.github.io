@@ -18,3 +18,10 @@ git clone https://<user-name>:<git-token>@<github-path.git>
 ```
 git diff --no-index file1 file2
 ```
+
+---
+
+### 让 git 停止跟踪（但保留本地文件）
+```
+git rm --cached file1
+```
