@@ -23,5 +23,5 @@ git diff --no-index file1 file2
 
 ### 让 git 停止跟踪（但保留本地文件）
 ```
-git rm --cached file1
+git rm -r --cached file1
 ```
