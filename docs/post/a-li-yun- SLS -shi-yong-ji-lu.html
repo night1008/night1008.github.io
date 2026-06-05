@@ -13,7 +13,7 @@
 <meta name="description" content="### 正则匹配某个容器下的日志
 
 ```sql
-_container_name_ = pod-name and content:#'foo'
+_container_name_ = pod-name and content:#'foo' and not content : 'foo'
 ```
 
 ---。">
@@ -21,7 +21,7 @@ _container_name_ = pod-name and content:#'foo'
 <meta property="og:description" content="### 正则匹配某个容器下的日志
 
 ```sql
-_container_name_ = pod-name and content:#'foo'
+_container_name_ = pod-name and content:#'foo' and not content : 'foo'
 ```
 
 ---。">
@@ -96,7 +96,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h3>正则匹配某个容器下的日志</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate">_container_name_ <span class="pl-k">=</span> pod<span class="pl-k">-</span>name <span class="pl-k">and</span> content:<span class="pl-c"><span class="pl-c">#</span>"foo"</span></pre></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate">_container_name_ <span class="pl-k">=</span> pod<span class="pl-k">-</span>name <span class="pl-k">and</span> content:<span class="pl-c"><span class="pl-c">#</span>"foo" and not content : "foo"</span></pre></div>
 <hr></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
