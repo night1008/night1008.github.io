@@ -22,6 +22,12 @@
 ```sql
 INSERT INTO your_table_local SELECT * FROM file('data.json', 'JSONEachRow');
 ```
+
+### 插入 csv.gz 文件内容
+```sql
+clickhouse-client --query='INSERT INTO my_table FORMAT CSVWithNames' < data.csv.gz
+```
+
 ---
 
 ### 指定周任意起始日
@@ -168,6 +174,12 @@ from tbl;
 ```sql
 INSERT INTO your_table_local SELECT * FROM file('data.json', 'JSONEachRow');
 ```
+
+### 插入 csv.gz 文件内容
+```sql
+clickhouse-client --query='INSERT INTO my_table FORMAT CSVWithNames' < data.csv.gz
+```
+
 ---
 
 ### 指定周任意起始日
@@ -381,6 +393,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>文件路径：/var/lib/clickhouse/user_files/data.json</p>
 </blockquote>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">INSERT INTO</span> your_table_local <span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> file(<span class="pl-s"><span class="pl-pds">'</span>data.json<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>JSONEachRow<span class="pl-pds">'</span></span>);</pre></div>
+<h3>插入 csv.gz 文件内容</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate">clickhouse<span class="pl-k">-</span>client <span class="pl-c"><span class="pl-c">--</span>query="INSERT INTO my_table FORMAT CSVWithNames" &lt; data.csv.gz</span></pre></div>
 <hr>
 <h3>指定周任意起始日</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span> arrayJoin([<span class="pl-c1">0</span>,<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>]) <span class="pl-k">as</span> start_day, 

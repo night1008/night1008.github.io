@@ -10,6 +10,12 @@
 ```sql
 INSERT INTO your_table_local SELECT * FROM file('data.json', 'JSONEachRow');
 ```
+
+### 插入 csv.gz 文件内容
+```sql
+clickhouse-client --query="INSERT INTO my_table FORMAT CSVWithNames" < data.csv.gz
+```
+
 ---
 
 ### 指定周任意起始日
