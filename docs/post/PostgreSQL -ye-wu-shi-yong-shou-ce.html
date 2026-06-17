@@ -59,7 +59,7 @@ pg_dump -h localhost -p 5432 -U postgres -d db_name -t table_name --schema-only
 ### 导出表结构
 
 ```sql
-pg_dump --schema-only -h localhost -p 5432 -U postgres -d db_name --schema-only -f schema.sql
+pg_dump --schema-only -h localhost -p 5432 -U postgres -d db_name --schema-only --no-owner --no-privileges -f schema.sql
 ```
 
 ---
@@ -179,7 +179,7 @@ pg_dump -h localhost -p 5432 -U postgres -d db_name -t table_name --schema-only
 ### 导出表结构
 
 ```sql
-pg_dump --schema-only -h localhost -p 5432 -U postgres -d db_name --schema-only -f schema.sql
+pg_dump --schema-only -h localhost -p 5432 -U postgres -d db_name --schema-only --no-owner --no-privileges -f schema.sql
 ```
 
 ---
@@ -346,7 +346,7 @@ ALTER DEFAULT PRIVILEGES <span class="pl-k">IN</span> SCHEMA public <span class=
 <div class="highlight highlight-source-sql"><pre class="notranslate">pg_dump <span class="pl-k">-</span>h localhost <span class="pl-k">-</span>p <span class="pl-c1">5432</span> <span class="pl-k">-</span>U postgres <span class="pl-k">-</span>d db_name <span class="pl-k">-</span>t table_name <span class="pl-c"><span class="pl-c">--</span>schema-only</span></pre></div>
 <hr>
 <h3>导出表结构</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate">pg_dump <span class="pl-c"><span class="pl-c">--</span>schema-only -h localhost -p 5432 -U postgres -d db_name --schema-only -f schema.sql</span></pre></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate">pg_dump <span class="pl-c"><span class="pl-c">--</span>schema-only -h localhost -p 5432 -U postgres -d db_name --schema-only --no-owner --no-privileges -f schema.sql</span></pre></div>
 <hr>
 <h3>表大小情况查询</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 查看每个表的占用空间大小</span>
