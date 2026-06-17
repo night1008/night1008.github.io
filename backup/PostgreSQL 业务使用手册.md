@@ -44,6 +44,14 @@ pg_dump -h localhost -p 5432 -U postgres -d db_name -t table_name --schema-only
 
 ---
 
+### 导出表结构
+
+```sql
+pg_dump --schema-only -h localhost -p 5432 -U postgres -d db_name --schema-only -f schema.sql
+```
+
+---
+
 ### 表大小情况查询
 
 ```sql
