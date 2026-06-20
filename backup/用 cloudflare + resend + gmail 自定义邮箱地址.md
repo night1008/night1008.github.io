@@ -1,36 +1,44 @@
-一个邮箱如何做到
-1. 一域多号，每个用途一个独立地址
-2. 追踪信息泄露源头
-3. 一键"拉黑"某个泄露源
-4. 摆脱对单一邮箱服务商的依赖
+# 用自己的域名做邮箱，告别 Gmail 锁死
 
-可以使用 cloudflare 的邮箱转发，再配合 Resend 的 SMTP 配置，就可以获得一个自有域名的且独一无二的邮箱地址。
+一个域名 + Cloudflare + Resend，免费实现：
 
-配置很简单，如下：
+- **一域多号**：`shop@你的域名`、`bank@你的域名`，每个用途一个地址
+- **追踪泄露源**：哪个地址开始收垃圾邮件，就知道是哪个网站卖了你
+- **一键拉黑**：删掉那条转发规则，垃圾邮件源头直接断流
+- **不被服务商绑架**：以后想换 Gmail 换别的邮箱，对外身份不用变
 
-第一步：设置 Cloudflare Email Routing（Compute > Email Service > Email Routing）
+## 原理
 
-Cloudflare Dashboard → 【你的域名】 → 电子邮件路由
-添加规则：me@【你的域名】 → 转发到你的 Gmail
-去 Gmail 确认转发验证邮件
+```
+收信：发件人 → Cloudflare Email Routing → 转发到 Gmail
+发信：Gmail 界面 → Resend SMTP → 以 me@你的域名 发出
+```
 
-第二步：设置 Gmail 转发 (设置 > 账号和导入 > 添加其他电子邮件地址)
+域名是你的根，Gmail 只是临时管道，随时可换。
 
-Gmail 支持"以其他地址发送"，但需要一个 SMTP 服务来验证你对 【你的域名】 的所有权。
+## 配置步骤
 
-可以使用 [http://resend.com](Resend)（免费额度够个人用）：每天免费收100封，每月免费发3000封
+**第一步：Cloudflare 收信**
 
-创建一个 API Key，然后在 Resend 里找 SMTP 凭据（Settings → SMTP）
+1. Cloudflare Dashboard → 你的域名 → Email Routing
+2. 添加规则：`me@你的域名` → 转发到 Gmail
+3. 去 Gmail 点确认验证邮件
 
-Gmail → 设置 → 账号和导入 → 用其他地址发送邮件 → 
+**第二步：Resend 发信**
 
-添加 me@【你的域名】
+1. 注册 [resend.com](https://resend.com/)（免费：每天收 100 封，每月发 3000 封）
+2. 创建 API Key
+3. 在 Settings → SMTP 拿到服务器地址、账号、密码
 
-SMTP 服务器填 Resend 提供的地址，用户名/密码填 Resend 的 SMTP 凭据
+**第三步：设置 Gmail**
 
-Gmail 会发验证码到 me@【你的域名】，因为第一步已经配好转发，验证码会转到你 Gmail 收件箱
+1. Gmail → 设置 → 账号和导入 → 用其他地址发送邮件 → 添加 `me@你的域名`
+2. 填入 Resend 的 SMTP 信息
+3. 验证码会发到 `me@你的域名`，因为第一步配好了转发，会自动转进 Gmail 收件箱
+4. 验证通过后，写邮件时"发件人"选 `me@你的域名` 即可
 
-配完之后，写邮件时在"发件人"下拉选 me@【你的域名】 就行了。
+## 用法建议
 
-收发链路的流程图如下，
-<img width="2720" height="2480" alt="Image" src="https://github.com/user-attachments/assets/06ddd490-6f2e-4135-84aa-c9817cc03618" />
+- 不同网站用不同的本地部分（`shop-jd@`、`sub-weekly@`），方便事后追溯
+- 开启 catch-all，注册新网站时现想现填，不用提前在后台建规则
+- 银行、政府类账号用固定、不外传的独立地址，别用"随手发放"的那批
