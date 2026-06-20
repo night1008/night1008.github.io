@@ -10,7 +10,7 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="# 用自己的域名做邮箱，告别 Gmail 锁死
+<meta name="description" content="## 用自己的域名做邮箱，告别 Gmail 锁死
 
 一个域名 + Cloudflare + Resend，免费实现：
 
@@ -19,7 +19,7 @@
 - **一键拉黑**：删掉那条转发规则，垃圾邮件源头直接断流
 - **不被服务商绑架**：以后想换 Gmail 换别的邮箱，对外身份不用变
 
-## 原理
+### 原理
 
 ```
 收信：发件人 → Cloudflare Email Routing → 转发到 Gmail
@@ -28,7 +28,7 @@
 
 域名是你的根，Gmail 只是临时管道，随时可换。">
 <meta property="og:title" content="用 cloudflare + resend + gmail 自定义邮箱地址">
-<meta property="og:description" content="# 用自己的域名做邮箱，告别 Gmail 锁死
+<meta property="og:description" content="## 用自己的域名做邮箱，告别 Gmail 锁死
 
 一个域名 + Cloudflare + Resend，免费实现：
 
@@ -37,7 +37,7 @@
 - **一键拉黑**：删掉那条转发规则，垃圾邮件源头直接断流
 - **不被服务商绑架**：以后想换 Gmail 换别的邮箱，对外身份不用变
 
-## 原理
+### 原理
 
 ```
 收信：发件人 → Cloudflare Email Routing → 转发到 Gmail
@@ -115,7 +115,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>用自己的域名做邮箱，告别 Gmail 锁死</h1>
+<div class="markdown-body" id="postBody"><h2>用自己的域名做邮箱，告别 Gmail 锁死</h2>
 <p>一个域名 + Cloudflare + Resend，免费实现：</p>
 <ul>
 <li><strong>一域多号</strong>：<code class="notranslate">shop@你的域名</code>、<code class="notranslate">bank@你的域名</code>，每个用途一个地址</li>
@@ -123,12 +123,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><strong>一键拉黑</strong>：删掉那条转发规则，垃圾邮件源头直接断流</li>
 <li><strong>不被服务商绑架</strong>：以后想换 Gmail 换别的邮箱，对外身份不用变</li>
 </ul>
-<h2>原理</h2>
+<h3>原理</h3>
 <pre class="notranslate"><code class="notranslate">收信：发件人 → Cloudflare Email Routing → 转发到 Gmail
 发信：Gmail 界面 → Resend SMTP → 以 me@你的域名 发出
 </code></pre>
 <p>域名是你的根，Gmail 只是临时管道，随时可换。</p>
-<h2>配置步骤</h2>
+<h3>配置步骤</h3>
 <p><strong>第一步：Cloudflare 收信</strong></p>
 <ol>
 <li>Cloudflare Dashboard → 你的域名 → Email Routing</li>
@@ -137,7 +137,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ol>
 <p><strong>第二步：Resend 发信</strong></p>
 <ol>
-<li>注册 <a href="https://resend.com/" rel="nofollow">resend.com</a>（免费：每天收 100 封，每月发 3000 封）</li>
+<li>注册 [<a href="https://resend.com/" rel="nofollow">resend.com</a>](<a href="https://resend.com)%EF%BC%88%E5%85%8D%E8%B4%B9%EF%BC%9A%E6%AF%8F%E5%A4%A9%E6%94%B6" rel="nofollow">https://resend.com)（免费：每天收</a> 100 封，每月发 3000 封）</li>
 <li>创建 API Key</li>
 <li>在 Settings → SMTP 拿到服务器地址、账号、密码</li>
 </ol>
@@ -148,7 +148,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>验证码会发到 <code class="notranslate">me@你的域名</code>，因为第一步配好了转发，会自动转进 Gmail 收件箱</li>
 <li>验证通过后，写邮件时"发件人"选 <code class="notranslate">me@你的域名</code> 即可</li>
 </ol>
-<h2>用法建议</h2>
+<h3>用法建议</h3>
 <ul>
 <li>不同网站用不同的本地部分（<code class="notranslate">shop-jd@</code>、<code class="notranslate">sub-weekly@</code>），方便事后追溯</li>
 <li>开启 catch-all，注册新网站时现想现填，不用提前在后台建规则</li>
