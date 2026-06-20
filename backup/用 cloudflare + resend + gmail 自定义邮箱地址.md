@@ -26,7 +26,7 @@
 
 **第二步：Resend 发信**
 
-1. 注册 [[resend.com](https://resend.com/)](https://resend.com)（免费：每天收 100 封，每月发 3000 封）
+1. 注册 [resend.com](https://resend.com/)（免费：每天收 100 封，每月发 3000 封）
 2. 创建 API Key
 3. 在 Settings → SMTP 拿到服务器地址、账号、密码
 
