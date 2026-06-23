@@ -40,10 +40,20 @@ go install -v golang.org/x/tools/cmd/goimports@latest
 
 ---
 
+### colima 启动
 ```
 colima stop --force
 
 colima start --cpu 4 --memory 8
+```
+
+---
+
+### 指定 Project Name
+```sh
+export COMPOSE_PROJECT_NAME=myapp
+
+docker-compose up -d
 ```。">
 <meta property="og:title" content="开发工具汇总">
 <meta property="og:description" content="### Go 导入自动补全
@@ -76,10 +86,20 @@ go install -v golang.org/x/tools/cmd/goimports@latest
 
 ---
 
+### colima 启动
 ```
 colima stop --force
 
 colima start --cpu 4 --memory 8
+```
+
+---
+
+### 指定 Project Name
+```sh
+export COMPOSE_PROJECT_NAME=myapp
+
+docker-compose up -d
 ```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/kai-fa-gong-ju-hui-zong.html">
@@ -178,10 +198,16 @@ go install -v golang.org/x/tools/cmd/goimports@latest</pre></div>
 <li><a href="https://marketplace.visualstudio.com/items?itemName=arturock.gitstash" rel="nofollow">Git Stash</a></li>
 </ul>
 <hr>
+<h3>colima 启动</h3>
 <pre class="notranslate"><code class="notranslate">colima stop --force
 
 colima start --cpu 4 --memory 8
-</code></pre></div>
+</code></pre>
+<hr>
+<h3>指定 Project Name</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-k">export</span> COMPOSE_PROJECT_NAME=myapp
+
+docker-compose up -d</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
