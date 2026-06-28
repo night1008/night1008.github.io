@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Tue, 23 Jun 2026 04:08:06 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>用 cloudflare + resend + gmail 自定义邮箱地址</title><link>https://night1008.github.io/post/yong-%20cloudflare%20%2B%20resend%20%2B%20gmail%20-zi-ding-yi-you-xiang-di-zhi.html</link><description>## 用自己的域名做邮箱，告别 Gmail 锁死
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sun, 28 Jun 2026 02:29:04 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>用 cloudflare + resend + gmail 自定义邮箱地址</title><link>https://night1008.github.io/post/yong-%20cloudflare%20%2B%20resend%20%2B%20gmail%20-zi-ding-yi-you-xiang-di-zhi.html</link><description>## 用自己的域名做邮箱，告别 Gmail 锁死
 
 一个域名 + Cloudflare + Resend，免费实现：
 
@@ -1156,6 +1156,32 @@ git diff --no-index file1 file2
 ### 让 git 停止跟踪（但保留本地文件）
 ```
 git rm -r --cached file1
+```
+
+---
+
+### .gitmodules 子模块
+&gt; 子模块锁定的是一个具体的 commit hash，不会随上游变动
+
+```sh
+# 添加子模块
+git submodule add https://github.com/xxx/yyy.git libs/yyy
+
+# 克隆含子模块的仓库
+git clone --recurse-submodules &lt;repo-url&gt;
+
+# 已克隆但还没初始化子模块
+git submodule update --init --recursive
+
+# 更新所有子模块到最新
+git submodule update --remote
+```
+
+```
+[submodule 'libs/awesome-lib']
+    path = libs/awesome-lib
+    url = https://github.com/someone/awesome-lib.git
+    branch = main
 ```。</description><guid isPermaLink="true">https://night1008.github.io/post/Git%20-shi-yong-ji-lu.html</guid><pubDate>Sat, 19 Jul 2025 09:49:35 +0000</pubDate></item><item><title>MySQL 业务使用手册</title><link>https://night1008.github.io/post/MySQL%20-ye-wu-shi-yong-shou-ce.html</link><description>### 查询数据库大小
 ```sql
 SELECT

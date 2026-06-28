@@ -36,6 +36,32 @@ git diff --no-index file1 file2
 ### 让 git 停止跟踪（但保留本地文件）
 ```
 git rm -r --cached file1
+```
+
+---
+
+### .gitmodules 子模块
+> 子模块锁定的是一个具体的 commit hash，不会随上游变动
+
+```sh
+# 添加子模块
+git submodule add https://github.com/xxx/yyy.git libs/yyy
+
+# 克隆含子模块的仓库
+git clone --recurse-submodules <repo-url>
+
+# 已克隆但还没初始化子模块
+git submodule update --init --recursive
+
+# 更新所有子模块到最新
+git submodule update --remote
+```
+
+```
+[submodule 'libs/awesome-lib']
+    path = libs/awesome-lib
+    url = https://github.com/someone/awesome-lib.git
+    branch = main
 ```。">
 <meta property="og:title" content="Git 使用记录">
 <meta property="og:description" content="### 回滚提交
@@ -64,6 +90,32 @@ git diff --no-index file1 file2
 ### 让 git 停止跟踪（但保留本地文件）
 ```
 git rm -r --cached file1
+```
+
+---
+
+### .gitmodules 子模块
+> 子模块锁定的是一个具体的 commit hash，不会随上游变动
+
+```sh
+# 添加子模块
+git submodule add https://github.com/xxx/yyy.git libs/yyy
+
+# 克隆含子模块的仓库
+git clone --recurse-submodules <repo-url>
+
+# 已克隆但还没初始化子模块
+git submodule update --init --recursive
+
+# 更新所有子模块到最新
+git submodule update --remote
+```
+
+```
+[submodule 'libs/awesome-lib']
+    path = libs/awesome-lib
+    url = https://github.com/someone/awesome-lib.git
+    branch = main
 ```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/Git%20-shi-yong-ji-lu.html">
@@ -150,6 +202,27 @@ git push origin branchName -f</pre></div>
 <hr>
 <h3>让 git 停止跟踪（但保留本地文件）</h3>
 <pre class="notranslate"><code class="notranslate">git rm -r --cached file1
+</code></pre>
+<hr>
+<h3>.gitmodules 子模块</h3>
+<blockquote>
+<p>子模块锁定的是一个具体的 commit hash，不会随上游变动</p>
+</blockquote>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 添加子模块</span>
+git submodule add https://github.com/xxx/yyy.git libs/yyy
+
+<span class="pl-c"><span class="pl-c">#</span> 克隆含子模块的仓库</span>
+git clone --recurse-submodules <span class="pl-k">&lt;</span>repo-url<span class="pl-k">&gt;</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 已克隆但还没初始化子模块</span>
+git submodule update --init --recursive
+
+<span class="pl-c"><span class="pl-c">#</span> 更新所有子模块到最新</span>
+git submodule update --remote</pre></div>
+<pre class="notranslate"><code class="notranslate">[submodule "libs/awesome-lib"]
+    path = libs/awesome-lib
+    url = https://github.com/someone/awesome-lib.git
+    branch = main
 </code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
