@@ -35,3 +35,9 @@ type result struct {
 var r result
 fmt.Println(r.string, r.bool)
 ```
+
+---
+
+### build 时忽略某个目录
+
+比如 storage，这这个目录下加一个 go.mod，声明一个独立的模块名（如 module storage），Go 就会把它当作独立模块，主模块的 ./... 不会再包含它。

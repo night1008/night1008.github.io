@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sun, 28 Jun 2026 02:29:04 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>用 cloudflare + resend + gmail 自定义邮箱地址</title><link>https://night1008.github.io/post/yong-%20cloudflare%20%2B%20resend%20%2B%20gmail%20-zi-ding-yi-you-xiang-di-zhi.html</link><description>## 用自己的域名做邮箱，告别 Gmail 锁死
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 17 Jul 2026 08:55:09 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>用 cloudflare + resend + gmail 自定义邮箱地址</title><link>https://night1008.github.io/post/yong-%20cloudflare%20%2B%20resend%20%2B%20gmail%20-zi-ding-yi-you-xiang-di-zhi.html</link><description>## 用自己的域名做邮箱，告别 Gmail 锁死
 
 一个域名 + Cloudflare + Resend，免费实现：
 
@@ -2304,43 +2304,49 @@ https://github.com/blockloop/scan&#13;
 &#13;
 &gt; panic: row #1, column #2 ('mapper') type map[string]uint8: unsupported type map[string]uint8, a map&#13;
 &#13;
-好在 `go-sqlmock` 可以指定 `ValueConverterOption`，这样就可以把 `driver.Rows` 转换成 `*sql.Rows` 了。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-ru-he-shi-xian-%20Clickhouse%20-cha-xun-huan-cun.html</guid><pubDate>Sun, 09 Jun 2024 06:43:22 +0000</pubDate></item><item><title>Go 有趣的代码片段</title><link>https://night1008.github.io/post/Go%20-you-qu-de-dai-ma-pian-duan.html</link><description>### 可以对 error 进行 switch 判断&#13;
-&#13;
-来源：https://github.com/prashanthpai/sqlcache/blob/4bf943bfd00f02394a480c5437e86af4b5be074c/cache_redis.go#L24&#13;
-&#13;
-```go&#13;
-func (r *Redis) Get(ctx context.Context, key string) (*cache.Item, bool, error) {&#13;
-	b, err := r.c.Get(ctx, r.keyPrefix+key).Bytes()&#13;
-	switch err {&#13;
-	case nil:&#13;
-		var item cache.Item&#13;
-		if err := msgpack.Unmarshal(b, &amp;item); err != nil {&#13;
-			return nil, true, err&#13;
-		}&#13;
-		return &amp;item, true, nil&#13;
-	case redis.Nil:&#13;
-		return nil, false, nil&#13;
-	default:&#13;
-		return nil, false, err&#13;
-	}&#13;
-}&#13;
-```&#13;
-&#13;
----&#13;
-&#13;
-### 匿名结构体&#13;
-&#13;
-来源：https://quii.gitbook.io/learn-go-with-tests/go-fundamentals/concurrency#channels&#13;
-&#13;
-```go&#13;
-type result struct {&#13;
-	string&#13;
-	bool&#13;
-}&#13;
-&#13;
-var r result&#13;
-fmt.Println(r.string, r.bool)&#13;
-```。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-you-qu-de-dai-ma-pian-duan.html</guid><pubDate>Sat, 01 Jun 2024 13:01:05 +0000</pubDate></item><item><title>分析平台中的业务关系图</title><link>https://night1008.github.io/post/fen-xi-ping-tai-zhong-de-ye-wu-guan-xi-tu.html</link><description>### 用户和应用角色之间的关系&#13;
+好在 `go-sqlmock` 可以指定 `ValueConverterOption`，这样就可以把 `driver.Rows` 转换成 `*sql.Rows` 了。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-ru-he-shi-xian-%20Clickhouse%20-cha-xun-huan-cun.html</guid><pubDate>Sun, 09 Jun 2024 06:43:22 +0000</pubDate></item><item><title>Go 有趣的代码片段</title><link>https://night1008.github.io/post/Go%20-you-qu-de-dai-ma-pian-duan.html</link><description>### 可以对 error 进行 switch 判断
+
+来源：https://github.com/prashanthpai/sqlcache/blob/4bf943bfd00f02394a480c5437e86af4b5be074c/cache_redis.go#L24
+
+```go
+func (r *Redis) Get(ctx context.Context, key string) (*cache.Item, bool, error) {
+	b, err := r.c.Get(ctx, r.keyPrefix+key).Bytes()
+	switch err {
+	case nil:
+		var item cache.Item
+		if err := msgpack.Unmarshal(b, &amp;item); err != nil {
+			return nil, true, err
+		}
+		return &amp;item, true, nil
+	case redis.Nil:
+		return nil, false, nil
+	default:
+		return nil, false, err
+	}
+}
+```
+
+---
+
+### 匿名结构体
+
+来源：https://quii.gitbook.io/learn-go-with-tests/go-fundamentals/concurrency#channels
+
+```go
+type result struct {
+	string
+	bool
+}
+
+var r result
+fmt.Println(r.string, r.bool)
+```
+
+---
+
+### build 时忽略某个目录
+
+比如 storage，这这个目录下加一个 go.mod，声明一个独立的模块名（如 module storage），Go 就会把它当作独立模块，主模块的 ./... 不会再包含它。</description><guid isPermaLink="true">https://night1008.github.io/post/Go%20-you-qu-de-dai-ma-pian-duan.html</guid><pubDate>Sat, 01 Jun 2024 13:01:05 +0000</pubDate></item><item><title>分析平台中的业务关系图</title><link>https://night1008.github.io/post/fen-xi-ping-tai-zhong-de-ye-wu-guan-xi-tu.html</link><description>### 用户和应用角色之间的关系&#13;
 ![user_role_permission](https://github.com/night1008/night1008.github.io/assets/3940006/214e5136-2ac8-453f-8ddb-e4cd865e4027)&#13;
 &#13;
 ---&#13;
