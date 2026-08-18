@@ -98,7 +98,10 @@ ORDER BY sum(bytes_on_disk) DESC;
 
 ### 删除分区数据(本地表)
 ```sql
-DELETE FROM table_local WHERE date = '2025-10-01';
+DELETE FROM demo.events_local in PARTITION '2026-07-27' 
+where `#dt` = '2026-07-27' and `#log_id` = '00102298-5e31-42ec-b810-36c6c2a90d6a'
+SETTINGS lightweight_deletes_sync = 2, mutations_sync = 1;
+
 ```
 
 ---
