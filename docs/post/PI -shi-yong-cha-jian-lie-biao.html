@@ -84,16 +84,20 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><p>现在主要使用 <a href="https://pi.dev" rel="nofollow">https://pi.dev</a> 进行 code agent。</p>
-<h3>上下文模式</h3>
-<blockquote>
-<p><a href="https://pi.dev/packages/context-mode" rel="nofollow">https://pi.dev/packages/context-mode</a></p>
-</blockquote>
-<div class="highlight highlight-source-shell"><pre class="notranslate">pi install npm:context-mode</pre></div>
-<h3>/usage</h3>
-<blockquote>
-<p><a href="https://github.com/tmustier/pi-extensions/tree/main/usage-extension">https://github.com/tmustier/pi-extensions/tree/main/usage-extension</a></p>
-</blockquote>
-<div class="highlight highlight-source-shell"><pre class="notranslate">pi install npm:@tmustier/pi-usage-extension</pre></div></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pi install npm:pi-mcp-adapter
+pi install npm:pi-web-access
+pi install npm:context-mode
+pi install npm:pi-rewind
+pi install npm:pi-hermes-memory
+pi install npm:@hypabolic/pi-hypa
+pi install npm:pi-lens
+pi install npm:remote-pi
+pi install npm:pi-subagents
+
+
+pi install npm:@spences10/pi-observability
+pi install npm:@pi-lab/input-history
+pi install npm:@tmustier/pi-usage-extension</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
