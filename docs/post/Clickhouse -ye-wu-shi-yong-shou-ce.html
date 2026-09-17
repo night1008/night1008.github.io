@@ -163,6 +163,13 @@ SELECT hex(groupBitXor(cityHash64(tuple(*)))) as cksum
 from tbl;
 -- B4B3E09AC69CEBE7
 ```
+
+---
+
+### 查询 sleep 超过 3 秒
+```sql
+SELECT sleep(12) AS s, 1 AS id SETTINGS function_sleep_max_microseconds_per_block = 60000000
+```
 。">
 <meta property="og:title" content="Clickhouse 业务使用手册">
 <meta property="og:description" content="### 数据写入流程
@@ -317,6 +324,13 @@ with  tbl as (select 1 as a, 2 as b,number from numbers(10) order by number desc
 SELECT hex(groupBitXor(cityHash64(tuple(*)))) as cksum
 from tbl;
 -- B4B3E09AC69CEBE7
+```
+
+---
+
+### 查询 sleep 超过 3 秒
+```sql
+SELECT sleep(12) AS s, 1 AS id SETTINGS function_sleep_max_microseconds_per_block = 60000000
 ```
 。">
 <meta property="og:type" content="article">
@@ -487,7 +501,10 @@ SETTINGS lightweight_deletes_sync <span class="pl-k">=</span> <span class="pl-c1
 <div class="highlight highlight-source-sql"><pre class="notranslate">with  tbl <span class="pl-k">as</span> (<span class="pl-k">select</span> <span class="pl-c1">1</span> <span class="pl-k">as</span> a, <span class="pl-c1">2</span> <span class="pl-k">as</span> b,<span class="pl-k">number</span> <span class="pl-k">from</span> numbers(<span class="pl-c1">10</span>) <span class="pl-k">order by</span> <span class="pl-k">number</span> <span class="pl-k">desc</span>)
 <span class="pl-k">SELECT</span> hex(groupBitXor(cityHash64(tuple(<span class="pl-k">*</span>)))) <span class="pl-k">as</span> cksum
 <span class="pl-k">from</span> tbl;
-<span class="pl-c"><span class="pl-c">--</span> B4B3E09AC69CEBE7</span></pre></div></div>
+<span class="pl-c"><span class="pl-c">--</span> B4B3E09AC69CEBE7</span></pre></div>
+<hr>
+<h3>查询 sleep 超过 3 秒</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> sleep(<span class="pl-c1">12</span>) <span class="pl-k">AS</span> s, <span class="pl-c1">1</span> <span class="pl-k">AS</span> id SETTINGS function_sleep_max_microseconds_per_block <span class="pl-k">=</span> <span class="pl-c1">60000000</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

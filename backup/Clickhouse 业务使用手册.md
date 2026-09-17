@@ -151,3 +151,10 @@ SELECT hex(groupBitXor(cityHash64(tuple(*)))) as cksum
 from tbl;
 -- B4B3E09AC69CEBE7
 ```
+
+---
+
+### 查询 sleep 超过 3 秒
+```sql
+SELECT sleep(12) AS s, 1 AS id SETTINGS function_sleep_max_microseconds_per_block = 60000000
+```
