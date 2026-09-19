@@ -122,6 +122,9 @@ Codex CLI 对自定义 Provider（非官方 <code class="notranslate">openai</co
 <hr>
 <h2>解决方案</h2>
 <p>编辑 <code class="notranslate">~/.codex/config.toml</code>，在对应 Provider 配置段中添加鉴权声明（三选一）：</p>
+<div class="highlight highlight-source-toml"><pre class="notranslate"><span class="pl-smi">model</span> = <span class="pl-s"><span class="pl-pds">"</span>gpt-5-codex<span class="pl-pds">"</span></span>
+<span class="pl-smi">model_provider</span> = <span class="pl-s"><span class="pl-pds">"</span>anyrouter<span class="pl-pds">"</span></span>
+<span class="pl-smi">preferred_auth_method</span> = <span class="pl-s"><span class="pl-pds">"</span>apikey<span class="pl-pds">"</span></span></pre></div>
 <h3>推荐做法 1：显式配置 <code class="notranslate">experimental_bearer_token</code></h3>
 <p>直接为该 Provider 绑定专属 Token（最稳定）：</p>
 <div class="highlight highlight-source-toml"><pre class="notranslate">[<span class="pl-en">model_providers</span>.<span class="pl-en">anyrouter</span>]

@@ -21,6 +21,12 @@ ERROR: unexpected status 401 Unauthorized: 未提供令牌 (request id: ...), ur
 
 编辑 `~/.codex/config.toml`，在对应 Provider 配置段中添加鉴权声明（三选一）：
 
+```toml
+model = "gpt-5-codex"
+model_provider = "anyrouter"
+preferred_auth_method = "apikey"
+```
+
 ### 推荐做法 1：显式配置 `experimental_bearer_token`
 
 直接为该 Provider 绑定专属 Token（最稳定）：
