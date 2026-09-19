@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Fri, 18 Sep 2026 10:43:35 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>解决 Codex CLI 使用 AnyRouter 报 401 Unauthorized「未提供令牌」</title><link>https://night1008.github.io/post/jie-jue-%20Codex%20CLI%20-shi-yong-%20AnyRouter%20-bao-%20401%20Unauthorized%E3%80%8C-wei-ti-gong-ling-pai-%E3%80%8D.html</link><description>在使用 OpenAI Codex CLI 配置第三方中转服务（如 AnyRouter、OneAPI 等）时，常遇到如下报错：
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Night1008</title><link>https://night1008.github.io</link><description>静以修身，俭以养德</description><copyright>Night1008</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://night1008.github.io</link></image><lastBuildDate>Sat, 19 Sep 2026 09:18:12 +0000</lastBuildDate><managingEditor>Night1008</managingEditor><ttl>60</ttl><webMaster>Night1008</webMaster><item><title>解决 Codex CLI 使用 AnyRouter 报 401 Unauthorized「未提供令牌」</title><link>https://night1008.github.io/post/jie-jue-%20Codex%20CLI%20-shi-yong-%20AnyRouter%20-bao-%20401%20Unauthorized%E3%80%8C-wei-ti-gong-ling-pai-%E3%80%8D.html</link><description>在使用 OpenAI Codex CLI 配置第三方中转服务（如 AnyRouter、OneAPI 等）时，常遇到如下报错：
 
 ```text
 ERROR: unexpected status 401 Unauthorized: 未提供令牌 (request id: ...), url: https://&lt;provider-domain&gt;/v1/responses
@@ -2170,7 +2170,8 @@ func RunJob(ctx context.Context) error {&#13;
 - [长安的荔枝](https://movie.douban.com/subject/36185502/) (还行)
 - [罗小黑战记2](https://movie.douban.com/subject/36448279/) (2025-10-26，还行)
 - [浪浪山小妖怪](https://movie.douban.com/subject/36438475/) (2025-11-22，还不错)
-- [寻龙诀·觅踪](https://movie.douban.com/subject/30330057/) (2026-04-18，有够无聊)。</description><guid isPermaLink="true">https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</guid><pubDate>Sat, 06 Jul 2024 14:59:53 +0000</pubDate></item><item><title>Go recover from panic</title><link>https://night1008.github.io/post/Go%20recover%20from%20panic.html</link><description>```go&#13;
+- [寻龙诀·觅踪](https://movie.douban.com/subject/30330057/) (2026-04-18，有够无聊)
+- [年会不能停 2](https://movie.douban.com/subject/36850814) (2026-09-19，一般)。</description><guid isPermaLink="true">https://night1008.github.io/post/kan-guo-de-dian-ying-he-ji.html</guid><pubDate>Sat, 06 Jul 2024 14:59:53 +0000</pubDate></item><item><title>Go recover from panic</title><link>https://night1008.github.io/post/Go%20recover%20from%20panic.html</link><description>```go&#13;
 package main&#13;
 &#13;
 import (&#13;
