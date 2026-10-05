@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
-    
-    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+    <link rel='apple-touch-icon' href='/apple-touch-icon.png'>
+    <link rel="icon" href="/favicon.ico"><script>
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
@@ -39,7 +39,7 @@ ERROR: unexpected status 401 Unauthorized: 未提供令牌 (request id: ...), ur
 1. **服务商拦截**：中转网关在收到请求时，要求必须携带 `Authorization: Bearer <API_KEY>` 请求头，缺失时直接返回 401「未提供令牌」。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://night1008.github.io/post/jie-jue-%20Codex%20CLI%20-shi-yong-%20AnyRouter%20-bao-%20401%20Unauthorized%E3%80%8C-wei-ti-gong-ling-pai-%E3%80%8D.html">
-<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<meta property="og:image" content="https://night1008.github.io/favicon.png">
 <title>解决 Codex CLI 使用 AnyRouter 报 401 Unauthorized「未提供令牌」</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
