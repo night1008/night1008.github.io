@@ -2,5 +2,8 @@
     "title":"Night1008",
     "subTitle":"静以修身，俭以养德",
     "avatarUrl":"https://github.githubassets.com/favicons/favicon.svg",
+    "faviconUrl":"/favicon.ico",
+    "ogImage":"https://night1008.github.io/favicon.png",
+    "allHead":"<link rel='apple-touch-icon' href='/apple-touch-icon.png'>",
     "GMEEK_VERSION":"last"
 }
