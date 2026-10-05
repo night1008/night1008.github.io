@@ -1,3 +1,5 @@
+> 现在最新版本的 pi 已经自带 MCP 了
+
 ## 原理
 
 pi 本身不内置 MCP 客户端，`mcp.json` 只是静态配置。`pi-mcp-adapter` 负责读取配置、启动 MCP server（JSON-RPC over stdio）、把工具注册给 pi：
