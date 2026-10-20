@@ -28,6 +28,10 @@ ALTER TABLE public.ad_advertisers ADD CONSTRAINT ad_advertisers_pkey PRIMARY KEY
 ### 重置数据库表 ID
 
 ```sql
+SELECT pg_sequence_last_value(
+  pg_get_serial_sequence('users', 'id')::regclass
+);
+
 ALTER SEQUENCE users_id_seq RESTART WITH 7;
 
 -- 根据表已有的数据进行重置
