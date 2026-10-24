@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <link rel='apple-touch-icon' href='/apple-touch-icon.png'>
+    <link rel="icon" href="/favicon.ico"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="想学量化，别一上来就研究因子和机器学习。">
+<meta property="og:title" content="从零开始学量化：先把“怎么买卖股票”搞明白">
+<meta property="og:description" content="想学量化，别一上来就研究因子和机器学习。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://night1008.github.io/post/cong-ling-kai-shi-xue-liang-hua-%EF%BC%9A-xian-ba-%E2%80%9C-zen-me-mai-mai-gu-piao-%E2%80%9D-gao-ming-bai.html">
+<meta property="og:image" content="https://night1008.github.io/favicon.png">
+<title>从零开始学量化：先把“怎么买卖股票”搞明白</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">从零开始学量化：先把“怎么买卖股票”搞明白</h1>
+<div class="title-right">
+    <a href="https://night1008.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/night1008/night1008.github.io/issues/89" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>想学量化，别一上来就研究因子和机器学习。连“一手多少股”“手续费怎么扣”都没搞清楚，回测做得再漂亮，实盘也会被基础成本和规则击穿。这篇把交易规则串一遍。</p>
+<h2>一、一开始能买什么</h2>
+<p>开户后只能买<strong>主板</strong>：沪市 600/601/603/605，深市 000/001/002/003 开头。创业板要 2 年经验 + 10 万，科创板、北交所要 2 年 + 50 万，现在都开不了，选股范围先锁死主板。</p>
+<p><strong>直接排除</strong>：名称带 ST 或 *ST 的（退市风险），以及 2 元以下的非 ST 股。低价看着便宜，往往反映公司有问题，新手容易踩雷。</p>
+<p>务实选法：从<strong>你听过名字、日常能接触到产品的主板大公司</strong>里挑，流动性好、波动温和、容易成交。选好后<strong>只买 1 手（100 股）</strong>，当学费上限，完整走一遍下单、成交、持仓、次日卖出、看交割单的流程。</p>
+<h2>二、一手多少股，怎么下单</h2>
+<p><strong>一手 = 100 股</strong>，主板买入必须是 100 股整数倍，填 150 股下不了单。</p>
+<p>下单填两个信息：<strong>买多少股</strong>和<strong>按什么价买</strong>。新手用<strong>限价委托</strong>——自己设最高买入价，成交价等于或低于它，价格可控但不保证成交。市价委托按当前最好价格立刻成交，快但价格可能有偏差。</p>
+<h2>三、手续费怎么扣</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>费用</th>
+<th>收取</th>
+<th>费率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>佣金</td>
+<td>买卖都收</td>
+<td>不超过 0.3%，<strong>不足 5 元按 5 元收</strong></td>
+</tr>
+<tr>
+<td>印花税</td>
+<td><strong>只卖出收</strong></td>
+<td>0.05%</td>
+</tr>
+<tr>
+<td>过户费</td>
+<td>买卖都收</td>
+<td>0.001%</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>举例：买 1000 股 10 元股票，成交 1 万元。买入佣金按万三算 3 元，不足 5 元<strong>实扣 5 元</strong>，加过户费 0.1 元。卖出一侧佣金最低 5 元 + 过户费 + 印花税 5 元。<strong>一买一卖，光手续费约 15 元。</strong> 所以量化回测必须把“最低 5 元佣金”写进去，否则高频小单利润会被严重高估。</p>
+<h2>四、高价股低价股怎么选</h2>
+<p>规则只能按手买，决策要看<strong>1 手花多少钱</strong>。1 万元买 5 元股，1 手 500 元，能分批、能补仓；买 100 元股，1 手正好 1 万，买完没钱了；买 200 元股，1 手 2 万，<strong>连一手都买不起</strong>。</p>
+<p>建议<strong>单只股票投入控制在总资金 10%—20%</strong>，否则再好的股票也拿不住。</p>
+<h2>五、买不到卖不掉怎么办</h2>
+<p>原因是价格不匹配。A 股“价格优先、时间优先”，涨停时买单排队、卖的人少，很难排到；跌停反过来。</p>
+<p>实操：<strong>撤单重挂</strong>，想快成交就买时挂高一点、卖时挂低一点。同时接受现实：涨停买不到、跌停卖不掉是规则决定的。写策略时把“涨停买不进、跌停卖不出”当硬约束，回测才可信。</p>
+<h2>六、做 T 和能减的损耗</h2>
+<p><strong>做 T</strong>：有底仓的前提下，同一天完成“先买后卖”或“先卖后买”，赚差价、摊成本，不增加总仓位。但不保证降成本，卖飞了越做越高，盈利要先覆盖两次手续费。</p>
+<p>损耗里<strong>佣金是唯一能主动协商降低的</strong>。但多数券商有“不足 5 元按 5 元收”门槛，小资金拆成很多小单，降费率没效果——<strong>别把一笔小资金拆碎</strong>更实际。滑点靠选流动性好的标的、用限价单减少；印花税和过户费固定，只能靠控制交易频率。</p>
+<h2>七、融资和港股通：知道有门槛就够了</h2>
+<p><strong>融资</strong>是向券商借钱买股，需<strong>交易经验满 6 个月 + 20 个交易日日均资产 50 万</strong>。放大亏损，有强平风险。现在开不了，也不该碰。</p>
+<p><strong>港股通</strong>同样卡 <strong>50 万</strong>。规则差异大：T+0 交易但资金 T+3 左右到账；<strong>没有涨跌幅限制</strong>；内地和香港都是交易日才开市，台风也停市；印花税双边收，成本更高。还有<strong>汇率差值</strong>：港币报价人民币结算，买卖各换一次汇，刚买入显示亏 5%～6% 多是参考汇率造成的假象，但换汇成本真实存在，回测要算进去。</p>
+<h2>八、行动顺序</h2>
+<ol>
+<li>花一两天搞懂：T+1、100 股整数倍、手续费构成、涨跌幅、只能做多。</li>
+<li>选一只主板非 ST、你听过、一手金额可接受的股票，<strong>买 1 手</strong>，走完整流程，看交割单扣了多少。</li>
+<li>用模拟盘感受波动，别用真钱试做 T、试杠杆。</li>
+<li>回到量化主线：Python 拉数据、写双均线策略、跑回测，把手续费和 T+1 写进代码。</li>
+<li>远离融资和港股通，等策略能稳定执行、资产到门槛再说。</li>
+</ol>
+<p>量化交易的起点是理解真实市场。这些规则吃透，你写的回测代码才更接近实盘。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://night1008.github.io">Night1008</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","night1008/night1008.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+
+
+</script>
+
+
+</html>
