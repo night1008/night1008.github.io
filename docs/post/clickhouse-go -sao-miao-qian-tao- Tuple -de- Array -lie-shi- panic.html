@@ -33,7 +33,7 @@ internal query panic: reflect: call of reflect.Value.Interface on zero Value
 <meta property="og:url" content="https://night1008.github.io/post/clickhouse-go%20-sao-miao-qian-tao-%20Tuple%20-de-%20Array%20-lie-shi-%20panic.html">
 <meta property="og:image" content="https://night1008.github.io/favicon.png">
 <title>clickhouse-go 扫描嵌套 Tuple 的 Array 列时 panic</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -116,13 +116,14 @@ database/sql.(*Rows).Next(...)
 </blockquote>
 <h2>根因:驱动吞掉解码错误,又对零值调 <code class="notranslate">.Interface()</code></h2>
 <p><code class="notranslate">lib/column/array.go</code> 的 <code class="notranslate">Array.Row</code>:</p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> (<span class="pl-s1">col</span> <span class="pl-c1">*</span><span class="pl-smi">Array</span>) <span class="pl-c1">Row</span>(<span class="pl-s1">i</span> <span class="pl-smi">int</span>, <span class="pl-s1">ptr</span> <span class="pl-smi">bool</span>) <span class="pl-smi">any</span> {
-    <span class="pl-s1">value</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">col</span>.<span class="pl-c1">scan</span>(<span class="pl-s1">col</span>.<span class="pl-c1">ScanType</span>(), <span class="pl-s1">i</span>) <span class="pl-c">// 反射解码某一行</span>
-    <span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-        <span class="pl-s1">fmt</span>.<span class="pl-c1">Println</span>(<span class="pl-s1">err</span>)          <span class="pl-c">// ← 错误只打印、被丢弃</span>
+<pre lang="go" class="notranslate"><code class="notranslate">func (col *Array) Row(i int, ptr bool) any {
+    value, err := col.scan(col.ScanType(), i) // 反射解码某一行
+    if err != nil {
+        fmt.Println(err)          // ← 错误只打印、被丢弃
     }
-    <span class="pl-k">return</span> <span class="pl-s1">value</span>.<span class="pl-c1">Interface</span>()      <span class="pl-c">// ← value 是零 Value → panic</span>
-}</pre></div>
+    return value.Interface()      // ← value 是零 Value → panic
+}
+</code></pre>
 <p><code class="notranslate">col.scan</code> 一旦因元素类型无法解码而返回 <code class="notranslate">(零Value, err)</code>,这里只把 err 打到 stdout,仍把零值交给<br>
 <code class="notranslate">.Interface()</code>。<strong>这是所有同类崩溃的最后一步。</strong></p>
 <p>让它返回零值 + err 的主要情形是"<strong>嵌套的无名 tuple</strong>":ClickHouse 无名 tuple 默认扫成 <code class="notranslate">[]any</code>,<br>
@@ -133,15 +134,16 @@ database/sql.(*Rows).Next(...)
 (<code class="notranslate">BigInt</code> 走 <code class="notranslate">ptr=false</code> 返回值 <code class="notranslate">big.Int</code> 塞不进 <code class="notranslate">*big.Int</code> 目标;套 <code class="notranslate">Nullable</code> 后走 <code class="notranslate">ptr=true</code> 则正常)。</p>
 <h2>最容易踩的 SQL 形态:argMin 打包再被外层聚合</h2>
 <p>用 <code class="notranslate">argMin/argMax</code> 取"一行多字段",再被外层 <code class="notranslate">groupArray(tuple(...))</code> 二次包一层,就构成嵌套无名 tuple:</p>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> user_id, groupArray(tuple(attr_key, row_data)) <span class="pl-k">AS</span> agg
-<span class="pl-k">FROM</span> (
-  <span class="pl-k">SELECT</span> user_id, attr_key,
+<pre lang="sql" class="notranslate"><code class="notranslate">SELECT user_id, groupArray(tuple(attr_key, row_data)) AS agg
+FROM (
+  SELECT user_id, attr_key,
          argMin(tuple(field1, field2, field3, field4, field5, field6,
                       field7, field8, field9, field10, field11, field12,
-                      field13, field14), tuple(field1, id)) <span class="pl-k">AS</span> row_data
-  <span class="pl-k">FROM</span> user_events <span class="pl-k">GROUP BY</span> user_id, attr_key
+                      field13, field14), tuple(field1, id)) AS row_data
+  FROM user_events GROUP BY user_id, attr_key
 )
-<span class="pl-k">GROUP BY</span> user_id <span class="pl-k">ORDER BY</span> user_id</pre></div>
+GROUP BY user_id ORDER BY user_id
+</code></pre>
 <p>内层 <code class="notranslate">argMin(...) AS row_data</code> 本是单层无名 tuple,单独返回没问题;外层 <code class="notranslate">groupArray(tuple(attr_key, row_data))</code><br>
 把它包成 <code class="notranslate">Array(Tuple(UInt64, Tuple(...)))</code>,命中拒绝逻辑。报错对象正是内层整条 tuple:<br>
 <code class="notranslate">converting Tuple(UInt64, ... Int64) to interface {} is unsupported</code>.这种写法在"AI 生成 SQL / 复杂聚合"里很常见。</p>
@@ -182,12 +184,14 @@ database/sql.(*Rows).Next(...)
 </table></markdown-accessiblity-table>
 <h2>最小复现</h2>
 <p>无需业务表,直连 ClickHouse,用 <code class="notranslate">database/sql</code> 把结果逐列 Scan 进 <code class="notranslate">interface{}</code>:</p>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> groupArray(tuple(tuple(toInt64(<span class="pl-c1">1</span>)))) <span class="pl-k">AS</span> arr</pre></div>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-s1">rows</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">db</span>.<span class="pl-c1">QueryContext</span>(<span class="pl-s1">ctx</span>, <span class="pl-s">"SELECT groupArray(tuple(tuple(toInt64(1)))) AS arr"</span>)
-<span class="pl-k">for</span> <span class="pl-s1">rows</span>.<span class="pl-c1">Next</span>() {
-    <span class="pl-k">var</span> <span class="pl-s1">v</span> <span class="pl-k">interface</span>{}
-    <span class="pl-s1">rows</span>.<span class="pl-c1">Scan</span>(<span class="pl-c1">&amp;</span><span class="pl-s1">v</span>) <span class="pl-c">// ← 在这里 panic</span>
-}</pre></div>
+<pre lang="sql" class="notranslate"><code class="notranslate">SELECT groupArray(tuple(tuple(toInt64(1)))) AS arr
+</code></pre>
+<pre lang="go" class="notranslate"><code class="notranslate">rows, _ := db.QueryContext(ctx, "SELECT groupArray(tuple(tuple(toInt64(1)))) AS arr")
+for rows.Next() {
+    var v interface{}
+    rows.Scan(&amp;v) // ← 在这里 panic
+}
+</code></pre>
 <p>stdout 先出现驱动打印、随后崩溃:</p>
 <pre class="notranslate"><code class="notranslate">clickhouse [ScanRow]: converting Tuple(Int64) to interface {} is unsupported. cannot use interface for unnamed tuples, use slice
 reflect: call of reflect.Value.Interface on zero Value
