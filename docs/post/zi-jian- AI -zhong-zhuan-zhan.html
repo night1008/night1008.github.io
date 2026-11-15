@@ -115,7 +115,7 @@ systemctl status cloudflared
 <meta property="og:url" content="https://night1008.github.io/post/zi-jian-%20AI%20-zhong-zhuan-zhan.html">
 <meta property="og:image" content="https://night1008.github.io/favicon.png">
 <title>自建 AI 中转站</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -188,14 +188,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ol>
 <hr>
 <h3>使用 new-api</h3>
-<div class="highlight highlight-source-shell"><pre class="notranslate">git clone https://github.com/QuantumNous/new-api.git
+<pre lang="sh" class="notranslate"><code class="notranslate">git clone https://github.com/QuantumNous/new-api.git
 
-<span class="pl-c1">cd</span> new-api
+cd new-api
 
-<span class="pl-c"><span class="pl-c">#</span> 改一下数据库和换成的密码</span>
+# 改一下数据库和换成的密码
 vim docker-compose.yml
 
-docker compose up -d</pre></div>
+docker compose up -d
+</code></pre>
 <h3>使用 Cloudflare Tunnel，全程免费，不需要证书</h3>
 <pre class="notranslate"><code class="notranslate"># 服务器上安装 cloudflared
 curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared
@@ -214,15 +215,16 @@ cloudflared tunnel route dns new-api api.yourdomain.com
 cloudflared tunnel run --url http://localhost:3000 new-api
 </code></pre>
 <h3>后台跑 Cloudflare Tunnel</h3>
-<div class="highlight highlight-source-shell"><pre class="notranslate">cloudflared tunnel route dns new-api api.yourdomain.com
+<pre lang="sh" class="notranslate"><code class="notranslate">cloudflared tunnel route dns new-api api.yourdomain.com
 
-<span class="pl-c"><span class="pl-c">#</span> 安装系统服务</span>
+# 安装系统服务
 cloudflared service install
 
-<span class="pl-c"><span class="pl-c">#</span> 启动</span>
+# 启动
 systemctl start cloudflared
 
-systemctl status cloudflared</pre></div></div>
+systemctl status cloudflared
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
