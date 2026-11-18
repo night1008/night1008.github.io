@@ -175,3 +175,28 @@ ORDER BY
 ```sql
 SELECT pg_cancel_backend(pid);
 ```
+
+---
+
+### 排查哪些事件节点有问题
+
+```sql
+SELECT ep.app_id, COUNT(*) AS invalid_edges
+  FROM event_properties ep
+  LEFT JOIN events e     ON e.id = ep.event_id     AND e.app_id = ep.app_id
+  LEFT JOIN properties p ON p.id = ep.property_id  AND p.app_id = ep.app_id AND p.table_type = 'event'
+  WHERE e.id IS NULL OR p.id IS NULL
+  GROUP BY ep.app_id;
+```
+
+```sql
+SELECT ep.app_id, ep.event_id, e.app_id AS event_app_id, e.name AS event_name,
+        ep.property_id, p.app_id AS property_app_id, p.name AS property_name, p.table_type
+  FROM event_properties ep
+  LEFT JOIN events e     ON e.id = ep.event_id
+  LEFT JOIN properties p ON p.id = ep.property_id
+  WHERE ep.app_id = <APP_ID>
+    AND (e.app_id IS DISTINCT FROM ep.app_id
+        OR p.app_id IS DISTINCT FROM ep.app_id
+        OR p.table_type IS DISTINCT FROM 'event');
+```

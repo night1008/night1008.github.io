@@ -438,7 +438,24 @@ ALTER DEFAULT PRIVILEGES <span class="pl-k">IN</span> SCHEMA public <span class=
     query_start;</pre></div>
 <hr>
 <h3>仅取消查询（连接还在）</h3>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> pg_cancel_backend(pid);</pre></div></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> pg_cancel_backend(pid);</pre></div>
+<hr>
+<h3>排查哪些事件节点有问题</h3>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-c1">ep</span>.<span class="pl-c1">app_id</span>, <span class="pl-c1">COUNT</span>(<span class="pl-k">*</span>) <span class="pl-k">AS</span> invalid_edges
+  <span class="pl-k">FROM</span> event_properties ep
+  <span class="pl-k">LEFT JOIN</span> events e     <span class="pl-k">ON</span> <span class="pl-c1">e</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span> <span class="pl-c1">ep</span>.<span class="pl-c1">event_id</span>     <span class="pl-k">AND</span> <span class="pl-c1">e</span>.<span class="pl-c1">app_id</span> <span class="pl-k">=</span> <span class="pl-c1">ep</span>.<span class="pl-c1">app_id</span>
+  <span class="pl-k">LEFT JOIN</span> properties p <span class="pl-k">ON</span> <span class="pl-c1">p</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span> <span class="pl-c1">ep</span>.<span class="pl-c1">property_id</span>  <span class="pl-k">AND</span> <span class="pl-c1">p</span>.<span class="pl-c1">app_id</span> <span class="pl-k">=</span> <span class="pl-c1">ep</span>.<span class="pl-c1">app_id</span> <span class="pl-k">AND</span> <span class="pl-c1">p</span>.<span class="pl-c1">table_type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>event<span class="pl-pds">'</span></span>
+  <span class="pl-k">WHERE</span> <span class="pl-c1">e</span>.<span class="pl-c1">id</span> IS <span class="pl-k">NULL</span> <span class="pl-k">OR</span> <span class="pl-c1">p</span>.<span class="pl-c1">id</span> IS <span class="pl-k">NULL</span>
+  <span class="pl-k">GROUP BY</span> <span class="pl-c1">ep</span>.<span class="pl-c1">app_id</span>;</pre></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-c1">ep</span>.<span class="pl-c1">app_id</span>, <span class="pl-c1">ep</span>.<span class="pl-c1">event_id</span>, <span class="pl-c1">e</span>.<span class="pl-c1">app_id</span> <span class="pl-k">AS</span> event_app_id, <span class="pl-c1">e</span>.<span class="pl-c1">name</span> <span class="pl-k">AS</span> event_name,
+        <span class="pl-c1">ep</span>.<span class="pl-c1">property_id</span>, <span class="pl-c1">p</span>.<span class="pl-c1">app_id</span> <span class="pl-k">AS</span> property_app_id, <span class="pl-c1">p</span>.<span class="pl-c1">name</span> <span class="pl-k">AS</span> property_name, <span class="pl-c1">p</span>.<span class="pl-c1">table_type</span>
+  <span class="pl-k">FROM</span> event_properties ep
+  <span class="pl-k">LEFT JOIN</span> events e     <span class="pl-k">ON</span> <span class="pl-c1">e</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span> <span class="pl-c1">ep</span>.<span class="pl-c1">event_id</span>
+  <span class="pl-k">LEFT JOIN</span> properties p <span class="pl-k">ON</span> <span class="pl-c1">p</span>.<span class="pl-c1">id</span> <span class="pl-k">=</span> <span class="pl-c1">ep</span>.<span class="pl-c1">property_id</span>
+  <span class="pl-k">WHERE</span> <span class="pl-c1">ep</span>.<span class="pl-c1">app_id</span> <span class="pl-k">=</span> <span class="pl-k">&lt;</span>APP_ID<span class="pl-k">&gt;</span>
+    <span class="pl-k">AND</span> (<span class="pl-c1">e</span>.<span class="pl-c1">app_id</span> IS DISTINCT <span class="pl-k">FROM</span> <span class="pl-c1">ep</span>.<span class="pl-c1">app_id</span>
+        <span class="pl-k">OR</span> <span class="pl-c1">p</span>.<span class="pl-c1">app_id</span> IS DISTINCT <span class="pl-k">FROM</span> <span class="pl-c1">ep</span>.<span class="pl-c1">app_id</span>
+        <span class="pl-k">OR</span> <span class="pl-c1">p</span>.<span class="pl-c1">table_type</span> IS DISTINCT <span class="pl-k">FROM</span> <span class="pl-s"><span class="pl-pds">'</span>event<span class="pl-pds">'</span></span>);</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
